@@ -1,0 +1,27 @@
+{
+  "Group": "Digimon Savers",
+  "Name": "DigiTale",
+  "Version": "1.0.0",
+  "Description": "Mod de Digimon para Fans - Sistema de combate estilo NDS",
+  "Authors": [
+    {
+      "Name": "Wolpunia",
+      "Email": "",
+      "Url": "https://www.twitch.tv/wolpunia/about"
+    },
+    {
+      "Name": "MEIN7",
+      "Email": "",
+      "Url": "https://mein7.carrd.co"
+    }
+  ],
+  "Website": "",
+  "ServerVersion": "2026.02.19-1a311a592",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "LoadBefore": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": true,
+  "SubPlugins": [],
+  "Main": "com.digitale.DigiTale"
+}
