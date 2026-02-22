@@ -1,0 +1,78 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+  Group #EntrenarPanel {
+    Anchor: (Width: 400, Height: 360);
+    Background: (Color: #1A1A2E);
+    LayoutMode: Top;
+
+    Label #Title {
+      Style: (FontSize: 15, Alignment: Center, Bold: true, Color: #FF6B6B);
+      Anchor: (Top: 10, Height: 24);
+      Text: "Entrenamiento";
+    }
+    Label #Info {
+      Style: (FontSize: 10, Alignment: Center, Color: #A8A8C0);
+      Anchor: (Top: 4, Height: 16);
+      Text: "Cada sesion cuesta 15 de energia";
+    }
+
+    Label #LabelStat {
+      Style: (FontSize: 10, Color: #A8A8C0);
+      Anchor: (Top: 12, Height: 14);
+      Text: "STAT A ENTRENAR:";
+      Padding: (Left: 20);
+    }
+
+    Group #BtnAtk {
+      Anchor: (Top: 4, Width: 340, Height: 34);
+      Background: (Color: #2D1A1A);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #FF6B6B); Text: "ATK - Ataque"; }
+    }
+    Group #BtnDef {
+      Anchor: (Top: 6, Width: 340, Height: 34);
+      Background: (Color: #1A2A2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #4ECDC4); Text: "DEF - Defensa"; }
+    }
+    Group #BtnSpd {
+      Anchor: (Top: 6, Width: 340, Height: 34);
+      Background: (Color: #1A2D1A);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #95E77E); Text: "SPD - Velocidad"; }
+    }
+    Group #BtnWis {
+      Anchor: (Top: 6, Width: 340, Height: 34);
+      Background: (Color: #251A2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #C084FC); Text: "WIS - Sabiduria"; }
+    }
+    Group #BtnHp {
+      Anchor: (Top: 6, Width: 340, Height: 34);
+      Background: (Color: #2D2200);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #FF9F43); Text: "HP - Vitalidad"; }
+    }
+
+    Label #LabelEnergias {
+      Style: (FontSize: 10, Color: #FFD700);
+      Anchor: (Top: 10, Height: 14);
+      Text: "Energia A: ? | Energia B: ?";
+      Padding: (Left: 20);
+    }
+    Label #Resultado {
+      Style: (FontSize: 11, Alignment: Center, Color: #95E77E);
+      Anchor: (Top: 4, Height: 18);
+      Text: "";
+    }
+
+    Group #BtnVolver {
+      Anchor: (Top: 10, Width: 200, Height: 32);
+      Background: (Color: #2D2D2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #888888); Text: "Volver"; }
+    }
+  }
+}

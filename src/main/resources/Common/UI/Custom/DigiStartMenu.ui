@@ -1,0 +1,118 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+  Group #StartPanel {
+    Anchor: (Width: 420, Height: 440);
+    Background: (Color: #1A1A2E);
+    LayoutMode: Top;
+
+    Label #Title {
+      Style: (FontSize: 16, Alignment: Center, Bold: true, Color: #E94560);
+      Anchor: (Top: 12, Height: 24);
+      Text: "Bienvenido a DigiTale";
+    }
+    Label #Subtitle {
+      Style: (FontSize: 10, Alignment: Center, Color: #A8A8C0);
+      Anchor: (Top: 4, Height: 16);
+      Text: "Elige tus 2 companeros para comenzar";
+    }
+
+    Label #MsgInfo {
+      Style: (FontSize: 11, Alignment: Center, Color: #FFD700);
+      Anchor: (Top: 8, Height: 18);
+      Text: "Elige tu primer companero";
+    }
+
+    Group #Row1 {
+      Anchor: (Top: 10, Height: 50);
+      LayoutMode: Left;
+
+      Group #BtnBotamon {
+        Anchor: (Left: 10, Width: 120, Height: 50);
+        Background: (Color: #2D1A1A);
+        LayoutMode: Top;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #FF6B6B); Anchor: (Top: 8, Height: 18); Text: "Botamon"; }
+        Label { Style: (FontSize: 9, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 14); Text: "Fuego"; }
+      }
+      Group #BtnPunimon {
+        Anchor: (Left: 8, Width: 120, Height: 50);
+        Background: (Color: #1A1A2D);
+        LayoutMode: Top;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #74B9FF); Anchor: (Top: 8, Height: 18); Text: "Punimon"; }
+        Label { Style: (FontSize: 9, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 14); Text: "Hielo"; }
+      }
+      Group #BtnPoyomon {
+        Anchor: (Left: 8, Width: 120, Height: 50);
+        Background: (Color: #2D2A1A);
+        LayoutMode: Top;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #FFD700); Anchor: (Top: 8, Height: 18); Text: "Poyomon"; }
+        Label { Style: (FontSize: 9, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 14); Text: "Luz"; }
+      }
+    }
+
+    Group #Row2 {
+      Anchor: (Top: 8, Height: 50);
+      LayoutMode: Left;
+
+      Group #BtnYuramon {
+        Anchor: (Left: 10, Width: 120, Height: 50);
+        Background: (Color: #1A2D1A);
+        LayoutMode: Top;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #95E77E); Anchor: (Top: 8, Height: 18); Text: "Yuramon"; }
+        Label { Style: (FontSize: 9, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 14); Text: "Naturaleza"; }
+      }
+      Group #BtnPichimon {
+        Anchor: (Left: 8, Width: 120, Height: 50);
+        Background: (Color: #1A222D);
+        LayoutMode: Top;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #4ECDC4); Anchor: (Top: 8, Height: 18); Text: "Pichimon"; }
+        Label { Style: (FontSize: 9, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 14); Text: "Agua"; }
+      }
+      Group #BtnNyokimon {
+        Anchor: (Left: 8, Width: 120, Height: 50);
+        Background: (Color: #1A252D);
+        LayoutMode: Top;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #C084FC); Anchor: (Top: 8, Height: 18); Text: "Nyokimon"; }
+        Label { Style: (FontSize: 9, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 14); Text: "Viento"; }
+      }
+    }
+
+    Label #LabelSeleccion {
+      Style: (FontSize: 10, Color: #A8A8C0);
+      Anchor: (Top: 16, Height: 14);
+      Text: "TU EQUIPO:";
+      Padding: (Left: 20);
+    }
+
+    Group #SeleccionRow {
+      Anchor: (Top: 6, Height: 36);
+      LayoutMode: Left;
+      Group {
+        Anchor: (Left: 20, Width: 175, Height: 36);
+        Background: (Color: #16213E);
+        LayoutMode: Center;
+        Label #Seleccion1 { Style: (FontSize: 13, Alignment: Center, Color: #4ECDC4); Text: "—"; }
+      }
+      Group {
+        Anchor: (Left: 10, Width: 175, Height: 36);
+        Background: (Color: #16213E);
+        LayoutMode: Center;
+        Label #Seleccion2 { Style: (FontSize: 13, Alignment: Center, Color: #FFD700); Text: "—"; }
+      }
+    }
+
+    Label #LineasEvo {
+      Style: (FontSize: 9, Alignment: Center, Color: #555577);
+      Anchor: (Top: 10, Height: 60);
+      Text: "Botamon→Agumon→Greymon→WarGreymon\nPunimon→Gabumon→GarurumonA→MetalGarurumon\nPoyomon→Patamon→Angemon→Seraphimon\nYuramon→Palmon→Togemon→Rosemon\nPichimon→Gomamon→Ikkakumon→MarineAngemon\nNyokimon→Biyomon→Birdramon→Phoenixmon";
+    }
+
+    Group #BtnConfirmar {
+      Anchor: (Top: 12, Width: 220, Height: 36);
+      Background: (Color: #0F3D0F);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 13, Alignment: Center, Bold: true, Color: #95E77E); Text: "Confirmar equipo"; }
+    }
+  }
+}

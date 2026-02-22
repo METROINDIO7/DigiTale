@@ -1,0 +1,79 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+  Group #CuidarPanel {
+    Anchor: (Width: 380, Height: 310);
+    Background: (Color: #1A1A2E);
+    LayoutMode: Top;
+
+    Label #Title {
+      Style: (FontSize: 15, Alignment: Center, Bold: true, Color: #95E77E);
+      Anchor: (Top: 10, Height: 24);
+      Text: "Cuidar Companeros";
+    }
+    Label #EstadoA {
+      Style: (FontSize: 10, Color: #FFD700);
+      Anchor: (Top: 8, Height: 14);
+      Text: "A - Hambre: ? | Energia: ?";
+      Padding: (Left: 20);
+    }
+    Label #EstadoB {
+      Style: (FontSize: 10, Color: #FFD700);
+      Anchor: (Top: 2, Height: 14);
+      Text: "B - Hambre: ? | Energia: ?";
+      Padding: (Left: 20);
+    }
+
+    Label #LabelAccion {
+      Style: (FontSize: 10, Color: #A8A8C0);
+      Anchor: (Top: 10, Height: 14);
+      Text: "ACCION  →  COMPANERO (A / B / A+B)";
+      Padding: (Left: 20);
+    }
+
+    Group #BtnAlimentarA {
+      Anchor: (Top: 6, Width: 340, Height: 32);
+      Background: (Color: #2D2200);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 11, Alignment: Center, Color: #FF9F43); Text: "Alimentar  —  Companero A"; }
+    }
+    Group #BtnAlimentarB {
+      Anchor: (Top: 4, Width: 340, Height: 32);
+      Background: (Color: #2D2200);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 11, Alignment: Center, Color: #FF9F43); Text: "Alimentar  —  Companero B"; }
+    }
+    Group #BtnMimarA {
+      Anchor: (Top: 4, Width: 340, Height: 32);
+      Background: (Color: #2D1A2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 11, Alignment: Center, Color: #FF9FF3); Text: "Mimar (+lazo)  —  Companero A"; }
+    }
+    Group #BtnMimarB {
+      Anchor: (Top: 4, Width: 340, Height: 32);
+      Background: (Color: #2D1A2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 11, Alignment: Center, Color: #FF9FF3); Text: "Mimar (+lazo)  —  Companero B"; }
+    }
+    Group #BtnDescansarAB {
+      Anchor: (Top: 4, Width: 340, Height: 32);
+      Background: (Color: #1A1A2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 11, Alignment: Center, Color: #7B7BFF); Text: "Descansar A+B (+energia, +HP)"; }
+    }
+
+    Label #Resultado {
+      Style: (FontSize: 11, Alignment: Center, Color: #95E77E);
+      Anchor: (Top: 6, Height: 16);
+      Text: "";
+    }
+
+    Group #BtnVolver {
+      Anchor: (Top: 6, Width: 180, Height: 30);
+      Background: (Color: #2D2D2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #888888); Text: "Volver"; }
+    }
+  }
+}

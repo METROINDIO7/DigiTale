@@ -1,0 +1,91 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+  Group #EvoPanel {
+    Anchor: (Width: 420, Height: 380);
+    Background: (Color: #1A1A2E);
+    LayoutMode: Top;
+
+    Label #Title {
+      Style: (FontSize: 15, Alignment: Center, Bold: true, Color: #FFD700);
+      Anchor: (Top: 10, Height: 24);
+      Text: "Evoluciones";
+    }
+
+    Group #Tabs {
+      Anchor: (Top: 8, Height: 34);
+      LayoutMode: Left;
+      Group #TabA {
+        Anchor: (Left: 20, Width: 178, Height: 34);
+        Background: (Color: #0F3460);
+        LayoutMode: Center;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #4ECDC4); Text: "Companero A"; }
+      }
+      Group #TabB {
+        Anchor: (Left: 8, Width: 178, Height: 34);
+        Background: (Color: #3A2C00);
+        LayoutMode: Center;
+        Label { Style: (FontSize: 12, Alignment: Center, Bold: true, Color: #FFD700); Text: "Companero B"; }
+      }
+    }
+
+    Label #InfoNombre {
+      Style: (FontSize: 13, Bold: true, Color: #FFFFFF);
+      Anchor: (Top: 10, Height: 20);
+      Text: "—";
+      Padding: (Left: 20);
+    }
+    Label #InfoEspecie {
+      Style: (FontSize: 10, Color: #A8A8C0);
+      Anchor: (Top: 2, Height: 16);
+      Text: "Baby · FUEGO";
+      Padding: (Left: 20);
+    }
+    Label #InfoStats {
+      Style: (FontSize: 10, Color: #A8A8C0);
+      Anchor: (Top: 2, Height: 16);
+      Text: "ATK:3 DEF:3 SPD:4 WIS:3 | V:0 Lazo:20 ABI:0";
+      Padding: (Left: 20);
+    }
+
+    Label #LabelEvo {
+      Style: (FontSize: 10, Color: #A8A8C0);
+      Anchor: (Top: 10, Height: 14);
+      Text: "EVOLUCIONES DISPONIBLES:";
+      Padding: (Left: 20);
+    }
+
+    Group #BtnEvo1 {
+      Anchor: (Top: 6, Width: 380, Height: 32);
+      Background: (Color: #16213E);
+      LayoutMode: Center;
+      Label #LabelEvo1 { Style: (FontSize: 11, Alignment: Center, Color: #888888); Text: "—"; }
+    }
+    Group #BtnEvo2 {
+      Anchor: (Top: 4, Width: 380, Height: 32);
+      Background: (Color: #16213E);
+      LayoutMode: Center;
+      Label #LabelEvo2 { Style: (FontSize: 11, Alignment: Center, Color: #888888); Text: "—"; }
+    }
+    Group #BtnEvo3 {
+      Anchor: (Top: 4, Width: 380, Height: 32);
+      Background: (Color: #16213E);
+      LayoutMode: Center;
+      Label #LabelEvo3 { Style: (FontSize: 11, Alignment: Center, Color: #888888); Text: "—"; }
+    }
+
+    Label #MsgEvolucion {
+      Style: (FontSize: 11, Alignment: Center, Color: #FFD700);
+      Anchor: (Top: 8, Height: 30);
+      Text: "";
+    }
+
+    Group #BtnVolver {
+      Anchor: (Top: 8, Width: 180, Height: 32);
+      Background: (Color: #2D2D2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #888888); Text: "Volver"; }
+    }
+  }
+}

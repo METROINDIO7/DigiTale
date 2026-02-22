@@ -1,0 +1,66 @@
+$Common = "Common.ui";
+
+Group {
+  LayoutMode: Center;
+  Group #StatusPanel {
+    Anchor: (Width: 440, Height: 390);
+    Background: (Color: #1A1A2E);
+    LayoutMode: Top;
+
+    Label #Title {
+      Style: (FontSize: 15, Alignment: Center, Bold: true, Color: #4ECDC4);
+      Anchor: (Top: 10, Height: 24);
+      Text: "Estado del Equipo";
+    }
+
+    Group #Cards {
+      Anchor: (Top: 10, Height: 280);
+      LayoutMode: Left;
+
+      Group #CardA {
+        Anchor: (Left: 10, Width: 200, Height: 270);
+        Background: (Color: #16213E);
+        LayoutMode: Top;
+        Label #SlotA { Style: (FontSize: 11, Alignment: Center, Bold: true, Color: #4ECDC4); Anchor: (Top: 6, Height: 16); Text: "Companero A"; }
+        Label #NombreA { Style: (FontSize: 14, Alignment: Center, Bold: true, Color: #FFFFFF); Anchor: (Top: 4, Height: 20); Text: "—"; }
+        Label #EspecieA { Style: (FontSize: 10, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 16); Text: "Baby"; }
+        Label #ElementoA { Style: (FontSize: 10, Alignment: Center, Color: #FF6B6B); Anchor: (Top: 2, Height: 16); Text: "FUEGO"; }
+        Label #HpA { Style: (FontSize: 10, Color: #FFFFFF); Anchor: (Top: 8, Height: 14); Text: "HP: 35/35"; Padding: (Left: 8); }
+        Label #AtkA { Style: (FontSize: 10, Color: #FF9F43); Anchor: (Top: 2, Height: 14); Text: "ATK: 3"; Padding: (Left: 8); }
+        Label #DefA { Style: (FontSize: 10, Color: #4ECDC4); Anchor: (Top: 2, Height: 14); Text: "DEF: 3"; Padding: (Left: 8); }
+        Label #SpdA { Style: (FontSize: 10, Color: #95E77E); Anchor: (Top: 2, Height: 14); Text: "SPD: 4"; Padding: (Left: 8); }
+        Label #WisA { Style: (FontSize: 10, Color: #C084FC); Anchor: (Top: 2, Height: 14); Text: "WIS: 3"; Padding: (Left: 8); }
+        Label #LazoA { Style: (FontSize: 10, Color: #FF9FF3); Anchor: (Top: 6, Height: 14); Text: "Lazo: 20/100"; Padding: (Left: 8); }
+        Label #AbiA { Style: (FontSize: 10, Color: #FFD700); Anchor: (Top: 2, Height: 14); Text: "ABI: 0"; Padding: (Left: 8); }
+        Label #VicA { Style: (FontSize: 10, Color: #95E77E); Anchor: (Top: 2, Height: 14); Text: "Victorias: 0"; Padding: (Left: 8); }
+        Label #EnergiaA { Style: (FontSize: 10, Color: #FFD700); Anchor: (Top: 2, Height: 14); Text: "Energia: 100/100"; Padding: (Left: 8); }
+      }
+
+      Group #CardB {
+        Anchor: (Left: 20, Width: 200, Height: 270);
+        Background: (Color: #16213E);
+        LayoutMode: Top;
+        Label #SlotB { Style: (FontSize: 11, Alignment: Center, Bold: true, Color: #FFD700); Anchor: (Top: 6, Height: 16); Text: "Companero B"; }
+        Label #NombreB { Style: (FontSize: 14, Alignment: Center, Bold: true, Color: #FFFFFF); Anchor: (Top: 4, Height: 20); Text: "—"; }
+        Label #EspecieB { Style: (FontSize: 10, Alignment: Center, Color: #A8A8C0); Anchor: (Top: 2, Height: 16); Text: "Baby"; }
+        Label #ElementoB { Style: (FontSize: 10, Alignment: Center, Color: #74B9FF); Anchor: (Top: 2, Height: 16); Text: "HIELO"; }
+        Label #HpB { Style: (FontSize: 10, Color: #FFFFFF); Anchor: (Top: 8, Height: 14); Text: "HP: 38/38"; Padding: (Left: 8); }
+        Label #AtkB { Style: (FontSize: 10, Color: #FF9F43); Anchor: (Top: 2, Height: 14); Text: "ATK: 2"; Padding: (Left: 8); }
+        Label #DefB { Style: (FontSize: 10, Color: #4ECDC4); Anchor: (Top: 2, Height: 14); Text: "DEF: 5"; Padding: (Left: 8); }
+        Label #SpdB { Style: (FontSize: 10, Color: #95E77E); Anchor: (Top: 2, Height: 14); Text: "SPD: 3"; Padding: (Left: 8); }
+        Label #WisB { Style: (FontSize: 10, Color: #C084FC); Anchor: (Top: 2, Height: 14); Text: "WIS: 3"; Padding: (Left: 8); }
+        Label #LazoB { Style: (FontSize: 10, Color: #FF9FF3); Anchor: (Top: 6, Height: 14); Text: "Lazo: 20/100"; Padding: (Left: 8); }
+        Label #AbiB { Style: (FontSize: 10, Color: #FFD700); Anchor: (Top: 2, Height: 14); Text: "ABI: 0"; Padding: (Left: 8); }
+        Label #VicB { Style: (FontSize: 10, Color: #95E77E); Anchor: (Top: 2, Height: 14); Text: "Victorias: 0"; Padding: (Left: 8); }
+        Label #EnergiaB { Style: (FontSize: 10, Color: #FFD700); Anchor: (Top: 2, Height: 14); Text: "Energia: 100/100"; Padding: (Left: 8); }
+      }
+    }
+
+    Group #BtnVolver {
+      Anchor: (Top: 12, Width: 200, Height: 32);
+      Background: (Color: #2D2D2D);
+      LayoutMode: Center;
+      Label { Style: (FontSize: 12, Alignment: Center, Color: #888888); Text: "Volver"; }
+    }
+  }
+}

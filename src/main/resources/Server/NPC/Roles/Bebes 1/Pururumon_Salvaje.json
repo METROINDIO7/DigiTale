@@ -1,0 +1,26 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Monster",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "DropList": "Empty",
+    "MaxHealth": 45,
+    "MaxSpeed": 7,
+    "ViewRange": 22,
+    "ViewSector": 360,
+    "HearingRange": 16,
+    "AlertedRange": 28,
+    "AlertedActionRange": 8,
+    "AbsoluteDetectionRange": 4,
+    "MemoriesNameOverride": "Pururumon",
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "entity.pururumon.wild.name",
+      "Description": "Pururumon (Salvaje)"
+    }
+  }
+}
