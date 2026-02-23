@@ -148,7 +148,7 @@ public class DigiBatallaComando extends AbstractPlayerCommand {
                                   DatosJugador datos, StringBuilder log, boolean modoDefensivo) {
         if (d == null || !d.vivo || d.hpCombate <= 0) return;
 
-        int dañoBase = d.calcularDaño(new DatoDigimon() {{ atk = 0; def = datos.enemigoDef; }});
+        int danoBase = d.calcularDanio(datos.enemigoDef);
 
         // Modificador de táctica
         double mult = switch (tactica) {
@@ -158,10 +158,10 @@ public class DigiBatallaComando extends AbstractPlayerCommand {
         };
         if (modoDefensivo) mult *= 0.6;
 
-        int daño = Math.max(1, (int)(dañoBase * mult));
-        datos.enemigoHp = Math.max(0, datos.enemigoHp - daño);
+        int dano = Math.max(1, (int)(danoBase * mult));
+        datos.enemigoHp = Math.max(0, datos.enemigoHp - dano);
         log.append("§a[").append(slot).append("] ").append(d.nombre)
-           .append(" §fatacó por §c").append(daño).append(" dmg\n");
+           .append(" §fataco por §c").append(dano).append(" dmg\n");
     }
 
     private void contraataque(DatosJugador datos, StringBuilder log, boolean modoDefensivo) {
@@ -169,11 +169,11 @@ public class DigiBatallaComando extends AbstractPlayerCommand {
         for (DatoDigimon d : vivos) {
             if (d == null) continue;
             double redDef = modoDefensivo ? 0.5 : 1.0;
-            // Disciplina reduce el daño recibido
+            // Disciplina reduce el dano recibido
             double redDisc = 1.0 - (d.disciplina / 200.0);
             int dmg = (int)(Math.max(1, datos.enemigoAtk - d.def / 2) * redDef * redDisc);
             d.hpCombate = Math.max(0, d.hpCombate - dmg);
-            log.append("§c").append(datos.enemigoNombre).append(" §fatacó a §e")
+            log.append("§c").append(datos.enemigoNombre).append(" §fataco a §e")
                .append(d.nombre).append(" §fpor §c").append(dmg).append(" dmg\n");
             if (d.hpCombate <= 0) {
                 log.append("§8").append(d.nombre).append(" fue derrotado...\n");

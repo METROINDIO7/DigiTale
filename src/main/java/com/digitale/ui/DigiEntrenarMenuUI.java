@@ -4,6 +4,8 @@ import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.AlmacenJugadores.DatosJugador;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.ui.DigiUIHelper;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -12,6 +14,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -49,7 +52,7 @@ public class DigiEntrenarMenuUI extends InteractiveCustomUIPage<DigiEntrenarMenu
                       @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store<EntityStore> store) {
 
-        uiBuilder.append("DigiEntrenarMenu.ui");
+        uiBuilder.append("Pages/DigiEntrenarMenu.ui");
         actualizarEnergias(uiBuilder);
 
         // Cada botón manda su stat como accion
@@ -92,9 +95,9 @@ public class DigiEntrenarMenuUI extends InteractiveCustomUIPage<DigiEntrenarMenu
             UICommandBuilder b = new UICommandBuilder();
             b.set("#Resultado.TextSpans", Message.raw(msg.toString()));
             actualizarEnergias(b);
-            sendUpdate(b, false);
+            sendUpdate(b);
         } else {
-            sendUpdate(new UICommandBuilder(), false);
+            sendUpdate();
         }
     }
 

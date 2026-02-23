@@ -1,0 +1,17 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Companero",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 20,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Puttimon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

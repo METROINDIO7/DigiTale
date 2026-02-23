@@ -1,0 +1,13 @@
+{
+  "Interactions": [
+    {
+      "Type": "Simple",
+      "Next": "Botamon_Bubble_Logic"
+    }
+  ],
+  "Tags": {
+    "Attack": [
+      "Melee"
+    ]
+  }
+}

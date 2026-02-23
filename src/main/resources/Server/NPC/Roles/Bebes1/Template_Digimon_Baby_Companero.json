@@ -1,0 +1,205 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "Parameters": {
+    "Appearance":           { "Value": "Botamon_Model", "Description": "Modelo visual" },
+    "MaxHealth":            { "Value": 20,              "Description": "Salud maxima" },
+    "ViewRange":            { "Value": 16,              "Description": "Rango de vision" },
+    "ViewSector":           { "Value": 180,             "Description": "Sector de vision en grados" },
+    "HearingRange":         { "Value": 8,               "Description": "Rango de oido" },
+    "AbsoluteDetectionRange": { "Value": 4,             "Description": "Rango de deteccion garantizada" },
+    "AlertedRange":         { "Value": 20,              "Description": "Rango alerta" },
+    "FollowItemDistance":   { "Value": [2.5, 3.5],      "Description": "Distancia al seguir al jugador" },
+    "MaxSpeed":             { "Value": 5,               "Description": "Velocidad maxima" },
+    "ParticleOffset":       { "Value": [0, 0.8, 0],     "Description": "Offset de particulas" },
+    "PetAnimation":         { "Value": "Curious",       "Description": "Animacion al ser acariciado" },
+    "PetTimeout":           { "Value": ["PT1M", "PT1M"], "Description": "Cooldown entre pets" },
+    "PetRequiredAttitudes": { "Value": ["Friendly", "Revered"], "Description": "Actitudes que pueden acariciar" },
+    "AttitudeGroup":        { "Value": "Prey",          "Description": "Grupo de actitud" },
+    "DropList":             { "Value": "Empty",         "Description": "Items al morir" },
+    "IsMemory":             { "Value": false,           "Description": "Si es un recuerdo" },
+    "MemoriesCategory":     { "Value": "Other",         "Description": "Categoria del recuerdo" },
+    "MemoriesNameOverride": { "Value": "",              "Description": "Nombre override" },
+    "NameTranslationKey":   { "Value": "server.npcRoles.Template.name", "Description": "Clave de nombre" }
+  },
+  "IsMemory":             { "Compute": "IsMemory" },
+  "MemoriesCategory":     { "Compute": "MemoriesCategory" },
+  "MemoriesNameOverride": { "Compute": "MemoriesNameOverride" },
+  "DropList":             { "Compute": "DropList" },
+  "Appearance":           { "Compute": "Appearance" },
+  "DefaultPlayerAttitude": "Revered",
+  "DefaultNPCAttitude":    "Ignore",
+  "AttitudeGroup":         { "Compute": "AttitudeGroup" },
+  "DisableDamageGroups":   ["Self"],
+  "KnockbackScale": 0.5,
+  "Invulnerable": true,
+  "MotionControllerList": [{
+    "Type": "Walk",
+    "MaxWalkSpeed": { "Compute": "MaxSpeed" },
+    "Gravity": 10, "MaxFallSpeed": 8, "Acceleration": 10, "MaxRotationSpeed": 360
+  }],
+  "MaxHealth": { "Compute": "MaxHealth" },
+  "StateTransitions": [
+    {
+      "States": [{ "To": ["Idle"], "From": [] }],
+      "Actions": [
+        { "Type": "ReleaseTarget" },
+        { "Type": "ResetInstructions" },
+        { "Type": "PlayAnimation", "Slot": "Status" }
+      ]
+    }
+  ],
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Continue": true,
+          "Sensor": {
+            "Type": "Alarm",
+            "Name": "Pet_Ready",
+            "State": "Passed",
+            "Clear": true
+          },
+          "Actions": [{ "Type": "Nothing" }]
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": { "Type": "State", "State": "Idle" },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange":              { "Compute": "ViewRange" },
+                  "ViewSector":             { "Compute": "ViewSector" },
+                  "HearingRange":           { "Compute": "HearingRange" },
+                  "AbsoluteDetectionRange": { "Compute": "AbsoluteDetectionRange" },
+                  "Attitudes": ["Revered", "Friendly"],
+                  "GetNPCs": false
+                }
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Target",
+                    "Filters": [
+                      {
+                        "Type": "Attitude",
+                        "Attitudes": ["Revered", "Friendly"]
+                      }
+                    ]
+                  },
+                  "HeadMotion": { "Type": "Watch" },
+                  "BodyMotion": {
+                    "Type": "MaintainDistance",
+                    "DesiredDistanceRange": { "Compute": "FollowItemDistance" },
+                    "RelativeForwardsSpeed": 0.5,
+                    "RelativeBackwardsSpeed": 0.3
+                  },
+                  "Actions": [
+                    { "Type": "PlayAnimation", "Slot": "Status", "Animation": "Curious" }
+                  ]
+                }
+              ]
+            },
+            {
+              "BodyMotion": {
+                "Type": "Sequence", "Looped": true,
+                "Motions": [
+                  { "Type": "Timer", "Time": [2, 4],
+                    "Motion": { "Type": "WanderInCircle", "Radius": 3, "MaxHeadingChange": 60, "RelativeSpeed": 0.15 } },
+                  { "Type": "Timer", "Time": [2, 5],
+                    "Motion": { "Type": "Nothing" } }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Continue": true,
+        "Actions": [{
+          "Type": "LockOnInteractionTarget",
+          "TargetSlot": "InteractionTarget"
+        }]
+      },
+      {
+        "TreeMode": true,
+        "Instructions": [
+          {
+            "InvertTreeModeResult": true,
+            "Sensor": {
+              "Type": "Not",
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  { "Type": "Alarm", "Name": "Pet_Ready", "State": "Unset" },
+                  {
+                    "Type": "CanInteract",
+                    "Attitudes": { "Compute": "PetRequiredAttitudes" }
+                  },
+                  {
+                    "Type": "Target",
+                    "TargetSlot": "InteractionTarget",
+                    "Filters": [{
+                      "Type": "Not",
+                      "Filter": { "Type": "ItemInHand", "Hand": "Main", "Items": ["*"] }
+                    }]
+                  }
+                ]
+              }
+            },
+            "Actions": [{ "Type": "Nothing" }]
+          },
+          {
+            "InvertTreeModeResult": true,
+            "Continue": true,
+            "Sensor": { "Type": "Any" },
+            "Actions": [{
+              "Type": "SetInteractable",
+              "Interactable": true,
+              "Hint": "server.interactionHints.pet"
+            }]
+          },
+          {
+            "Sensor": { "Type": "HasInteracted" },
+            "Instructions": [{
+              "Sensor": { "Type": "Target" },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status",
+                  "Animation": { "Compute": "PetAnimation" }
+                },
+                {
+                  "Type": "SpawnParticles",
+                  "ParticleSystem": "Hearts_Subtle",
+                  "Offset": { "Compute": "ParticleOffset" },
+                  "TargetNodeName": "Head"
+                },
+                {
+                  "Type": "SetAlarm",
+                  "Name": "Pet_Ready",
+                  "DurationRange": { "Compute": "PetTimeout" }
+                }
+              ]
+            }]
+          }
+        ]
+      },
+      {
+        "Actions": [{ "Type": "SetInteractable", "Interactable": false }]
+      }
+    ]
+  },
+  "NameTranslationKey": { "Compute": "NameTranslationKey" }
+}

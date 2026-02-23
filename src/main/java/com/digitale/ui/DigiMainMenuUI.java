@@ -1,12 +1,15 @@
 package com.digitale.ui;
 
 import com.digitale.datos.AlmacenJugadores;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -20,12 +23,12 @@ public class DigiMainMenuUI extends InteractiveCustomUIPage<DigiMainMenuUI.Data>
 
     public static class Data {
         public static final BuilderCodec<Data> CODEC = BuilderCodec
-            .builder(Data.class, Data::new)
-            .append(new KeyedCodec<>("@BtnPresionado", Codec.STRING),
-                    (data, v) -> data.btnPresionado = v,
-                    data -> data.btnPresionado)
-            .add()
-            .build();
+                .builder(Data.class, Data::new)
+                .append(new KeyedCodec<>("@BtnPresionado", Codec.STRING),
+                        (data, v) -> data.btnPresionado = v,
+                        data -> data.btnPresionado)
+                .add()
+                .build();
         public String btnPresionado = "";
     }
 
@@ -42,10 +45,8 @@ public class DigiMainMenuUI extends InteractiveCustomUIPage<DigiMainMenuUI.Data>
                       @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store<EntityStore> store) {
 
-        uiBuilder.append("DigiMainMenu.ui");
+        uiBuilder.append("Pages/DigiMainMenu.ui");
 
-        // TODO: sustituir BINDING_TYPE con la constante real cuando tengamos el javap
-        // Patrón de la doc: eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#id", EventData.of(...), false)
         DigiUIHelper.bindClick(eventBuilder, "#BtnEstado",      "@BtnPresionado", "estado");
         DigiUIHelper.bindClick(eventBuilder, "#BtnEvolucionar", "@BtnPresionado", "evolucionar");
         DigiUIHelper.bindClick(eventBuilder, "#BtnEntrenar",    "@BtnPresionado", "entrenar");
@@ -60,15 +61,15 @@ public class DigiMainMenuUI extends InteractiveCustomUIPage<DigiMainMenuUI.Data>
         super.handleDataEvent(ref, store, data);
 
         Player player = store.getComponent(ref, Player.getComponentType());
-        if (player == null) { sendUpdate(new UICommandBuilder(), false); return; }
+        if (player == null) { sendUpdate(); return; }
 
         switch (data.btnPresionado) {
             case "estado"      -> player.getPageManager().openCustomPage(ref, store, new DigiStatusMenuUI(playerRef));
             case "evolucionar" -> player.getPageManager().openCustomPage(ref, store, new DigiEvolucionMenuUI(playerRef, "a"));
             case "entrenar"    -> player.getPageManager().openCustomPage(ref, store, new DigiEntrenarMenuUI(playerRef));
             case "cuidar"      -> player.getPageManager().openCustomPage(ref, store, new DigiCuidarMenuUI(playerRef));
-            case "cerrar"      -> player.getPageManager().closePage(ref, store);
-            default            -> sendUpdate(new UICommandBuilder(), false);
+            case "cerrar"      -> player.getPageManager().setPage(ref, store, Page.None);
+            default            -> sendUpdate();
         }
     }
 }

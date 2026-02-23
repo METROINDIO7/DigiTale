@@ -1,0 +1,17 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Salvaje",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 28,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Choromon_Salvaje.name",
+      "Description": "Nombre del Digimon salvaje"
+    }
+  }
+}

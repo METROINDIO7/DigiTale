@@ -4,6 +4,8 @@ import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.AlmacenJugadores.DatosJugador;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.ui.DigiUIHelper;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -12,6 +14,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -51,7 +54,7 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
                       @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store<EntityStore> store) {
 
-        uiBuilder.append("DigiStartMenu.ui");
+        uiBuilder.append("Pages/DigiStartMenu.ui");
 
         // 6 bebés disponibles
         for (String bebe : new String[]{"Botamon","Punimon","Poyomon","Yuramon","Pichimon","Nyokimon"}) {
@@ -70,7 +73,7 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
             if (slot1.isEmpty() || slot2.isEmpty()) {
                 UICommandBuilder b = new UICommandBuilder();
                 b.set("#MsgInfo.TextSpans", Message.raw("Elige 2 compañeros diferentes."));
-                sendUpdate(b, false);
+                sendUpdate(b);
                 return;
             }
 
@@ -104,9 +107,9 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
             b.set("#MsgInfo.TextSpans", Message.raw(msg));
             b.set("#Seleccion1.TextSpans", Message.raw(slot1.isEmpty() ? "—" : slot1));
             b.set("#Seleccion2.TextSpans", Message.raw(slot2.isEmpty() ? "—" : slot2));
-            sendUpdate(b, false);
+            sendUpdate(b);
         } else {
-            sendUpdate(new UICommandBuilder(), false);
+            sendUpdate();
         }
     }
 }

@@ -1,0 +1,17 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Salvaje",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 40,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Arkadimon_Salvaje.name",
+      "Description": "Nombre del Digimon salvaje"
+    }
+  }
+}

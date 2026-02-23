@@ -4,6 +4,8 @@ import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.AlmacenJugadores.DatosJugador;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.ui.DigiUIHelper;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -12,6 +14,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -51,7 +54,7 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
                       @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store<EntityStore> store) {
 
-        uiBuilder.append("DigiEvolucionMenu.ui");
+        uiBuilder.append("Pages/DigiEvolucionMenu.ui");
 
         DatosJugador datos = AlmacenJugadores.obtener(playerRef.getUuid());
         rellenarDiGimon(uiBuilder, datos);
@@ -86,20 +89,20 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
                 slotActivo = "a";
                 UICommandBuilder b = new UICommandBuilder();
                 rellenarDiGimon(b, datos);
-                sendUpdate(b, false);
+                sendUpdate(b);
             }
             case "tab_b" -> {
                 slotActivo = "b";
                 UICommandBuilder b = new UICommandBuilder();
                 rellenarDiGimon(b, datos);
-                sendUpdate(b, false);
+                sendUpdate(b);
             }
             default -> {
                 if (data.accion.startsWith("evo_")) {
                     int idx = Integer.parseInt(data.accion.substring(4));
                     intentarEvolucionar(idx, datos, ref, store);
                 } else {
-                    sendUpdate(new UICommandBuilder(), false);
+                    sendUpdate();
                 }
             }
         }
@@ -108,10 +111,10 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
     private void intentarEvolucionar(int idx, DatosJugador datos,
                                      Ref<EntityStore> ref, Store<EntityStore> store) {
         if (idx < 0 || idx >= evosActuales.length || evosActuales[idx].isEmpty()) {
-            sendUpdate(new UICommandBuilder(), false); return;
+            sendUpdate(); return;
         }
         DatoDigimon d = slotActivo.equals("a") ? datos.companeroA : datos.companeroB;
-        if (d == null || !d.vivo) { sendUpdate(new UICommandBuilder(), false); return; }
+        if (d == null || !d.vivo) { sendUpdate(); return; }
 
         String forma = evosActuales[idx];
         UICommandBuilder b = new UICommandBuilder();
@@ -125,7 +128,7 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
             b.set("#MsgEvolucion.TextSpans",
                 Message.raw("Aun no cumples los requisitos para " + forma));
         }
-        sendUpdate(b, false);
+        sendUpdate(b);
     }
 
     // ── Rellenar datos del Digimon activo ─────────────────────────
