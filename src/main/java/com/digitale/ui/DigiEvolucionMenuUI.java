@@ -149,7 +149,7 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
 
         // Cargar evoluciones posibles
         String[][] opciones = evolucionesParaEspecie(d.especie);
-        String[] btnIds = {"#LabelEvo1", "#LabelEvo2", "#LabelEvo3"};
+        String[] btnIds = {"#BtnEvo1", "#BtnEvo2", "#BtnEvo3"};
 
         for (int i = 0; i < 3; i++) {
             if (i < opciones.length) {
@@ -167,9 +167,9 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
 
     private void limpiarEvo(UICommandBuilder b) {
         for (int i = 0; i < 3; i++) evosActuales[i] = "";
-        b.set("#LabelEvo1.TextSpans", Message.raw("—"));
-        b.set("#LabelEvo2.TextSpans", Message.raw("—"));
-        b.set("#LabelEvo3.TextSpans", Message.raw("—"));
+        b.set("#BtnEvo1.TextSpans", Message.raw("---"));
+        b.set("#BtnEvo2.TextSpans", Message.raw("---"));
+        b.set("#BtnEvo3.TextSpans", Message.raw("---"));
     }
 
     // ── Árbol de evoluciones ───────────────────────────────────────

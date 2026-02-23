@@ -56,7 +56,7 @@ public class DigiStatusMenuUI extends InteractiveCustomUIPage<DigiStatusMenuUI.D
         eventBuilder.addEventBinding(
                 CustomUIEventBindingType.Activating,
                 "#BtnVolver",
-                EventData.of("@Accion", "volver")
+                new EventData().append("@Accion", "volver")
         );
     }
 

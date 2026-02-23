@@ -13,20 +13,7 @@ public class DigiUIHelper {
         eventBuilder.addEventBinding(
                 CustomUIEventBindingType.Activating,
                 elementId,
-                EventData.of(codecKey, valor)
-        );
-    }
-
-    public static void bindClickWithLock(UIEventBuilder eventBuilder,
-                                         String elementId,
-                                         String codecKey,
-                                         String valor,
-                                         boolean locksInterface) {
-        eventBuilder.addEventBinding(
-                CustomUIEventBindingType.Activating,
-                elementId,
-                EventData.of(codecKey, valor),
-                locksInterface
+                new EventData().append(codecKey, valor)
         );
     }
 }
