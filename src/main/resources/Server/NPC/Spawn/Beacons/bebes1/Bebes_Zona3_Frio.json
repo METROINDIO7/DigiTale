@@ -1,0 +1,29 @@
+{
+  "Environments": [
+    "Env_Zone3_Tundra",
+    "Env_Zone3_Forests",
+    "Env_Zone3_Caves_Tundra"
+  ],
+  "MinDistanceFromPlayer": 12,
+  "MaxSpawnedNPCs": 4,
+  "ConcurrentSpawnsRange": [1, 2],
+  "SpawnAfterGameTimeRange": ["PT15M", "PT45M"],
+  "NPCIdleDespawnTime": 120,
+  "BeaconVacantDespawnGameTime": "PT20M",
+  "BeaconRadius": 70,
+  "SpawnRadius": 50,
+  "TargetDistanceFromPlayer": 20,
+  "NPCs": [
+    { "Weight": 28, "Id": "Poyomon_Salvaje" },
+    { "Weight": 28, "Id": "Pichimon_Salvaje" },
+    { "Weight": 24, "Id": "Pabumon_Salvaje" },
+    { "Weight": 24, "Id": "Paomon_Salvaje" },
+    { "Weight": 22, "Id": "Pusumon_Salvaje" },
+    { "Weight": 22, "Id": "Chibomon_Salvaje" },
+    { "Weight": 22, "Id": "Cotsucomon_Salvaje" },
+    { "Weight": 22, "Id": "Petitmon_Salvaje" }
+  ],
+  "LightRanges": {
+    "Light": [3, 15]
+  }
+}

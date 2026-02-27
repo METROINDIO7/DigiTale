@@ -1,6 +1,6 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Egg_Spawner_Lantern.name"
+    "Name": "Digitama Dark"
   },
   "Quality": "Epic",
   "PlayerAnimationsId": "Item",
@@ -9,7 +9,7 @@
       "Interactions": [
         {
           "Type": "SpawnNPC",
-          "EntityId": "Digitame_EggNpc_A",
+          "EntityId": "Digitama_Oscuro",
           "Next": {
             "Type": "ModifyInventory",
             "AdjustHeldItemQuantity": -1
@@ -23,7 +23,7 @@
       ]
     }
   },
-  "Model": "NPC/Models/Eggs/DigitamaDragon1.blockymodel",
-  "Texture": "NPC/Textures/Eggs/Egg1.png",
-  "Icon": "Icons/ItemsGenerated/Eggs/DigitamaDragon1.png"
+  "Model": "NPC/Models/Eggs/Egg.blockymodel",
+  "Texture": "NPC/Textures/Eggs/DigitamaOscuro.png",
+  "Icon": "Icons/ItemsGenerated/Eggs/DigitamaOscuro1.png"
 }

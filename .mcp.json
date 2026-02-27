@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "hytale-docs": {
+      "command": "npx",
+      "args": [
+        "hytaledocs-mcp-server"
+      ],
+      "env": {
+        "HYTALE_MCP_CACHE_DIR": "/home/mein7/.hytale-intellij/docs-cache"
+      }
+    }
+  }
+}

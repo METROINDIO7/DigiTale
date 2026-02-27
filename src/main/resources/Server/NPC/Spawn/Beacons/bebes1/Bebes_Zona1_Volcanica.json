@@ -1,0 +1,28 @@
+{
+  "Environments": [
+    "Env_Zone1_Caves_Volcanic_T1"
+  ],
+  "MinDistanceFromPlayer": 15,
+  "MaxSpawnedNPCs": 3,
+  "ConcurrentSpawnsRange": [1, 2],
+  "SpawnAfterGameTimeRange": ["PT20M", "PT60M"],
+  "NPCIdleDespawnTime": 60,
+  "BeaconVacantDespawnGameTime": "PT15M",
+  "BeaconRadius": 60,
+  "SpawnRadius": 40,
+  "TargetDistanceFromPlayer": 20,
+  "NPCs": [
+    { "Weight": 22, "Id": "Bommon_Salvaje" },
+    { "Weight": 22, "Id": "Bubbmon_Salvaje" },
+    { "Weight": 20, "Id": "Punimon_Salvaje" },
+    { "Weight": 16, "Id": "Algomon_Salvaje" },
+    { "Weight": 16, "Id": "Dokimon_Salvaje" },
+    { "Weight": 16, "Id": "Ketomon_Salvaje" },
+    { "Weight": 14, "Id": "Kuramon_Salvaje" },
+    { "Weight": 14, "Id": "Puyomon_Salvaje" },
+    { "Weight": 10, "Id": "Arkadimon_Salvaje" }
+  ],
+  "LightRanges": {
+    "Light": [0, 5]
+  }
+}

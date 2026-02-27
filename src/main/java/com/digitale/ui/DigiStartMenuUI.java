@@ -31,7 +31,7 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
     public static class Data {
         public static final BuilderCodec<Data> CODEC = BuilderCodec
             .builder(Data.class, Data::new)
-            .append(new KeyedCodec<>("@Seleccion", Codec.STRING),
+            .append(new KeyedCodec<>("Seleccion", Codec.STRING),
                     (data, v) -> data.seleccion = v,
                     data -> data.seleccion)
             .add()
@@ -40,8 +40,8 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
     }
 
     private final PlayerRef playerRef;
-    private String slot1 = "";  // primera elección
-    private String slot2 = "";  // segunda elección
+    private String slot1 = "";  // primera eleccion
+    private String slot2 = "";  // segunda eleccion
 
     public DigiStartMenuUI(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CantClose, Data.CODEC);
@@ -56,11 +56,11 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
 
         uiBuilder.append("Pages/DigiStartMenu.ui");
 
-        // 6 bebés disponibles
+        // 6 bebes disponibles
         for (String bebe : new String[]{"Botamon","Punimon","Poyomon","Yuramon","Pichimon","Nyokimon"}) {
-            DigiUIHelper.bindClick(eventBuilder, "#Btn" + bebe, "@Seleccion", bebe);
+            DigiUIHelper.bindClick(eventBuilder, "#Btn" + bebe, "Seleccion", bebe);
         }
-        DigiUIHelper.bindClick(eventBuilder, "#BtnConfirmar", "@Seleccion", "confirmar");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnConfirmar", "Seleccion", "confirmar");
     }
 
     @Override
@@ -72,8 +72,8 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
         if ("confirmar".equals(data.seleccion)) {
             if (slot1.isEmpty() || slot2.isEmpty()) {
                 UICommandBuilder b = new UICommandBuilder();
-                b.set("#MsgInfo.TextSpans", Message.raw("Elige 2 compañeros diferentes."));
-                sendUpdate(b);
+                b.set("#MsgInfo.Text", "Elige 2 companeros diferentes.");
+                sendUpdate(b, null, false);
                 return;
             }
 
@@ -83,7 +83,7 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
             datos.companeroB = DatoDigimon.crearInicial(slot2);
             datos.tieneEquipo = true;
 
-            // Abrir menú principal
+            // Abrir menu principal
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player != null)
                 player.getPageManager().openCustomPage(ref, store,
@@ -91,7 +91,7 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
             return;
         }
 
-        // Seleccionar bebé
+        // Seleccionar bebe
         String bebe = data.seleccion;
         if (!bebe.isEmpty()) {
             if (slot1.isEmpty()) {
@@ -101,15 +101,15 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
             }
 
             UICommandBuilder b = new UICommandBuilder();
-            String msg = slot1.isEmpty() ? "Elige tu primer compañero"
-                       : slot2.isEmpty() ? "Elegiste: " + slot1 + " — ahora elige el segundo"
-                       : "Equipo: " + slot1 + " + " + slot2 + " — pulsa Confirmar";
-            b.set("#MsgInfo.TextSpans", Message.raw(msg));
-            b.set("#Seleccion1.TextSpans", Message.raw(slot1.isEmpty() ? "—" : slot1));
-            b.set("#Seleccion2.TextSpans", Message.raw(slot2.isEmpty() ? "—" : slot2));
-            sendUpdate(b);
+            String msg = slot1.isEmpty() ? "Elige tu primer companero"
+                       : slot2.isEmpty() ? "Elegiste: " + slot1 + " - ahora elige el segundo"
+                       : "Equipo: " + slot1 + " + " + slot2 + " - pulsa Confirmar";
+            b.set("#MsgInfo.Text", msg);
+            b.set("#Seleccion1.Text", slot1.isEmpty() ? "-" : slot1);
+            b.set("#Seleccion2.Text", slot2.isEmpty() ? "-" : slot2);
+            sendUpdate(b, null, false);
         } else {
-            sendUpdate();
+            sendUpdate(new UICommandBuilder(), null, false);
         }
     }
 }

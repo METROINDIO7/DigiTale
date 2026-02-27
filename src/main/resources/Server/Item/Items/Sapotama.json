@@ -1,0 +1,10 @@
+{
+  "Icon": "Icons/ItemsGenerated/Sapotama_icon.png",
+  "Model": "NPC/Models/Items/Sapotama.blockymodel",
+  "Texture": "NPC/Textures/Items/Sapotama.png",
+  "Scale": 1,
+  "PlayerAnimationsId": "Item",
+  "TranslationProperties": {
+    "Name": "Sapotama"
+  }
+}

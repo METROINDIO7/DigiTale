@@ -1,0 +1,31 @@
+{
+  "Environments": [
+    "Env_Zone1_Forests",
+    "Env_Zone1_Caves_Forests"
+  ],
+  "MinDistanceFromPlayer": 12,
+  "MaxSpawnedNPCs": 4,
+  "ConcurrentSpawnsRange": [1, 2],
+  "SpawnAfterGameTimeRange": ["PT15M", "PT45M"],
+  "NPCIdleDespawnTime": 120,
+  "BeaconVacantDespawnGameTime": "PT20M",
+  "BeaconRadius": 70,
+  "SpawnRadius": 50,
+  "TargetDistanceFromPlayer": 20,
+  "NPCs": [
+    { "Weight": 28, "Id": "Yuramon_Salvaje" },
+    { "Weight": 26, "Id": "Curimon_Salvaje" },
+    { "Weight": 26, "Id": "Keemon_Salvaje" },
+    { "Weight": 24, "Id": "Pitchmon_Salvaje" },
+    { "Weight": 24, "Id": "Cocomon_Salvaje" },
+    { "Weight": 24, "Id": "Dodomon_Salvaje" },
+    { "Weight": 24, "Id": "Popomon_Salvaje" },
+    { "Weight": 24, "Id": "Pururumon_Salvaje" },
+    { "Weight": 22, "Id": "Sakumon_Salvaje" },
+    { "Weight": 10, "Id": "Conomon_Salvaje" },
+    { "Weight": 10, "Id": "Zurumon_Salvaje" }
+  ],
+  "LightRanges": {
+    "Light": [3, 12]
+  }
+}

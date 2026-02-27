@@ -1,0 +1,27 @@
+{
+  "Environments": [
+    "Env_Zone2_Deserts",
+    "Env_Zone2_Savanna",
+    "Env_Zone2_Caves_Deserts",
+    "Env_Zone2_Caves_Savanna"
+  ],
+  "MinDistanceFromPlayer": 12,
+  "MaxSpawnedNPCs": 3,
+  "ConcurrentSpawnsRange": [1, 2],
+  "SpawnAfterGameTimeRange": ["PT15M", "PT50M"],
+  "NPCIdleDespawnTime": 100,
+  "BeaconVacantDespawnGameTime": "PT20M",
+  "BeaconRadius": 70,
+  "SpawnRadius": 50,
+  "TargetDistanceFromPlayer": 20,
+  "NPCs": [
+    { "Weight": 35, "Id": "Jyarimon_Salvaje" },
+    { "Weight": 32, "Id": "Choromon_Salvaje" },
+    { "Weight": 28, "Id": "Sunamon_Salvaje" },
+    { "Weight": 14, "Id": "Bombmon_Salvaje" },
+    { "Weight": 14, "Id": "Zerimon_Salvaje" }
+  ],
+  "LightRanges": {
+    "Light": [4, 15]
+  }
+}

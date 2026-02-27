@@ -24,14 +24,14 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 
 /**
- * UI de entrenamiento. Un click = 1 sesión en ese stat para A+B.
+ * UI de entrenamiento. Un click = 1 sesion en ese stat para A+B.
  */
 public class DigiEntrenarMenuUI extends InteractiveCustomUIPage<DigiEntrenarMenuUI.Data> {
 
     public static class Data {
         public static final BuilderCodec<Data> CODEC = BuilderCodec
             .builder(Data.class, Data::new)
-            .append(new KeyedCodec<>("@Accion", Codec.STRING),
+            .append(new KeyedCodec<>("Accion", Codec.STRING),
                     (data, v) -> data.accion = v,
                     data -> data.accion)
             .add()
@@ -55,11 +55,11 @@ public class DigiEntrenarMenuUI extends InteractiveCustomUIPage<DigiEntrenarMenu
         uiBuilder.append("Pages/DigiEntrenarMenu.ui");
         actualizarEnergias(uiBuilder);
 
-        // Cada botón manda su stat como accion
+        // Cada boton manda su stat como accion
         for (String stat : new String[]{"atk", "def", "spd", "wis", "hp"}) {
-            DigiUIHelper.bindClick(eventBuilder, "#Btn" + capitalizar(stat), "@Accion", "stat_" + stat);
+            DigiUIHelper.bindClick(eventBuilder, "#Btn" + capitalizar(stat), "Accion", "stat_" + stat);
         }
-        DigiUIHelper.bindClick(eventBuilder, "#BtnVolver", "@Accion", "volver");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnVolver", "Accion", "volver");
     }
 
     @Override
@@ -82,22 +82,22 @@ public class DigiEntrenarMenuUI extends InteractiveCustomUIPage<DigiEntrenarMenu
 
             if (datos.companeroA != null && datos.companeroA.vivo) {
                 boolean ok = datos.companeroA.entrenar(stat, 1);
-                msg.append(ok ? datos.companeroA.nombre + " entrenó " + stat.toUpperCase() + "  "
-                              : datos.companeroA.nombre + " sin energía  ");
+                msg.append(ok ? datos.companeroA.nombre + " entreno " + stat.toUpperCase() + "  "
+                              : datos.companeroA.nombre + " sin energia  ");
             }
             if (datos.companeroB != null && datos.companeroB.vivo) {
                 boolean ok = datos.companeroB.entrenar(stat, 1);
-                msg.append(ok ? datos.companeroB.nombre + " entrenó " + stat.toUpperCase()
-                              : datos.companeroB.nombre + " sin energía");
+                msg.append(ok ? datos.companeroB.nombre + " entreno " + stat.toUpperCase()
+                              : datos.companeroB.nombre + " sin energia");
             }
 
-            // Actualizar resultado y energías
+            // Actualizar resultado y energias
             UICommandBuilder b = new UICommandBuilder();
-            b.set("#Resultado.TextSpans", Message.raw(msg.toString()));
+            b.set("#Resultado.Text", msg.toString());
             actualizarEnergias(b);
-            sendUpdate(b);
+            sendUpdate(b, null, false);
         } else {
-            sendUpdate();
+            sendUpdate(new UICommandBuilder(), null, false);
         }
     }
 
@@ -105,8 +105,7 @@ public class DigiEntrenarMenuUI extends InteractiveCustomUIPage<DigiEntrenarMenu
         DatosJugador datos = AlmacenJugadores.obtener(playerRef.getUuid());
         String enA = datos.companeroA != null ? String.valueOf(datos.companeroA.energia) : "?";
         String enB = datos.companeroB != null ? String.valueOf(datos.companeroB.energia) : "?";
-        b.set("#LabelEnergias.TextSpans",
-            Message.raw("Energia A: " + enA + "/100  |  Energia B: " + enB + "/100"));
+        b.set("#LabelEnergias.Text", "Energia A: " + enA + "/100  |  Energia B: " + enB + "/100");
     }
 
     private String capitalizar(String s) {

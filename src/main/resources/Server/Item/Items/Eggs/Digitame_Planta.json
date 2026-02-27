@@ -1,0 +1,29 @@
+{
+  "TranslationProperties": {
+    "Name": "Digitama Plant"
+  },
+  "Quality": "Epic",
+  "PlayerAnimationsId": "Item",
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "SpawnNPC",
+          "EntityId": "Digitama_Planta",
+          "Next": {
+            "Type": "ModifyInventory",
+            "AdjustHeldItemQuantity": -1
+          },
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 0.5,
+            "Z": 0
+          }
+        }
+      ]
+    }
+  },
+  "Model": "NPC/Models/Eggs/Egg.blockymodel",
+  "Texture": "NPC/Textures/Eggs/DigitamaPlanta.png",
+  "Icon": "Icons/ItemsGenerated/Eggs/DigitamaPlanta1.png"
+}

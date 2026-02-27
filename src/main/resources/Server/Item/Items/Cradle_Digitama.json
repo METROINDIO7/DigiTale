@@ -1,0 +1,80 @@
+{
+  "TranslationProperties": {
+    "Name": "Cradle Digitama",
+    "Description": ""
+  },
+  "Categories": [
+    "Furniture.Benches"
+  ],
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "NPC/Models/Items/Cunas.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "NPC/Textures/Items/cunadigimon.png",
+        "Weight": 1
+      }
+    ],
+    "HitboxType": "Cuna_Digitama",
+    "VariantRotation": "NESW",
+    "Bench": {
+      "Type": "Crafting",
+      "Categories": [
+        {
+          "Id": "All",
+          "Icon": "Icons/CraftingCategories/Campfire.png",
+          "Name": "server.benchCategories.all"
+        }
+      ],
+      "LocalOpenSoundEventId": "SFX_Bench_Placeholder",
+      "LocalCloseSoundEventId": "SFX_Bench_Placeholder",
+      "CompletedSoundEventId": "SFX_Bench_Placeholder",
+      "Id": "Farmingbench"
+    },
+    "State": {
+      "Id": "crafting",
+      "Definitions": {
+        "CraftCompleted": {}
+      }
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Benches"
+      }
+    },
+    "BlockParticleSetId": "Wood",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "ParticleColor": "#9e652f",
+    "BlockSoundSetId": "Wood",
+    "CustomModelScale": 2
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.43,
+    "Translation": [
+      13.2,
+      -10.8
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Cunas_icon.png",
+  "Tags": {
+    "Type": [
+      "Bench"
+    ]
+  },
+  "MaxStack": 1,
+  "ItemSoundSetId": "ISS_Blocks_Wood"
+}

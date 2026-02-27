@@ -1,0 +1,81 @@
+{
+  "Environments": [
+    "Env_Zone1_Plains",
+    "Env_Zone1_Caves_Plains"
+  ],
+  "NPCs": [
+    {
+      "Weight": 30,
+      "SpawnBlockSet": "Soil",
+      "Id": "Botamon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 28,
+      "SpawnBlockSet": "Soil",
+      "Id": "Nyokimon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 26,
+      "SpawnBlockSet": "Soil",
+      "Id": "Tsubumon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Fufumon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Kiimon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Datirimon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Pafumon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Pupumon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Puttimon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Puwamon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 22,
+      "SpawnBlockSet": "Soil",
+      "Id": "Pyonmon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 8,
+      "SpawnBlockSet": "Soil",
+      "Id": "Chibickmon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    }
+  ],
+  "DayTimeRange": [6, 20]
+}

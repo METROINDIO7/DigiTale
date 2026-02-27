@@ -28,7 +28,7 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
     public static class Data {
         public static final BuilderCodec<Data> CODEC = BuilderCodec
             .builder(Data.class, Data::new)
-            .append(new KeyedCodec<>("@Accion", Codec.STRING),
+            .append(new KeyedCodec<>("Accion", Codec.STRING),
                     (data, v) -> data.accion = v,
                     data -> data.accion)
             .add()
@@ -60,15 +60,15 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
         rellenarDiGimon(uiBuilder, datos);
 
         // Tabs
-        DigiUIHelper.bindClick(eventBuilder, "#TabA", "@Accion", "tab_a");
-        DigiUIHelper.bindClick(eventBuilder, "#TabB", "@Accion", "tab_b");
+        DigiUIHelper.bindClick(eventBuilder, "#TabA", "Accion", "tab_a");
+        DigiUIHelper.bindClick(eventBuilder, "#TabB", "Accion", "tab_b");
 
-        // Botones de evolución (cada uno manda su índice)
-        DigiUIHelper.bindClick(eventBuilder, "#BtnEvo1", "@Accion", "evo_0");
-        DigiUIHelper.bindClick(eventBuilder, "#BtnEvo2", "@Accion", "evo_1");
-        DigiUIHelper.bindClick(eventBuilder, "#BtnEvo3", "@Accion", "evo_2");
+        // Botones de evolucion (cada uno manda su indice)
+        DigiUIHelper.bindClick(eventBuilder, "#BtnEvo1", "Accion", "evo_0");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnEvo2", "Accion", "evo_1");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnEvo3", "Accion", "evo_2");
 
-        DigiUIHelper.bindClick(eventBuilder, "#BtnVolver", "@Accion", "volver");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnVolver", "Accion", "volver");
     }
 
     @Override
@@ -89,20 +89,20 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
                 slotActivo = "a";
                 UICommandBuilder b = new UICommandBuilder();
                 rellenarDiGimon(b, datos);
-                sendUpdate(b);
+                sendUpdate(b, null, false);
             }
             case "tab_b" -> {
                 slotActivo = "b";
                 UICommandBuilder b = new UICommandBuilder();
                 rellenarDiGimon(b, datos);
-                sendUpdate(b);
+                sendUpdate(b, null, false);
             }
             default -> {
                 if (data.accion.startsWith("evo_")) {
                     int idx = Integer.parseInt(data.accion.substring(4));
                     intentarEvolucionar(idx, datos, ref, store);
                 } else {
-                    sendUpdate();
+                    sendUpdate(new UICommandBuilder(), null, false);
                 }
             }
         }
@@ -111,41 +111,39 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
     private void intentarEvolucionar(int idx, DatosJugador datos,
                                      Ref<EntityStore> ref, Store<EntityStore> store) {
         if (idx < 0 || idx >= evosActuales.length || evosActuales[idx].isEmpty()) {
-            sendUpdate(); return;
+            sendUpdate(new UICommandBuilder(), null, false); return;
         }
         DatoDigimon d = slotActivo.equals("a") ? datos.companeroA : datos.companeroB;
-        if (d == null || !d.vivo) { sendUpdate(); return; }
+        if (d == null || !d.vivo) { sendUpdate(new UICommandBuilder(), null, false); return; }
 
         String forma = evosActuales[idx];
         UICommandBuilder b = new UICommandBuilder();
 
         if (d.puedeEvolucionar(forma)) {
             aplicarEvolucion(d, forma);
-            b.set("#MsgEvolucion.TextSpans",
-                Message.raw("¡" + d.nombre + " evoluciono a " + forma + "!"));
+            b.set("#MsgEvolucion.Text", "" + d.nombre + " evoluciono a " + forma + "!");
             rellenarDiGimon(b, datos);
         } else {
-            b.set("#MsgEvolucion.TextSpans",
-                Message.raw("Aun no cumples los requisitos para " + forma));
+            b.set("#MsgEvolucion.Text", "Aun no cumples los requisitos para " + forma);
         }
-        sendUpdate(b);
+        sendUpdate(b, null, false);
     }
 
-    // ── Rellenar datos del Digimon activo ─────────────────────────
+    // Rellenar datos del Digimon activo
     private void rellenarDiGimon(UICommandBuilder b, DatosJugador datos) {
         DatoDigimon d = slotActivo.equals("a") ? datos.companeroA : datos.companeroB;
         if (d == null || !d.vivo) {
-            b.set("#InfoNombre.TextSpans",  Message.raw("Sin compañero"));
-            b.set("#InfoEspecie.TextSpans", Message.raw("—"));
-            b.set("#InfoStats.TextSpans",   Message.raw("—"));
+            b.set("#InfoNombre.Text", "Sin companero");
+            b.set("#InfoEspecie.Text", "-");
+            b.set("#InfoStats.Text", "-");
             limpiarEvo(b);
             return;
         }
-        b.set("#InfoNombre.TextSpans",  Message.raw(d.nombre));
-        b.set("#InfoEspecie.TextSpans", Message.raw(d.especie + " · " + d.nombreNivel() + " · " + d.elemento));
-        b.set("#InfoStats.TextSpans",   Message.raw(
+        b.set("#InfoNombre.Text", d.nombre);
+        b.set("#InfoEspecie.Text", d.especie + " - " + d.nombreNivel() + " - " + d.elemento);
+        b.set("#InfoStats.Text", 
             "ATK:" + d.atk + " DEF:" + d.def + " SPD:" + d.spd +
-            " WIS:" + d.wis + " | V:" + d.victorias + " Lazo:" + d.lazo + " ABI:" + d.abi));
+            " WIS:" + d.wis + " | V:" + d.victorias + " Lazo:" + d.lazo + " ABI:" + d.abi);
 
         // Cargar evoluciones posibles
         String[][] opciones = evolucionesParaEspecie(d.especie);
@@ -155,56 +153,55 @@ public class DigiEvolucionMenuUI extends InteractiveCustomUIPage<DigiEvolucionMe
             if (i < opciones.length) {
                 evosActuales[i] = opciones[i][0];
                 boolean puede = d.puedeEvolucionar(opciones[i][0]);
-                String icono = puede ? "✔ " : "✘ ";
-                b.set(btnIds[i] + ".TextSpans",
-                    Message.raw(icono + opciones[i][0] + " — " + opciones[i][1]));
+                String icono = puede ? "[OK] " : "[X] ";
+                b.set(btnIds[i]  + ".Text", icono + opciones[i][0] + " - " + opciones[i][1]);
             } else {
                 evosActuales[i] = "";
-                b.set(btnIds[i] + ".TextSpans", Message.raw("—"));
+                b.set(btnIds[i] + ".Text", "-");
             }
         }
     }
 
     private void limpiarEvo(UICommandBuilder b) {
         for (int i = 0; i < 3; i++) evosActuales[i] = "";
-        b.set("#BtnEvo1.TextSpans", Message.raw("---"));
-        b.set("#BtnEvo2.TextSpans", Message.raw("---"));
-        b.set("#BtnEvo3.TextSpans", Message.raw("---"));
+        b.set("#BtnEvo1.Text", "---");
+        b.set("#BtnEvo2.Text", "---");
+        b.set("#BtnEvo3.Text", "---");
     }
 
-    // ── Árbol de evoluciones ───────────────────────────────────────
+    // Arbol de evoluciones
     private String[][] evolucionesParaEspecie(String especie) {
         return switch (especie) {
-            case "Botamon"  -> new String[][]{{"Koromon",       "Lazo≥30 o 1 victoria"}};
-            case "Punimon"  -> new String[][]{{"Tsunomon",      "Lazo≥30 o 1 victoria"}};
-            case "Poyomon"  -> new String[][]{{"Tokomon",       "Lazo≥30 o 1 victoria"}};
-            case "Yuramon"  -> new String[][]{{"Tanemon",       "Lazo≥30 o 1 victoria"}};
-            case "Pichimon" -> new String[][]{{"Bukamon",       "Lazo≥30 o 1 victoria"}};
-            case "Nyokimon" -> new String[][]{{"Yokomon",       "Lazo≥30 o 1 victoria"}};
-            case "Koromon"  -> new String[][]{{"Agumon",        "3 victorias, lazo≥40"}};
-            case "Tsunomon" -> new String[][]{{"Gabumon",       "3 victorias, def≥12"}};
-            case "Tokomon"  -> new String[][]{{"Patamon",       "3 victorias, wis≥12"}};
-            case "Tanemon"  -> new String[][]{{"Palmon",        "3 victorias, wis≥11"}};
-            case "Bukamon"  -> new String[][]{{"Gomamon",       "3 victorias, spd≥14"}};
-            case "Yokomon"  -> new String[][]{{"Biyomon",       "3 victorias, spd≥15"}};
-            case "Agumon"   -> new String[][]{{"Greymon",       "10V, lazo≥50"}};
-            case "Gabumon"  -> new String[][]{{"GarurumonA",    "10V, def≥20"}};
-            case "Patamon"  -> new String[][]{{"Angemon",       "10V, wis≥20"}};
-            case "Palmon"   -> new String[][]{{"Togemon",       "10V, def≥18"}};
-            case "Gomamon"  -> new String[][]{{"Ikkakumon",     "10V, maxHp≥160"}};
-            case "Biyomon"  -> new String[][]{{"Birdramon",     "10V, spd≥22"}};
-            case "Greymon"      -> new String[][]{{"MetalGreymon",   "25V, atk≥40, lazo≥70"}};
-            case "GarurumonA"   -> new String[][]{{"WereGarurumon",  "25V, def≥45, disc≥60"}};
-            case "Angemon"      -> new String[][]{{"MagnaAngemon",   "25V, wis≥45"}};
-            case "Togemon"      -> new String[][]{{"Lillymon",       "25V, wis≥40"}};
-            case "Ikkakumon"    -> new String[][]{{"Zudomon",        "25V, def≥50"}};
-            case "Birdramon"    -> new String[][]{{"Garudamon",      "25V, spd≥50"}};
-            case "MetalGreymon" -> new String[][]{{"WarGreymon",     "50V, atk≥80, lazo≥90, abi≥20"}};
-            case "WereGarurumon"-> new String[][]{{"MetalGarurumon", "50V, def≥80, abi≥20"}};
-            case "MagnaAngemon" -> new String[][]{{"Seraphimon",     "50V, wis≥90, abi≥20"}};
-            case "Lillymon"     -> new String[][]{{"Rosemon",        "50V, wis≥85, lazo≥85, abi≥20"}};
-            case "Zudomon"      -> new String[][]{{"MarineAngemon",  "50V, maxHp≥400, abi≥20"}};
-            case "Garudamon"    -> new String[][]{{"Phoenixmon",     "50V, spd≥90, abi≥20"}};
+            case "Botamon"  -> new String[][]{{"Koromon",       "Lazo>=30 o 1 victoria"}};
+            case "Punimon"  -> new String[][]{{"Tsunomon",      "Lazo>=30 o 1 victoria"}};
+            case "Poyomon"  -> new String[][]{{"Tokomon",       "Lazo>=30 o 1 victoria"}};
+            case "Yuramon"  -> new String[][]{{"Tanemon",       "Lazo>=30 o 1 victoria"}};
+            case "Pichimon" -> new String[][]{{"Bukamon",       "Lazo>=30 o 1 victoria"}};
+            case "Nyokimon" -> new String[][]{{"Yokomon",       "Lazo>=30 o 1 victoria"}};
+            case "Koromon"  -> new String[][]{{"Agumon",        "3 victorias, lazo>=40"}};
+            case "Tsunomon" -> new String[][]{{"Gabumon",       "3 victorias, def>=12"}};
+            case "Tokomon"  -> new String[][]{{"Patamon",       "3 victorias, wis>=12"}};
+            case "Tanemon"  -> new String[][]{{"Palmon",        "3 victorias, wis>=11"}};
+            case "Bukamon"  -> new String[][]{{"Gomamon",       "3 victorias, spd>=14"}};
+            case "Yokomon"  -> new String[][]{{"Biyomon",       "3 victorias, spd>=15"}};
+            case "Agumon"   -> new String[][]{{"Greymon",       "10V, lazo>=50"}};
+            case "Gabumon"  -> new String[][]{{"GarurumonA",    "10V, def>=20"}};
+            case "Patamon"  -> new String[][]{{"Angemon",       "10V, wis>=20"}};
+            case "Palmon"   -> new String[][]{{"Togemon",       "10V, def>=18"}};
+            case "Gomamon"  -> new String[][]{{"Ikkakumon",     "10V, maxHp>=160"}};
+            case "Biyomon"  -> new String[][]{{"Birdramon",     "10V, spd>=22"}};
+            case "Greymon"      -> new String[][]{{"MetalGreymon",   "25V, atk>=40, lazo>=70"}};
+            case "GarurumonA"   -> new String[][]{{"WereGarurumon",  "25V, def>=45, disc>=60"}};
+            case "Angemon"      -> new String[][]{{"MagnaAngemon",   "25V, wis>=45"}};
+            case "Togemon"      -> new String[][]{{"Lillymon",       "25V, wis>=40"}};
+            case "Ikkakumon"    -> new String[][]{{"Zudomon",        "25V, def>=50"}};
+            case "Birdramon"    -> new String[][]{{"Garudamon",      "25V, spd>=50"}};
+            case "MetalGreymon" -> new String[][]{{"WarGreymon",     "50V, atk>=80, lazo>=90, abi>=20"}};
+            case "WereGarurumon"-> new String[][]{{"MetalGarurumon", "50V, def>=80, abi>=20"}};
+            case "MagnaAngemon" -> new String[][]{{"Seraphimon",     "50V, wis>=90, abi>=20"}};
+            case "Lillymon"     -> new String[][]{{"Rosemon",        "50V, wis>=85, lazo>=85, abi>=20"}};
+            case "Zudomon"      -> new String[][]{{"MarineAngemon",  "50V, maxHp>=400, abi>=20"}};
+            case "Garudamon"    -> new String[][]{{"Phoenixmon",     "50V, spd>=90, abi>=20"}};
             default -> new String[0][0];
         };
     }

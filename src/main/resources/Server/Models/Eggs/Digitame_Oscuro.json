@@ -1,5 +1,5 @@
 {
-  "Model": "NPC/Models/Eggs/DigitamaDragon1.blockymodel",
+  "Model": "NPC/Models/Eggs/Egg.blockymodel",
   "HitBox": {
     "Max": {
       "X": 0.2,
@@ -15,5 +15,5 @@
   "MinScale": 2,
   "MaxScale": 3,
   "Trails": [],
-  "Texture": "NPC/Textures/Eggs/Egg1.png"
+  "Texture": "NPC/Textures/Eggs/DigitamaOscuro.png"
 }

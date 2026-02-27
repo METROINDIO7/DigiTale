@@ -1,0 +1,106 @@
+{
+  "Environments": [
+    "Env_Zone3_Tundra",
+    "Env_Zone3_Forests",
+    "Env_Zone3_Caves_Tundra"
+  ],
+  "NPCs": [
+    {
+      "Weight": 28,
+      "SpawnBlockSet": "Soil",
+      "Id": "Poyomon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 28,
+      "SpawnBlockSet": "Soil",
+      "Id": "Pichimon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Pabumon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 24,
+      "SpawnBlockSet": "Soil",
+      "Id": "Paomon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 22,
+      "SpawnBlockSet": "Soil",
+      "Id": "Pusumon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 22,
+      "SpawnBlockSet": "Soil",
+      "Id": "Chibomon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 22,
+      "SpawnBlockSet": "Rock_Ice",
+      "Id": "Cotsucomon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 22,
+      "SpawnBlockSet": "IceAndSnow",
+      "Id": "Petitmon_Salvaje",
+      "Flock": {
+        "Size": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "Weight": 30,
+      "SpawnBlockSet": "IceAndSnow",
+      "Id": "Yukimibotamon_Salvaje"
+    }
+  ],
+  "DayTimeRange": [
+    6,
+    20
+  ]
+}

@@ -4,7 +4,7 @@ Group {
   LayoutMode: CenterMiddle;
   $C.@Container #StatusPanel {
     Background: (Color: #9395F5);
-    Anchor: (Width: 460, Height: 400);
+    Anchor: (Width: 460, Height: 450);
 
     #Title {
       $C.@Title {

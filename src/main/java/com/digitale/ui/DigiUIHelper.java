@@ -13,7 +13,8 @@ public class DigiUIHelper {
         eventBuilder.addEventBinding(
                 CustomUIEventBindingType.Activating,
                 elementId,
-                new EventData().append(codecKey, valor)
+                new EventData().append(codecKey, valor),
+                false
         );
     }
 }

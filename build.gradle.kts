@@ -1,7 +1,7 @@
 plugins {
     id("java")
     // Se añade el plugin de Shadow para habilitar la tarea 'shadowJar'
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.0.0-beta12"
 }
 
 group = "org.example"
@@ -23,6 +23,8 @@ dependencies {
 
     // En lugar de usar un archivo local, se recomienda la dependencia oficial [4]
     implementation("com.hypixel.hytale:Server:+")
+    // Se añade Gson para la serialización y deserialización de datos
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 tasks.test {

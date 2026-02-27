@@ -28,7 +28,7 @@ public class DigiCuidarMenuUI extends InteractiveCustomUIPage<DigiCuidarMenuUI.D
     public static class Data {
         public static final BuilderCodec<Data> CODEC = BuilderCodec
             .builder(Data.class, Data::new)
-            .append(new KeyedCodec<>("@Accion", Codec.STRING),
+            .append(new KeyedCodec<>("Accion", Codec.STRING),
                     (data, v) -> data.accion = v,
                     data -> data.accion)
             .add()
@@ -52,12 +52,12 @@ public class DigiCuidarMenuUI extends InteractiveCustomUIPage<DigiCuidarMenuUI.D
         uiBuilder.append("Pages/DigiCuidarMenu.ui");
         actualizarEstados(uiBuilder);
 
-        DigiUIHelper.bindClick(eventBuilder, "#BtnAlimentarA", "@Accion", "alimentar_a");
-        DigiUIHelper.bindClick(eventBuilder, "#BtnAlimentarB", "@Accion", "alimentar_b");
-        DigiUIHelper.bindClick(eventBuilder, "#BtnMimarA", "@Accion", "mimar_a");
-        DigiUIHelper.bindClick(eventBuilder, "#BtnMimarB", "@Accion", "mimar_b");
-        DigiUIHelper.bindClick(eventBuilder, "#BtnDescansarAB", "@Accion", "descansar_ab");
-        DigiUIHelper.bindClick(eventBuilder, "#BtnVolver", "@Accion", "volver");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnAlimentarA", "Accion", "alimentar_a");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnAlimentarB", "Accion", "alimentar_b");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnMimarA", "Accion", "mimar_a");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnMimarB", "Accion", "mimar_b");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnDescansarAB", "Accion", "descansar_ab");
+        DigiUIHelper.bindClick(eventBuilder, "#BtnVolver", "Accion", "volver");
     }
 
     @Override
@@ -77,9 +77,9 @@ public class DigiCuidarMenuUI extends InteractiveCustomUIPage<DigiCuidarMenuUI.D
         String resultado = aplicarCuidado(data.accion, datos);
 
         UICommandBuilder b = new UICommandBuilder();
-        b.set("#Resultado.TextSpans", Message.raw(resultado));
+        b.set("#Resultado.Text", resultado);
         actualizarEstados(b);
-        sendUpdate(b);
+        sendUpdate(b, null, false);
     }
 
     private String aplicarCuidado(String accion, DatosJugador datos) {
@@ -98,7 +98,7 @@ public class DigiCuidarMenuUI extends InteractiveCustomUIPage<DigiCuidarMenuUI.D
     }
 
     private String cuidar(DatoDigimon d, String accion) {
-        if (d == null || !d.vivo) return "Sin compañero";
+        if (d == null || !d.vivo) return "Sin companero";
         return switch (accion) {
             case "alimentar" -> {
                 d.alimentar(30);
@@ -120,11 +120,11 @@ public class DigiCuidarMenuUI extends InteractiveCustomUIPage<DigiCuidarMenuUI.D
         DatosJugador datos = AlmacenJugadores.obtener(playerRef.getUuid());
         String textA = datos.companeroA != null
             ? "A - Hambre: " + datos.companeroA.hambre + "/100  |  Energia: " + datos.companeroA.energia + "/100"
-            : "A - Sin compañero";
+            : "A - Sin companero";
         String textB = datos.companeroB != null
             ? "B - Hambre: " + datos.companeroB.hambre + "/100  |  Energia: " + datos.companeroB.energia + "/100"
-            : "B - Sin compañero";
-        b.set("#EstadoA.TextSpans", Message.raw(textA));
-        b.set("#EstadoB.TextSpans", Message.raw(textB));
+            : "B - Sin companero";
+        b.set("#EstadoA.Text", textA);
+        b.set("#EstadoB.Text", textB);
     }
 }

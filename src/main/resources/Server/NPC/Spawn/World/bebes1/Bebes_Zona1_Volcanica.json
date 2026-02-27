@@ -1,0 +1,62 @@
+{
+  "Environments": [
+    "Env_Zone1_Caves_Volcanic_T1"
+  ],
+  "NPCs": [
+    {
+      "Weight": 22,
+      "SpawnBlockSet": "Rock",
+      "Id": "Bommon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 22,
+      "SpawnBlockSet": "Rock",
+      "Id": "Bubbmon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 20,
+      "SpawnBlockSet": "Rock",
+      "Id": "Punimon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 16,
+      "SpawnBlockSet": "Rock",
+      "Id": "Algomon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    },
+    {
+      "Weight": 16,
+      "SpawnBlockSet": "Rock",
+      "Id": "Dokimon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    },
+    {
+      "Weight": 16,
+      "SpawnBlockSet": "Rock",
+      "Id": "Ketomon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    },
+    {
+      "Weight": 14,
+      "SpawnBlockSet": "Rock",
+      "Id": "Kuramon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    },
+    {
+      "Weight": 14,
+      "SpawnBlockSet": "Rock",
+      "Id": "Puyomon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    },
+    {
+      "Weight": 10,
+      "SpawnBlockSet": "Rock",
+      "Id": "Arkadimon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    }
+  ],
+  "DayTimeRange": [0, 24]
+}

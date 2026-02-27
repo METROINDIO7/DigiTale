@@ -1,0 +1,41 @@
+{
+  "Environments": [
+    "Env_Zone2_Deserts",
+    "Env_Zone2_Savanna",
+    "Env_Zone2_Caves_Deserts",
+    "Env_Zone2_Caves_Savanna"
+  ],
+  "NPCs": [
+    {
+      "Weight": 35,
+      "SpawnBlockSet": "Soil",
+      "Id": "Jyarimon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 32,
+      "SpawnBlockSet": "Soil",
+      "Id": "Choromon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 28,
+      "SpawnBlockSet": "Soil",
+      "Id": "Sunamon_Salvaje",
+      "Flock": { "Size": [1, 2] }
+    },
+    {
+      "Weight": 14,
+      "SpawnBlockSet": "Soil",
+      "Id": "Bombmon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    },
+    {
+      "Weight": 14,
+      "SpawnBlockSet": "Soil",
+      "Id": "Zerimon_Salvaje",
+      "Flock": { "Size": [1, 1] }
+    }
+  ],
+  "DayTimeRange": [6, 20]
+}

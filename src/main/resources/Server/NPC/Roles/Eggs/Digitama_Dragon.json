@@ -2,7 +2,7 @@
   "StartState": "Idle",
   "DefaultSubState": "Default",
   "Type": "Generic",
-  "Appearance": "Digitame_Egg_A",
+  "Appearance": "Digitame_Dragon",
   "Invulnerable": true,
   "MotionControllerList": [
     {
@@ -39,7 +39,7 @@
               "Actions": [
                 {
                   "Type": "DropItem",
-                  "Item": "Digitame_Egg_Spawner",
+                  "Item": "Digitame_Dragon",
                   "Distance": [
                     0,
                     0
