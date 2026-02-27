@@ -1,0 +1,191 @@
+// ============================================================
+// HUD DE BATALLA DIGITALE
+// Overlay persistente durante el combate.
+//
+// Muestra en pantalla (sin capturar input):
+//   - HP y OP de los dos Digimon
+//   - HP del enemigo
+//   - Indicador de ExE disponible
+//   - Alerta cuando el enemigo carga ataque
+//
+// Se activa al iniciar combate y desaparece al terminar.
+// Compatible con MultipleHUD / AutoMultiHud.
+// ============================================================
+
+// ════════════════════════════════════════════════════════════
+// LAYOUT DEL HUD
+// Root Full: 0 para cubrir pantalla, contenido en esquinas
+// ════════════════════════════════════════════════════════════
+Group {
+    Anchor: (Full: 0);
+
+    // ── Panel equipo (esquina inferior izquierda) ─────────────
+    Group #HudEquipo {
+        Anchor: (Bottom: 14, Left: 14, Width: 220, Height: 116);
+        Background: #060e1c(0.88);
+        LayoutMode: Top;
+        Padding: (Horizontal: 10, Vertical: 7);
+
+        // Barra decorativa superior (azul DigiTale)
+        Group {
+            Anchor: (Height: 2, Bottom: 7);
+            Background: #00bfff(0.8);
+        }
+
+        // ── Digimon A ─────────────────────────────────────────
+        Group {
+            Anchor: (Height: 38, Bottom: 5);
+            LayoutMode: Top;
+
+            Group {
+                Anchor: (Height: 16);
+                LayoutMode: Left;
+                Label #HudNombreA {
+                    Style: LabelStyle(FontSize: 12, TextColor: #00bfff, RenderBold: true);
+                    Text: "Agumon";
+                    Anchor: (Height: 14);
+                }
+                Group { FlexWeight: 1; }
+                Label #HudHpTextoA {
+                    Style: LabelStyle(FontSize: 11, TextColor: #d0e8ff, HorizontalAlignment: End);
+                    Text: "100/100";
+                    Anchor: (Height: 14);
+                }
+            }
+            Group { Anchor: (Height: 3); }
+            Group {
+                Anchor: (Height: 10);
+                LayoutMode: Left;
+                Group {
+                    Anchor: (Width: 140, Height: 8);
+                    Background: #0a1a0a;
+                    Group #HudBarraHpA {
+                        Anchor: (Left: 0, Top: 0, Bottom: 0, Width: 140);
+                        Background: #00cc44;
+                    }
+                }
+                Group { Anchor: (Width: 8); }
+                Label #HudOpTextoA {
+                    Style: LabelStyle(FontSize: 10, TextColor: #aa77ff);
+                    Text: "0 OP";
+                    Anchor: (Height: 10);
+                }
+            }
+        }
+
+        // Separador
+        Group { Anchor: (Height: 1, Bottom: 5); Background: #1a2e48; }
+
+        // ── Digimon B ─────────────────────────────────────────
+        Group {
+            Anchor: (Height: 38);
+            LayoutMode: Top;
+
+            Group {
+                Anchor: (Height: 16);
+                LayoutMode: Left;
+                Label #HudNombreB {
+                    Style: LabelStyle(FontSize: 12, TextColor: #ff9900, RenderBold: true);
+                    Text: "Gabumon";
+                    Anchor: (Height: 14);
+                }
+                Group { FlexWeight: 1; }
+                Label #HudHpTextoB {
+                    Style: LabelStyle(FontSize: 11, TextColor: #d0e8ff, HorizontalAlignment: End);
+                    Text: "90/90";
+                    Anchor: (Height: 14);
+                }
+            }
+            Group { Anchor: (Height: 3); }
+            Group {
+                Anchor: (Height: 10);
+                LayoutMode: Left;
+                Group {
+                    Anchor: (Width: 140, Height: 8);
+                    Background: #0a1a0a;
+                    Group #HudBarraHpB {
+                        Anchor: (Left: 0, Top: 0, Bottom: 0, Width: 140);
+                        Background: #ff8800;
+                    }
+                }
+                Group { Anchor: (Width: 8); }
+                Label #HudOpTextoB {
+                    Style: LabelStyle(FontSize: 10, TextColor: #aa77ff);
+                    Text: "0 OP";
+                    Anchor: (Height: 10);
+                }
+            }
+        }
+    }
+
+    // ── Panel enemigo (esquina superior centrada) ─────────────
+    Group #HudEnemigo {
+        Anchor: (Top: 14, Left: 160, Right: 160, Height: 46);
+        Background: #140606(0.88);
+        LayoutMode: Top;
+        Padding: (Horizontal: 14, Vertical: 6);
+
+        Group {
+            Anchor: (Height: 16);
+            LayoutMode: Left;
+            Label #HudNombreEnemigo {
+                Style: LabelStyle(FontSize: 13, TextColor: #ff5555, RenderBold: true);
+                Text: "Agumon [FUEGO]";
+                Anchor: (Height: 14);
+            }
+            Group { FlexWeight: 1; }
+            Label #HudHpTextoEnemigo {
+                Style: LabelStyle(FontSize: 12, TextColor: #ffaaaa, HorizontalAlignment: End);
+                Text: "100/100";
+                Anchor: (Height: 14);
+            }
+        }
+        Group { Anchor: (Height: 3); }
+        Group {
+            Anchor: (Height: 10);
+            Background: #2a0808;
+            Group #HudBarraHpEnemigo {
+                Anchor: (Left: 0, Top: 0, Bottom: 0, Width: 200);
+                Background: #cc2222;
+            }
+        }
+    }
+
+    // ── Alerta de carga (centro pantalla) ─────────────────────
+    Group #HudAlerta {
+        Anchor: (Top: 68, Left: 160, Right: 160, Height: 26);
+        Background: #2a2000(0.9);
+        LayoutMode: CenterMiddle;
+        Visible: false;
+        Label #HudTextoAlerta {
+            Style: LabelStyle(FontSize: 13, TextColor: #ffee00, RenderBold: true, HorizontalAlignment: Center);
+            Text: "ENEMIGO CARGANDO ATAQUE!";
+            Anchor: (Height: 16);
+        }
+    }
+
+    // ── Indicador ExE (esquina inferior derecha) ──────────────
+    Group #HudExe {
+        Anchor: (Bottom: 14, Right: 14, Width: 140, Height: 34);
+        Background: #1a1400(0.88);
+        LayoutMode: CenterMiddle;
+        Visible: false;
+        Label #HudTextoExe {
+            Style: LabelStyle(FontSize: 13, TextColor: #ffee44, RenderBold: true, HorizontalAlignment: Center);
+            Text: "ExE DISPONIBLE!";
+            Anchor: (Height: 16);
+        }
+    }
+
+    // ── Indicador de ronda (esquina superior derecha) ─────────
+    Group #HudRonda {
+        Anchor: (Top: 14, Right: 14, Width: 90, Height: 28);
+        Background: #060e1c(0.82);
+        LayoutMode: CenterMiddle;
+        Label #HudTextoRonda {
+            Style: LabelStyle(FontSize: 12, TextColor: #6e7da1, HorizontalAlignment: Center);
+            Text: "Ronda 1";
+            Anchor: (Height: 14);
+        }
+    }
+}

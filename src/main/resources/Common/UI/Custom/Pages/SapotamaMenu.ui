@@ -1,0 +1,117 @@
+@GreenButtonStyle = TextButtonStyle(
+    Default: (Background: #1a5a1a, LabelStyle: (FontSize: 15, TextColor: #d0ffd8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #2a6a2a, LabelStyle: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #0a4a0a, LabelStyle: (FontSize: 15, TextColor: #d0ffd8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@RedButtonStyle = TextButtonStyle(
+    Default: (Background: #6a1a1a, LabelStyle: (FontSize: 15, TextColor: #ffd0d0, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #7a2a2a, LabelStyle: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #5a0a0a, LabelStyle: (FontSize: 15, TextColor: #ffd0d0, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@BlueButtonStyle = TextButtonStyle(
+    Default: (Background: #1a4a8a, LabelStyle: (FontSize: 15, TextColor: #d0e8ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #2a5a9a, LabelStyle: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #0a3a7a, LabelStyle: (FontSize: 15, TextColor: #d0e8ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@SecondaryButtonStyle = TextButtonStyle(
+    Default: (Background: #2b3542, LabelStyle: (FontSize: 14, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #3b4552, LabelStyle: (FontSize: 14, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1b2532, LabelStyle: (FontSize: 14, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+Group {
+    Anchor: (Full: 0);
+    Background: #000000(0.6);
+    LayoutMode: CenterMiddle;
+
+    Group #SapotamaPanel {
+        Anchor: (Width: 380, Height: 400);
+        Background: #141c26(0.98);
+        LayoutMode: Top;
+
+        Group {
+            Anchor: (Height: 3);
+            Background: #ff6a00;
+        }
+
+        Group {
+            Anchor: (Height: 60);
+            Background: #0a1119(0.95);
+            LayoutMode: CenterMiddle;
+            Label {
+                Text: "Sapotama";
+                Anchor: (Height: 30);
+                Style: LabelStyle(FontSize: 26, TextColor: #ff6a00, RenderBold: true, HorizontalAlignment: Center);
+            }
+        }
+
+        Group {
+            Anchor: (Height: 1);
+            Background: #2b3542;
+        }
+
+        Group {
+            Anchor: (Height: 36);
+            Background: #0a1119(0.95);
+            LayoutMode: CenterMiddle;
+            Label #LblEquipo {
+                Text: "Sin companeros aun";
+                Anchor: (Height: 20);
+                Style: LabelStyle(FontSize: 13, TextColor: #6e7da1, HorizontalAlignment: Center);
+            }
+        }
+
+        Group {
+            Anchor: (Height: 1);
+            Background: #2b3542;
+        }
+
+        Group {
+            FlexWeight: 1;
+            LayoutMode: Top;
+            Padding: (Full: 20);
+
+            TextButton #BtnPasear {
+                Text: "Pasear Companeros";
+                Anchor: (Height: 52);
+                Style: @GreenButtonStyle;
+            }
+
+            Group { Anchor: (Height: 10); }
+
+            TextButton #BtnBatallar {
+                Text: "Iniciar Batalla";
+                Anchor: (Height: 52);
+                Style: @RedButtonStyle;
+            }
+
+            Group { Anchor: (Height: 10); }
+
+            TextButton #BtnEquipo {
+                Text: "Gestionar Equipo";
+                Anchor: (Height: 52);
+                Style: @BlueButtonStyle;
+            }
+
+            Group { FlexWeight: 1; }
+
+            Group {
+                Anchor: (Height: 1);
+                Background: #2b3542;
+            }
+
+            Group { Anchor: (Height: 10); }
+
+            TextButton #BtnCerrar {
+                Text: "Cerrar";
+                Anchor: (Height: 36);
+                Style: @SecondaryButtonStyle;
+            }
+        }
+
+        Group {
+            Anchor: (Height: 3);
+            Background: #ff6a00;
+        }
+    }
+}

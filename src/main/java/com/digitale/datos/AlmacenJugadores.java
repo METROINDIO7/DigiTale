@@ -1,5 +1,7 @@
 package com.digitale.datos;
 
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,6 +32,18 @@ public class AlmacenJugadores {
         // Modo de combate Next Order: elegir táctica de cada compañero
         public String tacticaA = "BALANCEADO"; // AGRESIVO, BALANCEADO, DEFENSIVO
         public String tacticaB = "BALANCEADO";
+
+        // Estado de paseo — compañeros spawneados en el mundo
+        public boolean paseoActivo = false;
+        public Ref<EntityStore> refPaseoA = null;
+        public Ref<EntityStore> refPaseoB = null;
+
+        // Sistema de batalla nuevo (UI-driven)
+        public com.digitale.datos.EstadoCombate combate = null;
+
+        public boolean enCombateUI() {
+            return combate != null && combate.activa;
+        }
 
         public void iniciarCombate(String nombre, String elem,
                                    int hp, int atk, int def, int exp) {
@@ -67,6 +81,11 @@ public class AlmacenJugadores {
 
     public static DatosJugador obtener(UUID uuid) {
         return DATOS.computeIfAbsent(uuid, k -> new DatosJugador());
+    }
+
+    /** Alias de obtener() — retorna null si no existe aún el jugador */
+    public static DatosJugador getDatos(UUID uuid) {
+        return DATOS.get(uuid);
     }
 
     public static boolean existe(UUID uuid) {

@@ -1,0 +1,208 @@
+@OrdenButtonStyle = TextButtonStyle(
+    Default: (Background: #2a1a6a, LabelStyle: (FontSize: 13, TextColor: #d0c0ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #3a2a7a, LabelStyle: (FontSize: 13, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1a0a5a, LabelStyle: (FontSize: 13, TextColor: #d0c0ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@SpecialButtonStyle = TextButtonStyle(
+    Default: (Background: #6a2a1a, LabelStyle: (FontSize: 13, TextColor: #ffd0a0, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #7a3a2a, LabelStyle: (FontSize: 13, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #5a1a0a, LabelStyle: (FontSize: 13, TextColor: #ffd0a0, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@ExeButtonStyle = TextButtonStyle(
+    Default: (Background: #5a4a00, LabelStyle: (FontSize: 14, TextColor: #ffee44, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #7a6a00, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #3a2a00, LabelStyle: (FontSize: 14, TextColor: #ffee44, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@CerrarButtonStyle = TextButtonStyle(
+    Default: (Background: #2b3542, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #3b4552, LabelStyle: (FontSize: 13, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1b2532, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+Group {
+    Anchor: (Full: 0);
+    Background: #000000(0.7);
+    LayoutMode: CenterMiddle;
+
+    Group #RingPanel {
+        Anchor: (Width: 480, Height: 500);
+        Background: #0d0a1a(0.99);
+        LayoutMode: Top;
+
+        Group { Anchor: (Height: 3); Background: #8844ff; }
+
+        Group {
+            Anchor: (Height: 52);
+            Background: #080618(0.95);
+            LayoutMode: CenterMiddle;
+            Label {
+                Text: "ORDER RING";
+                Anchor: (Height: 28);
+                Style: LabelStyle(FontSize: 22, TextColor: #aa66ff, RenderBold: true, HorizontalAlignment: Center);
+            }
+        }
+
+        Group { Anchor: (Height: 1); Background: #2b2040; }
+
+        Group {
+            Anchor: (Height: 50);
+            Background: #0a0818(0.95);
+            LayoutMode: Top;
+            Padding: (Horizontal: 16, Vertical: 8);
+            Group {
+                Anchor: (Height: 16);
+                LayoutMode: Left;
+                Label #LblOpRingA {
+                    Text: "OP de Agumon: 0";
+                    FlexWeight: 1;
+                    Style: LabelStyle(FontSize: 12, TextColor: #aa88ff);
+                    Anchor: (Height: 16);
+                }
+                Label #LblOpRingB {
+                    Text: "OP de Gabumon: 0";
+                    FlexWeight: 1;
+                    Style: LabelStyle(FontSize: 12, TextColor: #aa88ff, HorizontalAlignment: Right);
+                    Anchor: (Height: 16);
+                }
+            }
+            Group { Anchor: (Height: 4); }
+            Label #LblOpTotal {
+                Text: "TOTAL: 0 OP";
+                Anchor: (Height: 14);
+                Style: LabelStyle(FontSize: 11, TextColor: #6e7da1, HorizontalAlignment: Center);
+            }
+        }
+
+        Group { Anchor: (Height: 1); Background: #2b2040; }
+
+        Group {
+            FlexWeight: 1;
+            LayoutMode: Top;
+            Padding: (Horizontal: 16, Vertical: 12);
+
+            Group {
+                Anchor: (Height: 14);
+                LayoutMode: Left;
+                Label #LblCosteGuard {
+                    Text: "Guard = 10 OP";
+                    Anchor: (Width: 200);
+                    Style: LabelStyle(FontSize: 10, TextColor: #6e7da1);
+                }
+                Label #LblCosteAttack {
+                    Text: "Order Attack = 30 OP";
+                    FlexWeight: 1;
+                    Style: LabelStyle(FontSize: 10, TextColor: #6e7da1, HorizontalAlignment: Right);
+                    Anchor: (Height: 14);
+                }
+            }
+
+            Group { Anchor: (Height: 8); }
+
+            Group {
+                Anchor: (Height: 42);
+                LayoutMode: Left;
+                TextButton #BtnGuardA {
+                    Text: "Guard A (10)";
+                    Anchor: (Width: 210);
+                    Style: @OrdenButtonStyle;
+                }
+                Group { Anchor: (Width: 8); }
+                TextButton #BtnGuardB {
+                    Text: "Guard B (10)";
+                    FlexWeight: 1;
+                    Style: @OrdenButtonStyle;
+                }
+            }
+
+            Group { Anchor: (Height: 8); }
+
+            Group {
+                Anchor: (Height: 42);
+                LayoutMode: Left;
+                TextButton #BtnAttackA {
+                    Text: "Order Attack A (30)";
+                    Anchor: (Width: 210);
+                    Style: @OrdenButtonStyle;
+                }
+                Group { Anchor: (Width: 8); }
+                TextButton #BtnAttackB {
+                    Text: "Order Attack B (30)";
+                    FlexWeight: 1;
+                    Style: @OrdenButtonStyle;
+                }
+            }
+
+            Group { Anchor: (Height: 12); }
+
+            Group {
+                Anchor: (Height: 14);
+                LayoutMode: Left;
+                Label #LblCosteSpecial {
+                    Text: "Special = 150 OP";
+                    Anchor: (Width: 200);
+                    Style: LabelStyle(FontSize: 10, TextColor: #6e7da1);
+                }
+                Label #LblCosteExe {
+                    Text: "ExE = 300 OP total";
+                    FlexWeight: 1;
+                    Style: LabelStyle(FontSize: 10, TextColor: #6e7da1, HorizontalAlignment: Right);
+                    Anchor: (Height: 14);
+                }
+            }
+
+            Group { Anchor: (Height: 8); }
+
+            Group {
+                Anchor: (Height: 42);
+                LayoutMode: Left;
+                TextButton #BtnSpecialA {
+                    Text: "ESPECIAL A (150)";
+                    Anchor: (Width: 210);
+                    Style: @SpecialButtonStyle;
+                }
+                Group { Anchor: (Width: 8); }
+                TextButton #BtnSpecialB {
+                    Text: "ESPECIAL B (150)";
+                    FlexWeight: 1;
+                    Style: @SpecialButtonStyle;
+                }
+            }
+
+            Group { Anchor: (Height: 12); }
+
+            Group {
+                Anchor: (Height: 1);
+                Background: #2b2040;
+            }
+
+            Group { Anchor: (Height: 8); }
+
+            Label #LblExeEstado {
+                Text: "ExE: acumula mas OP";
+                Anchor: (Height: 16);
+                Style: LabelStyle(FontSize: 12, TextColor: #ffee44, HorizontalAlignment: Center);
+            }
+
+            Group { Anchor: (Height: 6); }
+
+            TextButton #BtnExe {
+                Text: "ExE FUSION (300 OP + Lazo alto)";
+                Anchor: (Height: 46);
+                Style: @ExeButtonStyle;
+            }
+
+            Group { FlexWeight: 1; }
+
+            Group { Anchor: (Height: 1); Background: #2b2040; }
+            Group { Anchor: (Height: 10); }
+
+            TextButton #BtnCerrarRing {
+                Text: "Volver al combate";
+                Anchor: (Height: 38);
+                Style: @CerrarButtonStyle;
+            }
+        }
+
+        Group { Anchor: (Height: 3); Background: #8844ff; }
+    }
+}

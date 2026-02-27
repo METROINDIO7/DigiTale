@@ -1,0 +1,263 @@
+@SupportButtonStyle = TextButtonStyle(
+    Default: (Background: #2a6a2a, LabelStyle: (FontSize: 16, TextColor: #d0ffd8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #3a8a3a, LabelStyle: (FontSize: 16, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1a5a1a, LabelStyle: (FontSize: 16, TextColor: #d0ffd8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@RingButtonStyle = TextButtonStyle(
+    Default: (Background: #4a2a8a, LabelStyle: (FontSize: 14, TextColor: #e0d0ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #5a3a9a, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #3a1a7a, LabelStyle: (FontSize: 14, TextColor: #e0d0ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@TacticaButtonStyle = TextButtonStyle(
+    Default: (Background: #1b2d3a, LabelStyle: (FontSize: 12, TextColor: #7aaabb, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #2b3d4a, LabelStyle: (FontSize: 12, TextColor: #aaccdd, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #0b1d2a, LabelStyle: (FontSize: 12, TextColor: #7aaabb, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+@HuirButtonStyle = TextButtonStyle(
+    Default: (Background: #2b3542, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Hovered: (Background: #3b4552, LabelStyle: (FontSize: 13, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+    Pressed: (Background: #1b2532, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+Group {
+    Anchor: (Full: 0);
+    Background: #000000(0.65);
+    LayoutMode: CenterMiddle;
+
+    Group #BatallaPanel {
+        Anchor: (Width: 540, Height: 560);
+        Background: #141c26(0.98);
+        LayoutMode: Top;
+
+        Group { Anchor: (Height: 3); Background: #cc2222; }
+
+        Group {
+            Anchor: (Height: 44);
+            Background: #0a1119(0.95);
+            LayoutMode: Left;
+            Padding: (Horizontal: 14);
+            Label {
+                Text: "BATALLA";
+                Anchor: (Height: 24);
+                Style: LabelStyle(FontSize: 18, TextColor: #cc3333, RenderBold: true, VerticalAlignment: Center);
+            }
+            Group { FlexWeight: 1; }
+            Label #LblTurno {
+                Text: "Ronda 1";
+                Anchor: (Height: 18);
+                Style: LabelStyle(FontSize: 13, TextColor: #6e7da1, HorizontalAlignment: Right, VerticalAlignment: Center);
+            }
+        }
+
+        Group { Anchor: (Height: 1); Background: #2b3542; }
+
+        Group {
+            Anchor: (Height: 56);
+            Background: #1a0808(0.95);
+            LayoutMode: Top;
+            Padding: (Horizontal: 14, Vertical: 8);
+
+            Group {
+                Anchor: (Height: 20);
+                LayoutMode: Left;
+                Label #LblEnemigo {
+                    Text: "Agumon [FUEGO]";
+                    Style: LabelStyle(FontSize: 15, TextColor: #ff6060, RenderBold: true);
+                    Anchor: (Height: 20);
+                }
+                Group { FlexWeight: 1; }
+                Label #LblEnemHp {
+                    Text: "HP: 100/100";
+                    Style: LabelStyle(FontSize: 13, TextColor: #ffaaaa, HorizontalAlignment: Right);
+                    Anchor: (Height: 20);
+                }
+            }
+            Group { Anchor: (Height: 4); }
+            Label #LblBarraEnem {
+                Text: "██████████";
+                Anchor: (Height: 14);
+                Style: LabelStyle(FontSize: 13, TextColor: #ff4444);
+            }
+        }
+
+        Group {
+            Anchor: (Height: 22);
+            Background: #1a1206(0.9);
+            LayoutMode: CenterMiddle;
+            Label #LblAlerta {
+                Text: "";
+                Anchor: (Height: 16);
+                Style: LabelStyle(FontSize: 12, TextColor: #ffdd00, HorizontalAlignment: Center);
+            }
+        }
+
+        Group { Anchor: (Height: 1); Background: #2b3542; }
+
+        Group {
+            Anchor: (Height: 106);
+            LayoutMode: Left;
+
+            Group {
+                FlexWeight: 1;
+                Background: #081408(0.95);
+                LayoutMode: Top;
+                Padding: (Full: 10);
+
+                Group {
+                    Anchor: (Height: 16);
+                    LayoutMode: Left;
+                    Group { Anchor: (Width: 3); Background: #00bfff; }
+                    Label {
+                        Text: "  AUTO";
+                        Anchor: (Height: 12);
+                        Style: LabelStyle(FontSize: 9, TextColor: #00bfff, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                    }
+                }
+                Group { Anchor: (Height: 3); }
+                Label #LblNombreA {
+                    Text: "Agumon [EQU]";
+                    Anchor: (Height: 18);
+                    Style: LabelStyle(FontSize: 13, TextColor: #d0e8ff, RenderBold: true);
+                }
+                Label #LblBarraA {
+                    Text: "██████████";
+                    Anchor: (Height: 13);
+                    Style: LabelStyle(FontSize: 12, TextColor: #4aff7f);
+                }
+                Label #LblHpA {
+                    Text: "HP 100/100";
+                    Anchor: (Height: 14);
+                    Style: LabelStyle(FontSize: 11, TextColor: #d0e8ff);
+                }
+                Label #LblOpA {
+                    Text: "OP: 0 ░░░░░░░░░░";
+                    Anchor: (Height: 14);
+                    Style: LabelStyle(FontSize: 11, TextColor: #aa88ff);
+                }
+            }
+
+            Group { Anchor: (Width: 1); Background: #2b3542; }
+
+            Group {
+                FlexWeight: 1;
+                Background: #080814(0.95);
+                LayoutMode: Top;
+                Padding: (Full: 10);
+
+                Group {
+                    Anchor: (Height: 16);
+                    LayoutMode: Left;
+                    Group { Anchor: (Width: 3); Background: #ff9900; }
+                    Label {
+                        Text: "  AUTO";
+                        Anchor: (Height: 12);
+                        Style: LabelStyle(FontSize: 9, TextColor: #ff9900, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                    }
+                }
+                Group { Anchor: (Height: 3); }
+                Label #LblNombreB {
+                    Text: "Gabumon [EQU]";
+                    Anchor: (Height: 18);
+                    Style: LabelStyle(FontSize: 13, TextColor: #d0e8ff, RenderBold: true);
+                }
+                Label #LblBarraB {
+                    Text: "██████████";
+                    Anchor: (Height: 13);
+                    Style: LabelStyle(FontSize: 12, TextColor: #4aff7f);
+                }
+                Label #LblHpB {
+                    Text: "HP 90/90";
+                    Anchor: (Height: 14);
+                    Style: LabelStyle(FontSize: 11, TextColor: #d0e8ff);
+                }
+                Label #LblOpB {
+                    Text: "OP: 0 ░░░░░░░░░░";
+                    Anchor: (Height: 14);
+                    Style: LabelStyle(FontSize: 11, TextColor: #aa88ff);
+                }
+            }
+        }
+
+        Group { Anchor: (Height: 1); Background: #2b3542; }
+
+        Group {
+            Anchor: (Height: 100);
+            Background: #0d1118(0.98);
+            LayoutMode: Top;
+            Padding: (Horizontal: 14, Vertical: 8);
+
+            Label {
+                Text: "LOG:";
+                Anchor: (Height: 13);
+                Style: LabelStyle(FontSize: 9, TextColor: #4a5568, RenderUppercase: true);
+            }
+            Group { Anchor: (Height: 3); }
+            Label #LblLog {
+                Text: "El combate esta por comenzar...";
+                Anchor: (Height: 76);
+                Style: LabelStyle(FontSize: 12, TextColor: #96a9be, VerticalAlignment: Top);
+            }
+        }
+
+        Group { Anchor: (Height: 1); Background: #2b3542; }
+
+        Group {
+            Anchor: (Height: 18);
+            Background: #0a1119(0.95);
+            LayoutMode: CenterMiddle;
+            Label #LblResultado {
+                Text: "";
+                Anchor: (Height: 14);
+                Style: LabelStyle(FontSize: 11, TextColor: #ffdd44, HorizontalAlignment: Center);
+            }
+        }
+
+        Group { Anchor: (Height: 1); Background: #2b3542; }
+
+        Group {
+            Anchor: (Height: 56);
+            LayoutMode: Left;
+            Padding: (Horizontal: 10, Vertical: 8);
+
+            TextButton #BtnSupport {
+                Text: "! SUPPORT !";
+                Anchor: (Width: 140, Height: 40);
+                Style: @SupportButtonStyle;
+            }
+
+            Group { Anchor: (Width: 8); }
+
+            TextButton #BtnOrderRing {
+                Text: "ORDER RING";
+                Anchor: (Width: 130, Height: 40);
+                Style: @RingButtonStyle;
+            }
+
+            Group { FlexWeight: 1; }
+
+            TextButton #BtnTacticaA {
+                Text: "TAC A";
+                Anchor: (Width: 64, Height: 40);
+                Style: @TacticaButtonStyle;
+            }
+
+            Group { Anchor: (Width: 4); }
+
+            TextButton #BtnTacticaB {
+                Text: "TAC B";
+                Anchor: (Width: 64, Height: 40);
+                Style: @TacticaButtonStyle;
+            }
+
+            Group { Anchor: (Width: 8); }
+
+            TextButton #BtnHuir {
+                Text: "Huir";
+                Anchor: (Width: 60, Height: 40);
+                Style: @HuirButtonStyle;
+            }
+        }
+
+        Group { Anchor: (Height: 3); Background: #cc2222; }
+    }
+}
