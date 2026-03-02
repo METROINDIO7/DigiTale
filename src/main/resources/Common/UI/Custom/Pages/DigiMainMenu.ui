@@ -1,99 +1,199 @@
-@PrimaryButtonStyle = TextButtonStyle(
-    Default: (Background: #1a4a8a, LabelStyle: (FontSize: 15, TextColor: #d0e8ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Hovered: (Background: #2a5a9a, LabelStyle: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Pressed: (Background: #0a3a7a, LabelStyle: (FontSize: 15, TextColor: #d0e8ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
-);
-@SecondaryButtonStyle = TextButtonStyle(
-    Default: (Background: #2b3542, LabelStyle: (FontSize: 14, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Hovered: (Background: #3b4552, LabelStyle: (FontSize: 14, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Pressed: (Background: #1b2532, LabelStyle: (FontSize: 14, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
-);
+$C = "../Common.ui";
 
 Group {
-    Anchor: (Full: 0);
-    Background: #000000(0.6);
-    LayoutMode: CenterMiddle;
+  LayoutMode: CenterMiddle;
+  $C.@Container #MainPanel {
+    Background: (Color: #5a6f9e);
+    Anchor: (Width: 750, Height: 520);
 
-    Group #MainPanel {
-        Anchor: (Width: 360, Height: 360);
-        Background: #141c26(0.98);
-        LayoutMode: Top;
-
-        Group {
-            Anchor: (Height: 3);
-            Background: #00bfff;
-        }
-
-        Group {
-            Anchor: (Height: 60);
-            Background: #0a1119(0.95);
-            LayoutMode: CenterMiddle;
-            Label {
-                Text: "DigiTale";
-                Anchor: (Height: 32);
-                Style: LabelStyle(FontSize: 28, TextColor: #00bfff, RenderBold: true, HorizontalAlignment: Center);
-            }
-        }
-
-        Group {
-            Anchor: (Height: 1);
-            Background: #2b3542;
-        }
-
-        Group {
-            FlexWeight: 1;
-            LayoutMode: Top;
-            Padding: (Full: 20);
-
-            TextButton #BtnEstado {
-                Text: "Ver Estado del Equipo";
-                Anchor: (Height: 44);
-                Style: @PrimaryButtonStyle;
-            }
-
-            Group { Anchor: (Height: 8); }
-
-            TextButton #BtnEvolucionar {
-                Text: "Evolucionar";
-                Anchor: (Height: 44);
-                Style: @PrimaryButtonStyle;
-            }
-
-            Group { Anchor: (Height: 8); }
-
-            TextButton #BtnEntrenar {
-                Text: "Entrenar";
-                Anchor: (Height: 44);
-                Style: @PrimaryButtonStyle;
-            }
-
-            Group { Anchor: (Height: 8); }
-
-            TextButton #BtnCuidar {
-                Text: "Cuidar y Alimentar";
-                Anchor: (Height: 44);
-                Style: @PrimaryButtonStyle;
-            }
-
-            Group { FlexWeight: 1; }
-
-            Group {
-                Anchor: (Height: 1);
-                Background: #2b3542;
-            }
-
-            Group { Anchor: (Height: 10); }
-
-            TextButton #BtnCerrar {
-                Text: "Cerrar";
-                Anchor: (Height: 36);
-                Style: @SecondaryButtonStyle;
-            }
-        }
-
-        Group {
-            Anchor: (Height: 3);
-            Background: #00bfff;
-        }
+    #Title {
+      $C.@Title {
+        @Text = "Menu Principal";
+      }
     }
+
+    #Content {
+      LayoutMode: Top;
+
+      // Barra de pestanas
+      Group {
+        Anchor: (Height: 44);
+        LayoutMode: Left;
+        $C.@TextButton #BtnTabEstado {
+          FlexWeight: 1;
+          Anchor: (Height: 40, Top: 2);
+          Text: "Estado";
+        }
+        $C.@TextButton #BtnTabEvolucionar {
+          FlexWeight: 1;
+          Anchor: (Height: 40, Top: 2);
+          Text: "Evolucionar";
+        }
+        $C.@TextButton #BtnTabEntrenar {
+          FlexWeight: 1;
+          Anchor: (Height: 40, Top: 2);
+          Text: "Entrenar";
+        }
+        $C.@TextButton #BtnTabCuidar {
+          FlexWeight: 1;
+          Anchor: (Height: 40, Top: 2);
+          Text: "Cuidar";
+        }
+      }
+
+      // ===================== PESTANA ESTADO =====================
+      Group #TabEstado {
+        Anchor: (Height: 360);
+        LayoutMode: Left;
+        Visible: true;
+
+        Group {
+          FlexWeight: 1;
+          LayoutMode: Top;
+          Label { Anchor: (Height: 20); Text: "Equipo A:"; Style: LabelStyle(FontSize: 13, TextColor: #00bfff, RenderBold: true); }
+          Label #NombreA  { Anchor: (Height: 16); Text: "Nombre: ---"; Style: LabelStyle(FontSize: 12, TextColor: #d0e8ff); }
+          Label #EspecieA { Anchor: (Height: 16); Text: "Especie: ---"; Style: LabelStyle(FontSize: 12, TextColor: #d0e8ff); }
+          Label #ElementoA{ Anchor: (Height: 16); Text: "Elemento: ---"; Style: LabelStyle(FontSize: 12, TextColor: #d0e8ff); }
+          Label #HpA      { Anchor: (Height: 14); Text: "HP: ---";  Style: LabelStyle(FontSize: 11, TextColor: #80ff80); }
+          Label #AtkA     { Anchor: (Height: 14); Text: "ATK: ---"; Style: LabelStyle(FontSize: 11, TextColor: #ff8080); }
+          Label #DefA     { Anchor: (Height: 14); Text: "DEF: ---"; Style: LabelStyle(FontSize: 11, TextColor: #8080ff); }
+          Label #SpdA     { Anchor: (Height: 14); Text: "SPD: ---"; Style: LabelStyle(FontSize: 11, TextColor: #80ffff); }
+          Label #WisA     { Anchor: (Height: 14); Text: "WIS: ---"; Style: LabelStyle(FontSize: 11, TextColor: #ff80ff); }
+          Label #LazoA    { Anchor: (Height: 14); Text: "Lazo: ---"; Style: LabelStyle(FontSize: 11, TextColor: #c0a0ff); }
+          Label #AbiA     { Anchor: (Height: 14); Text: "ABI: ---"; Style: LabelStyle(FontSize: 11, TextColor: #ffd080); }
+          Label #VicA     { Anchor: (Height: 14); Text: "Victorias: ---"; Style: LabelStyle(FontSize: 11, TextColor: #80d8ff); }
+          Label #EnergiaA { Anchor: (Height: 14); Text: "Energia: ---"; Style: LabelStyle(FontSize: 11, TextColor: #80ff80); }
+        }
+
+        Group {
+          FlexWeight: 1;
+          LayoutMode: Top;
+          Label { Anchor: (Height: 20); Text: "Equipo B:"; Style: LabelStyle(FontSize: 13, TextColor: #ff9900, RenderBold: true); }
+          Label #NombreB  { Anchor: (Height: 16); Text: "Nombre: ---"; Style: LabelStyle(FontSize: 12, TextColor: #ffd080); }
+          Label #EspecieB { Anchor: (Height: 16); Text: "Especie: ---"; Style: LabelStyle(FontSize: 12, TextColor: #ffd080); }
+          Label #ElementoB{ Anchor: (Height: 16); Text: "Elemento: ---"; Style: LabelStyle(FontSize: 12, TextColor: #ffd080); }
+          Label #HpB      { Anchor: (Height: 14); Text: "HP: ---";  Style: LabelStyle(FontSize: 11, TextColor: #80ff80); }
+          Label #AtkB     { Anchor: (Height: 14); Text: "ATK: ---"; Style: LabelStyle(FontSize: 11, TextColor: #ff8080); }
+          Label #DefB     { Anchor: (Height: 14); Text: "DEF: ---"; Style: LabelStyle(FontSize: 11, TextColor: #8080ff); }
+          Label #SpdB     { Anchor: (Height: 14); Text: "SPD: ---"; Style: LabelStyle(FontSize: 11, TextColor: #80ffff); }
+          Label #WisB     { Anchor: (Height: 14); Text: "WIS: ---"; Style: LabelStyle(FontSize: 11, TextColor: #ff80ff); }
+          Label #LazoB    { Anchor: (Height: 14); Text: "Lazo: ---"; Style: LabelStyle(FontSize: 11, TextColor: #c0a0ff); }
+          Label #AbiB     { Anchor: (Height: 14); Text: "ABI: ---"; Style: LabelStyle(FontSize: 11, TextColor: #ffd080); }
+          Label #VicB     { Anchor: (Height: 14); Text: "Victorias: ---"; Style: LabelStyle(FontSize: 11, TextColor: #80d8ff); }
+          Label #EnergiaB { Anchor: (Height: 14); Text: "Energia: ---"; Style: LabelStyle(FontSize: 11, TextColor: #80ff80); }
+        }
+      }
+
+      // ===================== PESTANA EVOLUCIONAR =====================
+      Group #TabEvolucionar {
+        Anchor: (Height: 360);
+        LayoutMode: Top;
+        Visible: false;
+
+        Label {
+          Anchor: (Height: 20);
+          Text: "Selecciona a quien evolucionar:";
+          Style: LabelStyle(FontSize: 12, TextColor: #d0e8ff);
+        }
+        Group {
+          Anchor: (Height: 44);
+          LayoutMode: Left;
+          $C.@TextButton #EvoTabA {
+            FlexWeight: 1;
+            Anchor: (Height: 40, Top: 2);
+            Text: "Companero A";
+          }
+          $C.@TextButton #EvoTabB {
+            FlexWeight: 1;
+            Anchor: (Height: 40, Top: 2);
+            Text: "Companero B";
+          }
+        }
+        Group {
+          Anchor: (Height: 60);
+          LayoutMode: Top;
+          Label #InfoNombre  { Anchor: (Height: 20); Text: "Nombre: ---"; Style: LabelStyle(FontSize: 13, TextColor: #ffffff, RenderBold: true); }
+          Label #InfoEspecie { Anchor: (Height: 18); Text: "Especie: ---"; Style: LabelStyle(FontSize: 12, TextColor: #a0cfff); }
+          Label #InfoStats   { Anchor: (Height: 16); Text: "Stats: ---"; Style: LabelStyle(FontSize: 11, TextColor: #80a8c0); }
+        }
+        Group {
+          Anchor: (Height: 130);
+          LayoutMode: Top;
+          Label { Anchor: (Height: 18); Text: "Opciones de evolucion:"; Style: LabelStyle(FontSize: 12, TextColor: #d0e8ff); }
+          $C.@TextButton #BtnEvo1 { Anchor: (Top: 4); Text: "Opcion 1"; }
+          $C.@TextButton #BtnEvo2 { Anchor: (Top: 4); Text: "Opcion 2"; }
+          $C.@TextButton #BtnEvo3 { Anchor: (Top: 4); Text: "Opcion 3"; }
+        }
+        Label #MsgEvolucion {
+          Anchor: (Height: 20);
+          Text: "";
+          Style: LabelStyle(FontSize: 12, TextColor: #4aff7f);
+        }
+      }
+
+      // ===================== PESTANA ENTRENAR =====================
+      Group #TabEntrenar {
+        Anchor: (Height: 360);
+        LayoutMode: Top;
+        Visible: false;
+
+        Label {
+          Anchor: (Height: 18);
+          Text: "Cada stat cuesta 15 de energia.";
+          Style: LabelStyle(FontSize: 12, TextColor: #a0cfff);
+        }
+        $C.@TextButton #BtnAtk { Anchor: (Top: 8); Text: "ATK - Ataque"; }
+        $C.@TextButton #BtnDef { Anchor: (Top: 6); Text: "DEF - Defensa"; }
+        $C.@TextButton #BtnSpd { Anchor: (Top: 6); Text: "SPD - Velocidad"; }
+        $C.@TextButton #BtnWis { Anchor: (Top: 6); Text: "WIS - Sabiduria"; }
+        $C.@TextButton #BtnHp  { Anchor: (Top: 6); Text: "HP - Vitalidad"; }
+        Label #LabelEnergias {
+          Anchor: (Height: 18, Top: 10);
+          Text: "Energia A: ? | Energia B: ?";
+          Style: LabelStyle(FontSize: 12, TextColor: #80ff80);
+        }
+        Label #Resultado {
+          Anchor: (Height: 18, Top: 4);
+          Text: "";
+          Style: LabelStyle(FontSize: 12, TextColor: #ffffff);
+        }
+      }
+
+      // ===================== PESTANA CUIDAR =====================
+      Group #TabCuidar {
+        Anchor: (Height: 360);
+        LayoutMode: Top;
+        Visible: false;
+
+        Label #EstadoA {
+          Anchor: (Height: 18);
+          Text: "A: cargando...";
+          Style: LabelStyle(FontSize: 12, TextColor: #00bfff);
+        }
+        Label #EstadoB {
+          Anchor: (Height: 18, Top: 4);
+          Text: "B: cargando...";
+          Style: LabelStyle(FontSize: 12, TextColor: #ffaa4a);
+        }
+        $C.@TextButton #BtnAlimentarA  { Anchor: (Top: 10); Text: "Alimentar A"; }
+        $C.@TextButton #BtnAlimentarB  { Anchor: (Top: 6);  Text: "Alimentar B"; }
+        $C.@TextButton #BtnMimarA      { Anchor: (Top: 6);  Text: "Mimar A"; }
+        $C.@TextButton #BtnMimarB      { Anchor: (Top: 6);  Text: "Mimar B"; }
+        $C.@TextButton #BtnDescansarAB { Anchor: (Top: 6);  Text: "Descansar A + B"; }
+        Label #MsgCuidado {
+          Anchor: (Height: 18, Top: 8);
+          Text: "";
+          Style: LabelStyle(FontSize: 12, TextColor: #ffffff);
+        }
+      }
+
+      // Cerrar siempre visible
+      $C.@TextButton #BtnCerrar {
+        Background: (Color: #e14c4c);
+        Padding: (Full: 0);
+        Anchor: (Top: 8);
+        Text: "Cerrar";
+      }
+    }
+  }
 }

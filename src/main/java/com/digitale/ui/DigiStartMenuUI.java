@@ -22,11 +22,14 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * UI de bienvenida para elegir los 2 Digimon baby iniciales.
  */
 public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Data> {
+    private static final Logger LOGGER = Logger.getLogger(DigiStartMenuUI.class.getName());
 
     public static class Data {
         public static final BuilderCodec<Data> CODEC = BuilderCodec
@@ -54,6 +57,8 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
                       @Nonnull UIEventBuilder eventBuilder,
                       @Nonnull Store<EntityStore> store) {
 
+        LOGGER.log(Level.INFO, "DigiStartMenuUI.build() - Cargando UI inicial para seleccionar compañeros");
+        
         uiBuilder.append("Pages/DigiStartMenu.ui");
 
         // 6 bebes disponibles
@@ -61,6 +66,8 @@ public class DigiStartMenuUI extends InteractiveCustomUIPage<DigiStartMenuUI.Dat
             DigiUIHelper.bindClick(eventBuilder, "#Btn" + bebe, "Seleccion", bebe);
         }
         DigiUIHelper.bindClick(eventBuilder, "#BtnConfirmar", "Seleccion", "confirmar");
+        
+        LOGGER.log(Level.INFO, "DigiStartMenuUI.build() - UI cargada correctamente");
     }
 
     @Override

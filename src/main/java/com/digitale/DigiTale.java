@@ -65,6 +65,10 @@ public class DigiTale extends JavaPlugin {
             new DigiEvolucionarComando("digi_evolucionar",
                 "Evolucionar: /digi_evolucionar [a|b] [forma]"));
 
+        this.getCommandRegistry().registerCommand(
+            new DigiPasearComando("digi_pasear",
+                "Alternar paseo: /digi_pasear (spawnea/recoge compañeros)"));
+
         getLogger().at(Level.INFO).log("DigiTale cargado correctamente!");
     }
 
@@ -85,12 +89,14 @@ public class DigiTale extends JavaPlugin {
             event -> {
                 Ref<EntityStore> playerStoreRef = event.getPlayerRef();
                 Store<EntityStore> store = playerStoreRef.getStore();
-                PlayerRef playerRef = store.getComponent(
-                    playerStoreRef, PlayerRef.getComponentType());
-                if (playerRef != null) {
-                    getLogger().at(Level.INFO).log(
-                        "DigiTale: jugador listo → " + playerRef.getUsername());
-                }
+                store.getExternalData().getWorld().execute(() -> {
+                    PlayerRef playerRef = store.getComponent(
+                        playerStoreRef, PlayerRef.getComponentType());
+                    if (playerRef != null) {
+                        getLogger().at(Level.INFO).log(
+                            "DigiTale: jugador listo → " + playerRef.getUsername());
+                    }
+                });
             }
         );
 

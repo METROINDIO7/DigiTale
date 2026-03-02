@@ -6,5 +6,15 @@
   "PlayerAnimationsId": "Item",
   "TranslationProperties": {
     "Name": "Sapotama"
-  }
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "Simple"
+        }
+      ]
+    }
+  },
+  "MaxStack": 1
 }

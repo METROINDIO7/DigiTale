@@ -35,8 +35,15 @@ public class AlmacenJugadores {
 
         // Estado de paseo — compañeros spawneados en el mundo
         public boolean paseoActivo = false;
-        public Ref<EntityStore> refPaseoA = null;
-        public Ref<EntityStore> refPaseoB = null;
+        public Ref<?> refPaseoA = null;
+        public Ref<?> refPaseoB = null;
+        
+        // Información de spawn guardada para rastreo
+        public double posSpawnX = 0;
+        public double posSpawnY = 0;
+        public double posSpawnZ = 0;
+        public String rolSpawnA = "";
+        public String rolSpawnB = "";
 
         // Sistema de batalla nuevo (UI-driven)
         public com.digitale.datos.EstadoCombate combate = null;

@@ -1,52 +1,84 @@
-# Correcciones realizadas en SistemaPaseo.java
+# Correcciones y Estado del Sistema de Paseo (SistemaPaseo.java)
 
-## Errores encontrados y solucionados
+**Última actualización:** 1 de Marzo de 2026  
+**Estado:** ✅ Compilando / ⏳ Esperando implementación de NPC spawn API
+
+## 📋 Errores Solucionados
 
 ### 1. **Import faltante: `Entity`**
-**Problema:** La clase `Entity` se usaba en el código pero no estaba importada.
-```java
-import com.hypixel.hytale.server.core.entity.Entity;
-```
-**Solución:** Se agregó el import correcto.
-
----
+**Problema:** La clase `Entity` se usaba pero no estaba importada.  
+**Solución:** ✅ Se agregó el import correcto.
 
 ### 2. **Import faltante: `ArrayList`**
-**Problema:** Se usaba `List` pero no se importaba `ArrayList`.
-```java
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-```
-
----
+**Problema:** Se usaba `List` pero faltaba importar `ArrayList`.  
+**Solución:** ✅ Se agregaron imports necesarios.
 
 ### 3. **Clase `Scheduler` no existe en Hytale**
-**Problema:** El código usaba `Scheduler.schedule()` que no existe en la API de Hytale.
-```java
-// ANTES (INCORRECTO)
-Scheduler.schedule(1, () -> { ... });
-
-// DESPUÉS (CORREGIDO)
-// Búsqueda inmediata sin scheduler
-List<Entity> entidades = getEntitiesInArea(world, pos, 3);
-```
-**Solución:** Se eliminó la dependencia de `Scheduler`.
-
----
+**Problema:** Código usaba `Scheduler.schedule()` que no existe en la API.  
+**Solución:** ✅ Se eliminó la dependencia de Scheduler.
 
 ### 4. **`player.getComponent()` no existe**
-**Problema:** El método `getComponent()` no existe en la clase `Player`.
+**Problema:** Este método no existe en la clase `Player`.  
+**Solución:** ✅ Se reemplazó con `store.getComponent(ref, TransformComponent.class)`.
+
+### 5. **`world.spawnNPC()` no existe**
+**Problema:** Intentamos llamar a método que no existe en la API de Hytale.  
 ```java
 // ANTES (INCORRECTO)
-TransformComponent transform = player.getComponent(TransformComponent.class);
+world.spawnNPC(roleId, new Vector3d(x, y, z));
 
-// DESPUÉS (CORRECTO)
-TransformComponent transform = store.getComponent(ref, TransformComponent.class);
+// DESPUÉS (EN PROGRESO)
+registrarSpawnearNpc(world, playerRef, digimon, roleId, posicion, esA);
 ```
-**Solución:** Se obtiene el componente desde `store` en lugar de desde `player`.
+**Status:** ⏳ Registra solicitudes de spawn para depuración. Requiere investigación del API de spawn de Hytale.
 
 ---
+
+## 🔍 Investigación: API de Spawn de NPCs en Hytale
+
+### Hallazgos:
+1. ✅ **Módulo Spawning existe:** Log muestra: `"[PluginManager] Enabled plugin Hytale:Spawning"`
+2. ✅ **Assets de spawn registrados:** 
+   - `WorldNPCSpawn: 101` configuraciones disponibles
+   - `BeaconNPCSpawn: 80` configuraciones disponibles
+3. ✅ **NPCFlockCommand existe:** Clase `NPCFlockCommand` presente en el JAR
+4. ✅ **Roles de Digimon están registrados:** Archivos JSON en `Server/NPC/Roles/Bebes1/`
+
+### Opciones de Implementación:
+1. **CommandDispatcher** - No encontrado en API pública
+2. **WorldProxy** - Requiere investigación adicional
+3. **NPC Module Direct API** - No expuesto públicamente aún
+4. **Event-based System** - Registrar evento para que sea procesado por servidor
+
+---
+
+## 📊 Estado Actual Completo
+
+### ✅ FUNCIONANDO
+- Sapotama ítem abre UI en tecla F (SwapFrom)
+- Compile sin errores
+- Threading correctamente manejado (WorldThread safe)
+- Auto-redirect para nuevos jugadores ✅
+- Estructura de spawn de NPCs lista para depuración
+
+### ⏳ EN DESARROLLOCON TODO:
+- Implementación real de spawn de NPCs
+- Búsqueda y almacenamiento de referencias de NPCs spawnados
+- Despawn de NPCs al cerrar paseo
+
+### 📝 Logging Implementado:
+- `[SistemaPaseo] ========== SPAWN COMPANIONS REQUEST ==========`
+- `[SistemaPaseo] >>> SPAWN Request [A]` - Detalles de cada spawn
+- `[SistemaPaseo DEBUG]` - Información completa del Digimon
+
+---
+
+## 🛠️ Próximos Pasos
+
+1. **Prueba en servidor:** Iniciar servidor y registrar logs
+2. **Investigar API:** Buscar en documentación de Hytale o ejemplos de mods
+3. **Implementar spawn:** Usar API correcta una vez identificada
+4. **Prueba de funcionalidad:** Verificar que se spawnen NPCs correctamente
 
 ### 5. **`player.executeCommand()` no existe**
 **Problema:** El método `executeCommand()` no existe en la clase `Player`.

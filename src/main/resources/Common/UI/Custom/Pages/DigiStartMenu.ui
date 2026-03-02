@@ -1,160 +1,66 @@
-@PrimaryButtonStyle = TextButtonStyle(
-    Default: (Background: #1a4a8a, LabelStyle: (FontSize: 14, TextColor: #d0e8ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Hovered: (Background: #2a5a9a, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Pressed: (Background: #0a3a7a, LabelStyle: (FontSize: 14, TextColor: #d0e8ff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
-);
-@ConfirmButtonStyle = TextButtonStyle(
-    Default: (Background: #1a6a2a, LabelStyle: (FontSize: 15, TextColor: #d0ffd8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Hovered: (Background: #2a7a3a, LabelStyle: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
-    Pressed: (Background: #0a5a1a, LabelStyle: (FontSize: 15, TextColor: #d0ffd8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
-);
+$C = "../Common.ui";
 
 Group {
-    Anchor: (Full: 0);
-    Background: #000000(0.6);
-    LayoutMode: CenterMiddle;
+  LayoutMode: CenterMiddle;
+  $C.@Container #StartPanel {
+    Background: (Color: #6b8e5f);
+    Anchor: (Width: 420, Height: 380);
 
-    Group #StartPanel {
-        Anchor: (Width: 480, Height: 400);
-        Background: #141c26(0.98);
-        LayoutMode: Top;
-
-        Group {
-            Anchor: (Height: 3);
-            Background: #00bfff;
-        }
-
-        Group {
-            Anchor: (Height: 56);
-            Background: #0a1119(0.95);
-            LayoutMode: CenterMiddle;
-            Label {
-                Text: "Bienvenido a DigiTale";
-                Anchor: (Height: 28);
-                Style: LabelStyle(FontSize: 22, TextColor: #00bfff, RenderBold: true, HorizontalAlignment: Center);
-            }
-        }
-
-        Group {
-            Anchor: (Height: 1);
-            Background: #2b3542;
-        }
-
-        Group {
-            FlexWeight: 1;
-            LayoutMode: Top;
-            Padding: (Horizontal: 20, Vertical: 14);
-
-            Label {
-                Text: "Elige a tus 2 companeros para comenzar la aventura.";
-                Anchor: (Height: 18);
-                Style: LabelStyle(FontSize: 13, TextColor: #6e7da1, HorizontalAlignment: Center);
-            }
-
-            Group { Anchor: (Height: 4); }
-
-            Label #MsgInfo {
-                Text: "Elige tu primer companero";
-                Anchor: (Height: 20);
-                Style: LabelStyle(FontSize: 14, TextColor: #00bfff, HorizontalAlignment: Center);
-            }
-
-            Group { Anchor: (Height: 10); }
-
-            Group {
-                Anchor: (Height: 44);
-                LayoutMode: Left;
-                TextButton #BtnBotamon {
-                    Text: "Botamon";
-                    Anchor: (Width: 140);
-                    Style: @PrimaryButtonStyle;
-                }
-                Group { Anchor: (Width: 7); }
-                TextButton #BtnPunimon {
-                    Text: "Punimon";
-                    Anchor: (Width: 140);
-                    Style: @PrimaryButtonStyle;
-                }
-                Group { Anchor: (Width: 7); }
-                TextButton #BtnPoyomon {
-                    Text: "Poyomon";
-                    Anchor: (Width: 140);
-                    Style: @PrimaryButtonStyle;
-                }
-            }
-
-            Group { Anchor: (Height: 6); }
-
-            Group {
-                Anchor: (Height: 44);
-                LayoutMode: Left;
-                TextButton #BtnYuramon {
-                    Text: "Yuramon";
-                    Anchor: (Width: 140);
-                    Style: @PrimaryButtonStyle;
-                }
-                Group { Anchor: (Width: 7); }
-                TextButton #BtnPichimon {
-                    Text: "Pichimon";
-                    Anchor: (Width: 140);
-                    Style: @PrimaryButtonStyle;
-                }
-                Group { Anchor: (Width: 7); }
-                TextButton #BtnNyokimon {
-                    Text: "Nyokimon";
-                    Anchor: (Width: 140);
-                    Style: @PrimaryButtonStyle;
-                }
-            }
-
-            Group { Anchor: (Height: 14); }
-
-            Label {
-                Text: "EQUIPO SELECCIONADO:";
-                Anchor: (Height: 16);
-                Style: LabelStyle(FontSize: 11, TextColor: #6e7da1, RenderUppercase: true);
-            }
-
-            Group { Anchor: (Height: 6); }
-
-            Group {
-                Anchor: (Height: 40);
-                LayoutMode: Left;
-                Group {
-                    Anchor: (Width: 212);
-                    Background: #0a1119(0.95);
-                    LayoutMode: CenterMiddle;
-                    Label #Seleccion1 {
-                        Text: "---";
-                        Anchor: (Height: 20);
-                        Style: LabelStyle(FontSize: 15, TextColor: #d0e8ff, HorizontalAlignment: Center);
-                    }
-                }
-                Group { Anchor: (Width: 8); }
-                Group {
-                    Anchor: (Width: 212);
-                    Background: #0a1119(0.95);
-                    LayoutMode: CenterMiddle;
-                    Label #Seleccion2 {
-                        Text: "---";
-                        Anchor: (Height: 20);
-                        Style: LabelStyle(FontSize: 15, TextColor: #d0e8ff, HorizontalAlignment: Center);
-                    }
-                }
-            }
-
-            Group { FlexWeight: 1; }
-
-            TextButton #BtnConfirmar {
-                Text: "Confirmar Equipo";
-                Anchor: (Height: 46);
-                Style: @ConfirmButtonStyle;
-            }
-        }
-
-        Group {
-            Anchor: (Height: 3);
-            Background: #00bfff;
-        }
+    #Title {
+      $C.@Title {
+        @Text = "Seleccionar Bebe";
+      }
     }
+
+    #Content {
+      LayoutMode: Top;
+      Label {
+        Anchor: (Height: 20);
+        Text: "Elige 2 bebes para comenzar:";
+        Style: LabelStyle(FontSize: 12, TextColor: #d0e8ff);
+      }
+      $C.@TextButton #BtnBotamon {
+        Anchor: (Top: 4);
+        Text: "Botamon";
+      }
+      $C.@TextButton #BtnPunimon {
+        Anchor: (Top: 4);
+        Text: "Punimon";
+      }
+      $C.@TextButton #BtnPoyomon {
+        Anchor: (Top: 4);
+        Text: "Poyomon";
+      }
+      $C.@TextButton #BtnYuramon {
+        Anchor: (Top: 4);
+        Text: "Yuramon";
+      }
+      $C.@TextButton #BtnPichimon {
+        Anchor: (Top: 4);
+        Text: "Pichimon";
+      }
+      $C.@TextButton #BtnNyokimon {
+        Anchor: (Top: 4);
+        Text: "Nyokimon";
+      }
+      Label #MsgInfo {
+        Anchor: (Top: 8);
+        Text: "";
+        Style: LabelStyle(FontSize: 11, TextColor: #00bfff);
+      }
+      Label #Seleccion1 {
+        Anchor: (Height: 16);
+        Text: "-";
+        Style: LabelStyle(FontSize: 12, TextColor: #4aff7f);
+      }
+      Label #Seleccion2 {
+        Anchor: (Height: 16);
+        Text: "-";
+        Style: LabelStyle(FontSize: 12, TextColor: #4aff7f);
+      }
+      $C.@TextButton #BtnConfirmar {
+        Text: "Confirmar Seleccion";
+      }
+    }
+  }
 }
