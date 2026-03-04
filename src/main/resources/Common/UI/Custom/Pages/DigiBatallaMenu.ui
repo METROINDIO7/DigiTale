@@ -1,56 +1,143 @@
 $C = "../Common.ui";
 
 Group {
-  LayoutMode: CenterMiddle;
-  $C.@Container #BatallaPanel {
-    Background: (Color: #8a5a6a);
-    Anchor: (Width: 700, Height: 500);
 
-    #Title {
-      $C.@Title {
-        @Text = "Batalla";
-      }
+  // TOP CENTER — Enemigo
+  Group #PanelEnemigo {
+    Anchor: (Top: 10, Width: 320, Height: 82);
+    LayoutMode: Top;
+    Padding: (Horizontal: 12, Vertical: 6);
+
+    Label #LblTurno {
+      Anchor: (Height: 15);
+      Text: "Ronda 1";
+      Style: (FontSize: 11, Alignment: Center);
+    }
+    Label #LblEnemigo {
+      Anchor: (Height: 20);
+      Text: "Enemigo: ---";
+      Style: (FontSize: 14, Alignment: Center);
+    }
+    Label #LblEnemHp {
+      Anchor: (Height: 14);
+      Text: "HP: ---";
+      Style: (FontSize: 12, Alignment: Center);
+    }
+    Label #LblBarraEnem {
+      Anchor: (Height: 12);
+      Text: "░░░░░░░░░░";
+      Style: (FontSize: 11, Alignment: Center);
+    }
+  }
+
+  // CENTER — Alerta de refuerzo
+  Label #LblAlerta {
+    Anchor: (Top: 320, Width: 500, Height: 24);
+    Text: "";
+    Style: (FontSize: 14, Alignment: Center);
+  }
+
+  // BOTTOM LEFT — Equipo del jugador
+  Group #PanelEquipo {
+    Anchor: (Left: 12, Bottom: 10, Width: 210, Height: 164);
+    LayoutMode: Top;
+    Padding: (Horizontal: 10, Vertical: 7);
+
+    Label {
+      Anchor: (Height: 16);
+      Text: "Equipo";
+      Style: (FontSize: 13);
     }
 
-    #Content {
-      LayoutMode: Top;
-      Label #LblTurno { Anchor: (Height: 20); Text: "Turno: ---"; }
-      Label #LblEnemigo { Anchor: (Height: 20); Text: "Enemigo: ---"; }
-      Label #LblEnemHp { Anchor: (Height: 16); Text: "HP: ---"; }
-      Label #LblBarraEnem { Anchor: (Height: 12); Text: "░░░░░░░░░░"; }
-      Label #LblAlerta { Anchor: (Height: 16); Text: ""; }
-      Label #LblNombreA { Anchor: (Height: 20); Text: "---"; }
-      Label #LblBarraA { Anchor: (Height: 12); Text: "░░░░░░░░░░"; }
-      Label #LblHpA { Anchor: (Height: 16); Text: "HP: ---"; }
-      Label #LblOpA { Anchor: (Height: 16); Text: "OP: 0"; }
-      Label #LblNombreB { Anchor: (Height: 20); Text: "---"; }
-      Label #LblBarraB { Anchor: (Height: 12); Text: "░░░░░░░░░░"; }
-      Label #LblHpB { Anchor: (Height: 16); Text: "HP: ---"; }
-      Label #LblOpB { Anchor: (Height: 16); Text: "OP: 0"; }
-      Label #LblLog { Anchor: (Height: 40); Text: "Log de combate..."; }
-      Label #LblResultado { Anchor: (Height: 20); Text: ""; }
-      $C.@TextButton #BtnSupport {
-        Anchor: (Top: 4);
-        Text: "Support";
-      }
-      $C.@TextButton #BtnOrderRing {
-        Anchor: (Top: 4);
-        Text: "Order Ring";
-      }
-      $C.@TextButton #BtnTacticaA {
-        Anchor: (Top: 4);
-        Text: "Tactica A";
-      }
-      $C.@TextButton #BtnTacticaB {
-        Anchor: (Top: 4);
-        Text: "Tactica B";
-      }
-      $C.@TextButton #BtnHuir {
-        Background: (Color: #e14c4c);
-        Padding: (Full: 0);
-        Anchor: (Top: 4);
-        Text: "Huir";
-      }
+    Label #LblNombreA {
+      Anchor: (Height: 16);
+      Text: "A: ---";
+      Style: (FontSize: 13);
+    }
+    Label #LblBarraA {
+      Anchor: (Height: 10);
+      Text: "░░░░░░░░░░";
+      Style: (FontSize: 10);
+    }
+    Label #LblHpA {
+      Anchor: (Height: 13);
+      Text: "HP: ---";
+      Style: (FontSize: 11);
+    }
+    Label #LblOpA {
+      Anchor: (Height: 13);
+      Text: "OP: 0";
+      Style: (FontSize: 11);
+    }
+
+    Group { Anchor: (Height: 6); }
+
+    Label #LblNombreB {
+      Anchor: (Height: 16);
+      Text: "B: ---";
+      Style: (FontSize: 13);
+    }
+    Label #LblBarraB {
+      Anchor: (Height: 10);
+      Text: "░░░░░░░░░░";
+      Style: (FontSize: 10);
+    }
+    Label #LblHpB {
+      Anchor: (Height: 13);
+      Text: "HP: ---";
+      Style: (FontSize: 11);
+    }
+    Label #LblOpB {
+      Anchor: (Height: 13);
+      Text: "OP: 0";
+      Style: (FontSize: 11);
+    }
+  }
+
+  // BOTTOM CENTER — Log + resultado
+  Group #PanelLog {
+    Anchor: (Bottom: 10, Width: 360, Height: 72);
+    LayoutMode: Top;
+    Padding: (Horizontal: 10, Vertical: 6);
+
+    Label #LblLog {
+      Anchor: (Height: 46);
+      Text: "Log de combate...";
+      Style: (FontSize: 11, Alignment: Center);
+    }
+    Label #LblResultado {
+      Anchor: (Height: 18);
+      Text: "";
+      Style: (FontSize: 13, Alignment: Center);
+    }
+  }
+
+  // BOTTOM RIGHT — Botones de accion
+  Group #PanelBotones {
+    Anchor: (Right: 12, Bottom: 10, Width: 168, Height: 200);
+    LayoutMode: Top;
+    Padding: (Horizontal: 8, Vertical: 6);
+
+    $C.@TextButton #BtnSupport {
+      Anchor: (Top: 4, Height: 34);
+      Text: "Support";
+    }
+    $C.@TextButton #BtnOrderRing {
+      Anchor: (Top: 6, Height: 34);
+      Text: "Order Ring";
+    }
+    $C.@TextButton #BtnTacticaA {
+      Anchor: (Top: 6, Height: 34);
+      Text: "Tactica A";
+    }
+    $C.@TextButton #BtnTacticaB {
+      Anchor: (Top: 6, Height: 34);
+      Text: "Tactica B";
+    }
+    $C.@TextButton #BtnHuir {
+      Padding: (Full: 0);
+      Anchor: (Top: 6, Height: 34);
+      Text: "Huir";
     }
   }
 }

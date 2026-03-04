@@ -1,0 +1,650 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "$Comment": "COMBAT COMPANION B: Criatura aliada del jugador en combate. Similar a A pero con enfoque supportive (heals, buffs). Responde a beacons, integra morale/sync para combos y MegaEvo. AI de compañero leal, pathfind al jugador + offset.",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Veemon_Model",
+      "Description": "Modelo de la Criatura B (e.g., Gabumon-like)"
+    },
+    "WanderRadius": {
+      "Value": 6,
+      "Description": "Radio de deambulación"
+    },
+    "ViewRange": {
+      "Value": 18,
+      "Description": "Distancia de visión"
+    },
+    "ViewSector": {
+      "Value": 150,
+      "Description": "Ángulo de visión"
+    },
+    "HearingRange": {
+      "Value": 10,
+      "Description": "Distancia de oído"
+    },
+    "AbsoluteDetectionRange": {
+      "Value": 3,
+      "Description": "Rango de detección garantizada"
+    },
+    "AlertedRange": {
+      "Value": 22,
+      "Description": "Rango alertado"
+    },
+    "AlertedTime": {
+      "Value": [
+        1.5,
+        2.5
+      ],
+      "Description": "Tiempo antes de acción"
+    },
+    "AttackDistance": {
+      "Value": 4,
+      "Description": "Distancia de skill/support"
+    },
+    "Attack": {
+      "Value": "Root_NPC_Support_Skill_B",
+      "Description": "Skill principal de B (e.g., heal/buff)"
+    },
+    "AttackPauseRange": {
+      "Value": [
+        2,
+        3
+      ],
+      "Description": "Pausa entre skills"
+    },
+    "CombatAttackPreDelay": {
+      "Value": [
+        0.3,
+        0.5
+      ],
+      "Description": "Retraso pre-skill"
+    },
+    "CombatAttackPostDelay": {
+      "Value": [
+        0.6,
+        0.8
+      ],
+      "Description": "Retraso post-skill"
+    },
+    "CombatBehaviorDistance": {
+      "Value": 6,
+      "Description": "Distancia para support behaviors"
+    },
+    "CombatStrafeWeight": {
+      "Value": 6,
+      "Description": "Peso de strafe"
+    },
+    "CombatDirectWeight": {
+      "Value": 10,
+      "Description": "Peso de directo"
+    },
+    "CombatAlwaysMovingWeight": {
+      "Value": 12,
+      "Description": "Peso de movimiento"
+    },
+    "CombatBackOffAfterAttack": {
+      "Value": true,
+      "Description": "Retrocede tras skill"
+    },
+    "CombatBackOffDistanceRange": {
+      "Value": [
+        2,
+        3
+      ],
+      "Description": "Distancia retroceso"
+    },
+    "CombatBackOffDurationRange": {
+      "Value": [
+        1,
+        2
+      ],
+      "Description": "Duración retroceso"
+    },
+    "CombatMovingRelativeSpeed": {
+      "Value": 0.6,
+      "Description": "Velocidad en combate"
+    },
+    "CombatRelativeTurnSpeed": {
+      "Value": 1.3,
+      "Description": "Giro en combate"
+    },
+    "Chase": {
+      "Value": false,
+      "Description": "No persigue, se queda cerca del jugador"
+    },
+    "ChaseRelativeSpeed": {
+      "Value": 0.9,
+      "Description": "Velocidad si necesita"
+    },
+    "LeashDistance": {
+      "Value": 12,
+      "Description": "Leash al jugador"
+    },
+    "LeashMinPlayerDistance": {
+      "Value": 3,
+      "Description": "Distancia mínima"
+    },
+    "LeashTimer": {
+      "Value": [
+        2,
+        4
+      ],
+      "Description": "Tiempo para leash"
+    },
+    "HardLeashDistance": {
+      "Value": 25,
+      "Description": "Leash absoluta"
+    },
+    "LeashRelativeSpeed": {
+      "Value": 0.7,
+      "Description": "Velocidad regreso"
+    },
+    "ConfusedTimeRange": {
+      "Value": [
+        1,
+        2
+      ],
+      "Description": "Confusión"
+    },
+    "SearchTimeRange": {
+      "Value": [
+        4,
+        6
+      ],
+      "Description": "Búsqueda"
+    },
+    "MaxSpeed": {
+      "Value": 7,
+      "Description": "Velocidad máxima"
+    },
+    "RunThreshold": {
+      "Value": 0.45,
+      "Description": "Umbral carrera"
+    },
+    "ClimbHeight": {
+      "Value": 1.5,
+      "Description": "Escalada"
+    },
+    "MaxHealth": {
+      "Value": 50,
+      "Description": "Salud"
+    },
+    "FlockArray": {
+      "Value": [
+        "CreatureA"
+      ],
+      "TypeHint": "String",
+      "Description": "Flock con A para combos"
+    },
+    "BlockAbility": {
+      "Value": "Support_Shield",
+      "Description": "Habilidad de support"
+    },
+    "DropList": {
+      "Value": "CreatureB_Drops",
+      "Description": "Drops"
+    },
+    "IsMemory": {
+      "Value": false,
+      "Description": "Memoria"
+    },
+    "MemoriesCategory": {
+      "Value": "Digimon_Companion",
+      "Description": "Categoría"
+    },
+    "MemoriesNameOverride": {
+      "Value": "Creature B",
+      "Description": "Nombre"
+    },
+    "BreathesInWater": {
+      "Value": false,
+      "Description": "Agua"
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.CreatureB.name",
+      "Description": "Traducción"
+    },
+    "SyncThresholdHigh": {
+      "Value": 70,
+      "Description": "Sync alto"
+    },
+    "SyncThresholdMega": {
+      "Value": 100,
+      "Description": "MegaEvo"
+    },
+    "MoraleIgnoreChance": {
+      "Value": 50,
+      "Description": "Ignorar órdenes"
+    },
+    "DamageModifierLowMorale": {
+      "Value": -20,
+      "Description": "Reducción daño"
+    },
+    "ComboBeacon": {
+      "Value": "Combo_Attack",
+      "Description": "Beacon combo"
+    }
+  },
+  "IsMemory": {
+    "Compute": "IsMemory"
+  },
+  "MemoriesCategory": {
+    "Compute": "MemoriesCategory"
+  },
+  "MemoriesNameOverride": {
+    "Compute": "MemoriesNameOverride"
+  },
+  "BreathesInWater": {
+    "Compute": "BreathesInWater"
+  },
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "DropList": {
+    "Compute": "DropList"
+  },
+  "FlockSpawnTypes": {
+    "Compute": "FlockArray"
+  },
+  "FlockAllowedNPC": {
+    "Compute": "FlockArray"
+  },
+  "DisableDamageGroups": [
+    "Self",
+    "Player_Owner"
+  ],
+  "DefaultPlayerAttitude": "Friendly",
+  "DefaultNPCAttitude": "Hostile",
+  "ApplySeparation": true,
+  "SeparationDistance": 1.8,
+  "SeparationWeight": 1.0,
+  "SeparationDistanceTarget": 1.2,
+  "SeparationNearRadiusTarget": 4,
+  "SeparationFarRadiusTarget": 7,
+  "KnockbackScale": 0.65,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": {
+        "Compute": "MaxSpeed"
+      },
+      "Gravity": 11,
+      "RunThreshold": {
+        "Compute": "RunThreshold"
+      },
+      "RunThresholdRange": 0.08,
+      "MaxFallSpeed": 10,
+      "MaxRotationSpeed": 180,
+      "Acceleration": 11,
+      "MaxClimbHeight": {
+        "Compute": "ClimbHeight"
+      }
+    }
+  ],
+  "InteractionVars": {
+    "Support_Heal": {
+      "Interactions": [
+        {
+          "Parent": "NPC_Support_Heal",
+          "HealAmount": 12,
+          "Range": 6,
+          "ModifierLowMorale": {
+            "Compute": "DamageModifierLowMorale"
+          }
+        }
+      ]
+    }
+  },
+  "StateTransitions": [
+    {
+      "States": [
+        {
+          "From": [
+            "Idle"
+          ],
+          "To": [
+            "Combat"
+          ]
+        }
+      ],
+      "Actions": {
+        "Reference": "Component_ActionList_Combat_Start"
+      }
+    },
+    {
+      "States": [
+        {
+          "From": [
+            "Combat"
+          ],
+          "To": [
+            "Idle"
+          ]
+        }
+      ],
+      "Actions": {
+        "Reference": "Component_ActionList_Combat_End"
+      }
+    },
+    {
+      "States": [
+        {
+          "To": [
+            "SyncHigh"
+          ],
+          "From": [
+            "Combat"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "PlayAnimation",
+          "Slot": "Status",
+          "Animation": "PoweredUp"
+        },
+        {
+          "Type": "SpawnParticles",
+          "ParticleSystem": "SyncAura"
+        }
+      ]
+    },
+    {
+      "States": [
+        {
+          "To": [
+            "MegaEvo"
+          ],
+          "From": [
+            "SyncHigh"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "Morph",
+          "To": "MegaForm_B"
+        },
+        {
+          "Type": "StatModifier",
+          "Stats": {
+            "Damage": 50,
+            "Speed": 50,
+            "Health": 50
+          },
+          "Duration": 30
+        }
+      ]
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "Instructions": [
+    {
+      "Continue": true,
+      "Sensor": {
+        "Type": "Leash",
+        "Range": {
+          "Compute": "HardLeashDistance"
+        },
+        "Target": "Player_Owner"
+      },
+      "Actions": [
+        {
+          "Type": "SetLeashPosition",
+          "ToPlayer": true
+        }
+      ]
+    },
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Enabled": {
+            "Compute": "!isEmptyStringArray(FlockArray)"
+          },
+          "Continue": true,
+          "Sensor": {
+            "Type": "FlockLeader",
+            "Leader": "Player_Owner"
+          },
+          "Actions": [
+            {
+              "Type": "FollowLeader",
+              "Offset": [
+                -2,
+                0,
+                -2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "Sensor": {
+                "Type": "Beacon",
+                "Message": "Combat_Start",
+                "From": "Player_Owner"
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Combat"
+                }
+              ]
+            },
+            {
+              "BodyMotion": {
+                "Type": "Follow",
+                "Target": "Player_Owner",
+                "RelativeSpeed": 0.5,
+                "StopDistance": 4
+              }
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Combat"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Beacon",
+                "Message": "Support"
+              },
+              "Actions": [
+                {
+                  "Type": "BoostNearestAlly",
+                  "Buff": "Speed+",
+                  "Range": 5,
+                  "Duration": 10
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Beacon",
+                "Message": "Order_Ring"
+              },
+              "Actions": [
+                {
+                  "Type": "CircleTarget",
+                  "Radius": 5,
+                  "Speed": 0.7
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Beacon",
+                "Message": "Tactica_B"
+              },
+              "Actions": [
+                {
+                  "Type": "MoveToPosition",
+                  "Pos": "Target_Pos",
+                  "UseSkill": "Skill2"
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Beacon",
+                "Message": "Huir"
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Idle"
+                },
+                {
+                  "Type": "TeleportBack"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Eval",
+                "Expression": "Trust < 50 || Mood == Sad"
+              },
+              "Actions": [
+                {
+                  "Type": "RandomChance",
+                  "Chance": {
+                    "Compute": "MoraleIgnoreChance"
+                  },
+                  "Action": {
+                    "Type": "IgnoreOrder"
+                  }
+                },
+                {
+                  "Type": "Emote",
+                  "Animation": "Sad"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Eval",
+                "Expression": "Sync > SyncThresholdHigh"
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "SyncHigh"
+                },
+                {
+                  "Type": "FlockBeacon",
+                  "Message": {
+                    "Compute": "ComboBeacon"
+                  }
+                },
+                {
+                  "Type": "Emote",
+                  "Animation": "Cheer"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Eval",
+                "Expression": "Sync >= SyncThresholdMega"
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "MegaEvo"
+                }
+              ]
+            },
+            {
+              "Reference": "Component_Instruction_Combat_Target_Swap",
+              "Modify": {
+                "TargetSwitchTimer": {
+                  "Compute": "TargetSwitchTimer"
+                },
+                "TargetRange": {
+                  "Compute": "TargetRange"
+                },
+                "NextTargetRange": {
+                  "Compute": "max(ViewRange, HearingRange)"
+                }
+              }
+            },
+            {
+              "Reference": "Component_Instruction_Intelligent_Chase",
+              "Modify": {
+                "ViewRange": {
+                  "Compute": "AlertedRange"
+                },
+                "HearingRange": {
+                  "Compute": "HearingRange"
+                },
+                "RelativeSpeed": {
+                  "Compute": "ChaseRelativeSpeed"
+                }
+              }
+            },
+            {
+              "Reference": "Component_Instruction_Combat_Back_Off",
+              "Modify": {
+                "CombatBackOffAfterAttack": {
+                  "Compute": "CombatBackOffAfterAttack"
+                },
+                "CombatBackOffDistanceRange": {
+                  "Compute": "CombatBackOffDistanceRange"
+                },
+                "CombatBackOffDurationRange": {
+                  "Compute": "CombatBackOffDurationRange"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "SyncHigh"
+          },
+          "Instructions": [
+            {
+              "Sensor": {
+                "Type": "Beacon",
+                "Message": {
+                  "Compute": "ComboBeacon"
+                },
+                "FromFlock": true
+              },
+              "Actions": [
+                {
+                  "Type": "ComboAttack",
+                  "Skill": "Joint_Fireball"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  }
+}

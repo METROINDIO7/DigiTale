@@ -2,15 +2,15 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Baby_Companero",
   "Modify": {
-    "Appearance": "Jyarimon_Model",
-    "MaxHealth": 20,
+    "Appearance": "Veemon_Model",
+    "MaxHealth": 60,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }
   },
   "Parameters": {
     "NameTranslationKey": {
-      "Value": "server.npcRoles.Jyarimon_Companero.name",
+      "Value": "server.npcRoles.Veemon_Companero.name",
       "Description": "Nombre del Digimon companero"
     }
   }

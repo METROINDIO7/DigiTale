@@ -1,8 +1,12 @@
 package com.digitale;
 
 import com.digitale.comandos.*;
+import com.digitale.componentes.ComponentRegistry;
+import com.digitale.componentes.PetProgressComponent;
+import com.digitale.datos.AlmacenJugadores;
 import com.digitale.item.SapotamaInputFilter;
-import com.digitale.ui.DigiBatallaHudManager;
+import com.digitale.sistema.SistemaPaseo;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
@@ -15,102 +19,94 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class DigiTale extends JavaPlugin {
 
     private PacketFilter sapotamaFilter;
+    private ComponentType<EntityStore, PetProgressComponent> petProgressType;
 
-    public DigiTale(@NonNullDecl JavaPluginInit init) {
-        super(init);
-    }
+    // Cache de Ref<EntityStore> por UUID para usarlo al desconectar
+    private static final ConcurrentHashMap<UUID, Ref<EntityStore>> storeRefCache = new ConcurrentHashMap<>();
+
+    public DigiTale(@NonNullDecl JavaPluginInit init) { super(init); }
 
     @Override
     protected void setup() {
         super.setup();
-
-        // ── Ítem Sapotama — interceptar tecla F en mano ────────────
+        this.petProgressType = this.getEntityStoreRegistry().registerComponent(
+                PetProgressComponent.class, "PetProgressComponent", PetProgressComponent.CODEC);
+        ComponentRegistry.registerPetProgressType(this.petProgressType);
         sapotamaFilter = PacketAdapters.registerInbound(new SapotamaInputFilter());
-
-        // ── Eventos de jugador ─────────────────────────────────────
         registrarEventosJugador();
-
-        // ── Comandos UI (abren menús gráficos) ─────────────────────
-        this.getCommandRegistry().registerCommand(
-            new DigiMenuComando("digi_menu",
-                "Abre el menu principal de DigiTale"));
-
-        // ── Comandos de texto (backup sin UI) ─────────────────────
-        this.getCommandRegistry().registerCommand(
-            new DigiStartComando("digi_start",
-                "Elige companeros: /digi_start <esp1> <esp2> <nom1> [nom2]"));
-
-        this.getCommandRegistry().registerCommand(
-            new DigiStatusComando("digi_status",
-                "Ver estado del equipo"));
-
-        this.getCommandRegistry().registerCommand(
-            new DigiEntrenarComando("digi_entrenar",
-                "Entrenar: /digi_entrenar <a|b|ambos> <atk|def|spd|wis|hp> [sesiones]"));
-
-        this.getCommandRegistry().registerCommand(
-            new DigiBatallaComando("digi_batalla",
-                "Combate legacy por texto"));
-
-        this.getCommandRegistry().registerCommand(
-            new DigiCuidarComando("digi_cuidar",
-                "Cuidar: /digi_cuidar <a|b|ambos> [alimentar|mimar|descansar]"));
-
-        this.getCommandRegistry().registerCommand(
-            new DigiEvolucionarComando("digi_evolucionar",
-                "Evolucionar: /digi_evolucionar [a|b] [forma]"));
-
-        this.getCommandRegistry().registerCommand(
-            new DigiPasearComando("digi_pasear",
-                "Alternar paseo: /digi_pasear (spawnea/recoge compañeros)"));
-
+        this.getCommandRegistry().registerCommand(new DigiMenuComando("digi_menu", "Abre el menu principal de DigiTale"));
+        this.getCommandRegistry().registerCommand(new DigiStartComando("digi_start", "Elige companeros"));
+        this.getCommandRegistry().registerCommand(new DigiStatusComando("digi_status", "Ver estado del equipo"));
+        this.getCommandRegistry().registerCommand(new DigiEntrenarComando("digi_entrenar", "Entrenar"));
+        this.getCommandRegistry().registerCommand(new DigiBatallaComando("digi_batalla", "Combate legacy"));
+        this.getCommandRegistry().registerCommand(new DigiCuidarComando("digi_cuidar", "Cuidar"));
+        this.getCommandRegistry().registerCommand(new DigiEvolucionarComando("digi_evolucionar", "Evolucionar"));
+        this.getCommandRegistry().registerCommand(new DigiPasearComando("digi_pasear", "Alternar paseo"));
+        this.getCommandRegistry().registerCommand(new DigiProgressComando("digi_progress", "Ver progreso"));
+        this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiResetProgressComando("digi_resetprogress", "Reset progreso"));
+        this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiSetProgressComando("digi_setprogress", "Set progreso"));
         getLogger().at(Level.INFO).log("DigiTale cargado correctamente!");
     }
 
-    /**
-     * Registra los eventos de conexión y desconexión de jugadores.
-     *
-     * - PlayerReadyEvent: jugador completamente cargado en el mundo.
-     *   Su getPlayerRef() devuelve Ref<EntityStore> — hay que extraer PlayerRef del store.
-     *
-     * - PlayerDisconnectEvent: jugador se desconecta.
-     *   Su getPlayerRef() devuelve PlayerRef directamente.
-     */
     private void registrarEventosJugador() {
 
-        // Al entrar un jugador: podríamos inicializar datos aquí si fuera necesario
-        getEventRegistry().registerGlobal(
-            PlayerReadyEvent.class,
-            event -> {
-                Ref<EntityStore> playerStoreRef = event.getPlayerRef();
-                Store<EntityStore> store = playerStoreRef.getStore();
-                store.getExternalData().getWorld().execute(() -> {
-                    PlayerRef playerRef = store.getComponent(
-                        playerStoreRef, PlayerRef.getComponentType());
-                    if (playerRef != null) {
-                        getLogger().at(Level.INFO).log(
-                            "DigiTale: jugador listo → " + playerRef.getUsername());
-                    }
-                });
-            }
-        );
+        // AL ENTRAR: guardar storeRef en cache y restaurar datos a RAM
+        getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
+            Ref<EntityStore> storeRef = event.getPlayerRef();
+            Store<EntityStore> store = storeRef.getStore();
+            store.getExternalData().getWorld().execute(() -> {
+                PlayerRef playerRef = store.getComponent(storeRef, PlayerRef.getComponentType());
+                if (playerRef == null) return;
+                UUID uuid = playerRef.getUuid();
+                storeRefCache.put(uuid, storeRef);
+                PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, storeRef);
+                AlmacenJugadores.DatosJugador datos = AlmacenJugadores.obtener(uuid);
+                progress.cargarEn(datos);
+                String msg = datos.tieneEquipo
+                        ? "equipo restaurado: A=" + (datos.companeroA != null ? datos.companeroA.especie : "null")
+                        + " B=" + (datos.companeroB != null ? datos.companeroB.especie : "null")
+                        : "sin equipo aun";
+                getLogger().at(Level.INFO).log("DigiTale [" + playerRef.getUsername() + "] " + msg);
+            });
+        });
 
-        // Al salir un jugador: limpiar HUD de batalla si lo tenía activo
-        getEventRegistry().registerGlobal(
-            PlayerDisconnectEvent.class,
-            event -> {
-                // PlayerDisconnectEvent.getPlayerRef() devuelve PlayerRef directamente
-                PlayerRef playerRef = event.getPlayerRef();
-                if (playerRef != null) {
-                    DigiBatallaHudManager.onPlayerDisconnect(playerRef);
-                }
+        // AL SALIR: despawnear NPCs si el paseo estaba activo, luego guardar datos
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
+            PlayerRef playerRef = event.getPlayerRef();
+            if (playerRef == null) return;
+
+            UUID uuid = playerRef.getUuid();
+            Ref<EntityStore> storeRef = storeRefCache.remove(uuid);
+            if (storeRef == null || !storeRef.isValid()) {
+                getLogger().at(Level.WARNING).log("DigiTale [" + playerRef.getUsername() + "] storeRef no disponible al desconectar");
+                return;
             }
-        );
+            Store<EntityStore> store = storeRef.getStore();
+            store.getExternalData().getWorld().execute(() -> {
+                AlmacenJugadores.DatosJugador datos = AlmacenJugadores.getDatos(uuid);
+                if (datos == null) return;
+
+                // Despawnear NPCs si el paseo estaba activo para evitar duplicados
+                if (datos.paseoActivo) {
+                    getLogger().at(Level.INFO).log("DigiTale [" + playerRef.getUsername() + "] desconexion con paseo activo - despawneando NPCs");
+                    SistemaPaseo.recogerCompaneros(playerRef, storeRef, store);
+                    datos.paseoActivo = false;
+                }
+
+                // Guardar datos al componente persistente
+                PetProgressComponent progress = ComponentRegistry.getProgress(store, storeRef);
+                if (progress == null) return;
+                progress.guardarDesde(datos);
+                getLogger().at(Level.INFO).log("DigiTale [" + playerRef.getUsername() + "] datos guardados al desconectar");
+            });
+        });
 
         getLogger().at(Level.INFO).log("Eventos Ready/Disconnect registrados.");
     }
@@ -118,9 +114,8 @@ public class DigiTale extends JavaPlugin {
     @Override
     protected void shutdown() {
         super.shutdown();
-        if (sapotamaFilter != null) {
-            PacketAdapters.deregisterInbound(sapotamaFilter);
-        }
-        DigiBatallaHudManager.shutdown();
+        if (sapotamaFilter != null) PacketAdapters.deregisterInbound(sapotamaFilter);
+        storeRefCache.clear();
+
     }
 }

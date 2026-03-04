@@ -1,5 +1,7 @@
 package com.digitale.ui;
 
+import com.digitale.componentes.ComponentRegistry;
+import com.digitale.componentes.PetProgressComponent;
 import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.sistema.SistemaPaseo;
@@ -21,21 +23,12 @@ import javax.annotation.Nonnull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Menú principal del Sapotama — ítem de mascotas.
- *
- * Botón 1 · Pasear   → Spawnea o despawnea los Digimon compañeros en el mundo.
- * Botón 2 · Batallar → Inicia combate contra un Digimon salvaje cercano.
- * Botón 3 · Equipo   → Abre el menú general de gestión de equipo (DigiMainMenuUI).
- */
 public class SapotamaMenuUI extends InteractiveCustomUIPage<SapotamaMenuUI.Data> {
     private static final Logger LOGGER = Logger.getLogger(SapotamaMenuUI.class.getName());
 
-    // ── Campos para rastrear la selección de Digimon (sin equipo) ────
-    private String slot1 = "";  // primera selección
-    private String slot2 = "";  // segunda selección
+    private String slot1 = "";
+    private String slot2 = "";
 
-    // ── Codec ──────────────────────────────────────────────────────
     public static class Data {
         public String btnPresionado = "";
 
@@ -55,7 +48,6 @@ public class SapotamaMenuUI extends InteractiveCustomUIPage<SapotamaMenuUI.Data>
         this.playerRef = playerRef;
     }
 
-    // ── Build ──────────────────────────────────────────────────────
     @Override
     public void build(@Nonnull Ref<EntityStore> ref,
                       @Nonnull UICommandBuilder uiBuilder,
@@ -63,62 +55,49 @@ public class SapotamaMenuUI extends InteractiveCustomUIPage<SapotamaMenuUI.Data>
                       @Nonnull Store<EntityStore> store) {
 
         LOGGER.log(Level.INFO, "SapotamaMenuUI.build() iniciado para: " + playerRef.getUuid());
-        
-        // Obtener datos del jugador
+
         AlmacenJugadores.DatosJugador datos = AlmacenJugadores.getDatos(playerRef.getUuid());
         LOGGER.log(Level.INFO, "Datos del jugador obtenidos: " + (datos != null ? "no nulo" : "nulo"));
-        
-        if (datos != null) {
-            LOGGER.log(Level.INFO, "  tieneEquipo: " + datos.tieneEquipo);
-        }
-        
-        // Si no tiene equipo, cargar la UI de selección DIRECTAMENTE sin redirigir
+        if (datos != null) LOGGER.log(Level.INFO, "  tieneEquipo: " + datos.tieneEquipo);
+
         if (datos == null || !datos.tieneEquipo) {
-            LOGGER.log(Level.INFO, "Sin equipo - cargando UI de selección");
+            LOGGER.log(Level.INFO, "Sin equipo - cargando UI de seleccion");
             uiBuilder.append("Pages/DigiStartMenu.ui");
-            
-            // Bind los botones de selección
             for (String bebe : new String[]{"Botamon","Punimon","Poyomon","Yuramon","Pichimon","Nyokimon"}) {
                 DigiUIHelper.bindClick(eventBuilder, "#Btn" + bebe, "BtnPresionado", "elegir_" + bebe);
             }
             DigiUIHelper.bindClick(eventBuilder, "#BtnConfirmar", "BtnPresionado", "confirmar");
             return;
         }
-        
-        // Tiene equipo - cargar la UI normal de Sapotama
+
         LOGGER.log(Level.INFO, "Con equipo - cargando UI normal de Sapotama");
-        
         if (datos.companeroA != null) LOGGER.log(Level.INFO, "  companeroA: " + datos.companeroA.nombre);
         if (datos.companeroB != null) LOGGER.log(Level.INFO, "  companeroB: " + datos.companeroB.nombre);
-        
+
         uiBuilder.append("Pages/SapotamaMenu.ui");
 
-        // Inyectar estado actual (¿paseo activo?) para que la UI lo muestre
-        String labelPaseo = (datos.paseoActivo) ? "Recoger Compañeros" : "Pasear Compañeros";
+        String labelPaseo = datos.paseoActivo ? "Recoger Companeros" : "Pasear Companeros";
         uiBuilder.set("#LblPaseo.Text", labelPaseo);
 
-        // Nombre del equipo para mostrar en la UI
-        String nomA = datos.companeroA != null ? datos.companeroA.nombre : "–";
-        String nomB = datos.companeroB != null ? datos.companeroB.nombre : "–";
+        String nomA = datos.companeroA != null ? datos.companeroA.nombre : "-";
+        String nomB = datos.companeroB != null ? datos.companeroB.nombre : "-";
         uiBuilder.set("#LblEquipo.Text", nomA + "  &  " + nomB);
 
-        // Bind botones
         DigiUIHelper.bindClick(eventBuilder, "#BtnPasear",   "BtnPresionado", "pasear");
         DigiUIHelper.bindClick(eventBuilder, "#BtnBatallar", "BtnPresionado", "batallar");
         DigiUIHelper.bindClick(eventBuilder, "#BtnEquipo",   "BtnPresionado", "equipo");
         DigiUIHelper.bindClick(eventBuilder, "#BtnCerrar",   "BtnPresionado", "cerrar");
-        
+
         LOGGER.log(Level.INFO, "SapotamaMenuUI.build() completado exitosamente");
     }
 
-    // ── Handle ─────────────────────────────────────────────────────
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref,
                                 @Nonnull Store<EntityStore> store,
                                 @Nonnull Data data) {
         super.handleDataEvent(ref, store, data);
 
-        LOGGER.log(Level.INFO, "SapotamaMenuUI.handleDataEvent - acción: " + data.btnPresionado);
+        LOGGER.log(Level.INFO, "SapotamaMenuUI.handleDataEvent - accion: " + data.btnPresionado);
 
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) {
@@ -128,16 +107,11 @@ public class SapotamaMenuUI extends InteractiveCustomUIPage<SapotamaMenuUI.Data>
 
         AlmacenJugadores.DatosJugador datos = AlmacenJugadores.getDatos(playerRef.getUuid());
 
-        // ─── Manejar acciones de SELECCIÓN de Digimon (cuando no tiene equipo)
+        // ── Seleccion de Digimon (sin equipo) ──────────────────────
         if (data.btnPresionado.startsWith("elegir_")) {
-            // Extraer el nombre del Digimon elegido
-            String bebeName = data.btnPresionado.substring(7); // "elegir_Botamon" -> "Botamon"
-            if (datos == null) {
-                LOGGER.log(Level.INFO, "Creando datos del jugador para primera vez");
-                datos = AlmacenJugadores.obtener(playerRef.getUuid());
-            }
-            
-            // Guardar la selección
+            String bebeName = data.btnPresionado.substring(7);
+            if (datos == null) datos = AlmacenJugadores.obtener(playerRef.getUuid());
+
             if (slot1.isEmpty()) {
                 slot1 = bebeName;
                 LOGGER.log(Level.INFO, "Slot 1 = " + slot1);
@@ -145,20 +119,15 @@ public class SapotamaMenuUI extends InteractiveCustomUIPage<SapotamaMenuUI.Data>
                 slot2 = bebeName;
                 LOGGER.log(Level.INFO, "Slot 2 = " + slot2);
             } else if (bebeName.equals(slot1)) {
-                // Deseleccionar slot 1
                 slot1 = "";
-                LOGGER.log(Level.INFO, "Deseleccionado slot 1");
             } else {
-                // Deseleccionar slot 2
                 slot2 = "";
-                LOGGER.log(Level.INFO, "Deseleccionado slot 2");
             }
-            
-            // Actualizar UI para mostrar selecciones
+
             UICommandBuilder b = new UICommandBuilder();
             String msgInfo = slot1.isEmpty() ? "Elige tu primer companero"
-                           : slot2.isEmpty() ? "Elegiste: " + slot1 + " - ahora elige el segundo"
-                           : "Equipo: " + slot1 + " + " + slot2 + " - pulsa Confirmar";
+                    : slot2.isEmpty() ? "Elegiste: " + slot1 + " - ahora elige el segundo"
+                    : "Equipo: " + slot1 + " + " + slot2 + " - pulsa Confirmar";
             b.set("#MsgInfo.Text", msgInfo);
             b.set("#Seleccion1.Text", slot1.isEmpty() ? "-" : slot1);
             b.set("#Seleccion2.Text", slot2.isEmpty() ? "-" : slot2);
@@ -167,89 +136,83 @@ public class SapotamaMenuUI extends InteractiveCustomUIPage<SapotamaMenuUI.Data>
         }
 
         if (data.btnPresionado.equals("confirmar")) {
-            // Confirmar selección de Digimon iniciales
-            LOGGER.log(Level.INFO, "Confirmando selección: " + slot1 + " + " + slot2);
-            
+            LOGGER.log(Level.INFO, "Confirmando seleccion: " + slot1 + " + " + slot2);
+
             if (slot1.isEmpty() || slot2.isEmpty()) {
                 UICommandBuilder b = new UICommandBuilder();
-                b.set("#MsgInfo.Text", "¡Elige 2 companeros diferentes!");
+                b.set("#MsgInfo.Text", "Elige 2 companeros diferentes!");
                 sendUpdate(b, null, false);
                 return;
             }
-            
-            // Crear los Digimon y asignarlos
-            if (datos == null) {
-                datos = AlmacenJugadores.obtener(playerRef.getUuid());
-            }
+
+            if (datos == null) datos = AlmacenJugadores.obtener(playerRef.getUuid());
             datos.companeroA = DatoDigimon.crearInicial(slot1);
             datos.companeroB = DatoDigimon.crearInicial(slot2);
             datos.tieneEquipo = true;
-            
-            LOGGER.log(Level.INFO, "Equipo creado: " + slot1 + " y " + slot2);
-            LOGGER.log(Level.INFO, "Reabriendo UI de Sapotama con equipo");
-            
-            // Recargar el UI para que muestre el SapotamaMenu.ui cuando ya tenga datos
+
+            // ── GUARDAR en el componente persistente ──────────────
+            PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, ref);
+            progress.guardarDesde(datos);
+            LOGGER.log(Level.INFO, "Equipo guardado en componente persistente: " + slot1 + " + " + slot2);
+
             player.getPageManager().openCustomPage(ref, store, new SapotamaMenuUI(playerRef));
             return;
         }
 
-        // ─── Manejar acciones NORMALES de Sapotama (cuando SÍ tiene equipo)
+        // ── Acciones normales (con equipo) ─────────────────────────
         if (datos == null || !datos.tieneEquipo) {
-            LOGGER.log(Level.WARNING, "Acción " + data.btnPresionado + " en UI sin equipo");
+            LOGGER.log(Level.WARNING, "Accion " + data.btnPresionado + " en UI sin equipo");
             return;
         }
 
         switch (data.btnPresionado) {
 
             case "pasear" -> {
-                LOGGER.log(Level.INFO, "Acción: Pasear/Recoger");
+                LOGGER.log(Level.INFO, "Accion: Pasear/Recoger");
                 Player playerComponent = store.getComponent(ref, Player.getComponentType());
-                
+
                 if (datos.paseoActivo) {
-                    // Recogiendo compañeros
                     SistemaPaseo.recogerCompaneros(playerRef, ref, store);
                     datos.paseoActivo = false;
-                    LOGGER.log(Level.INFO, "Compañeros recogidos");
-                    if (playerComponent != null) {
-                        playerComponent.getPageManager().setPage(ref, store, Page.None);
-                    }
+                    LOGGER.log(Level.INFO, "Companeros recogidos");
                 } else {
-                    // Intentando spawnear - prepara datos para que aparezcan tus compañeros
-                    LOGGER.log(Level.INFO, "Preparando spawn de compañeros");
+                    LOGGER.log(Level.INFO, "Preparando spawn de companeros");
                     SistemaPaseo.spawnearCompaneros(playerRef, ref, store);
-                    
-                    // Cerrar UI - los compañeros deben aparecer automáticamente
-                    if (playerComponent != null) {
-                        playerComponent.getPageManager().setPage(ref, store, Page.None);
-                    }
                     datos.paseoActivo = true;
-                    LOGGER.log(Level.INFO, "Spawn iniciado - tus compañeros aparecerán en breve");
+                    LOGGER.log(Level.INFO, "Spawn iniciado");
+                }
+
+                // ── GUARDAR estado de paseo ───────────────────────
+                PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, ref);
+                progress.guardarDesde(datos);
+
+                if (playerComponent != null) {
+                    playerComponent.getPageManager().setPage(ref, store, Page.None);
                 }
             }
 
             case "batallar" -> {
-                LOGGER.log(Level.INFO, "Acción: Batallar");
+                LOGGER.log(Level.INFO, "Accion: Batallar");
                 if (!datos.enCombateUI()) {
                     datos.combate = com.digitale.sistema.SistemaBatalla.iniciarCombate(
-                        datos.companeroA, datos.companeroB);
+                            datos.companeroA, datos.companeroB);
                 }
-                // Activar HUD de batalla
-                DigiBatallaHudManager.mostrar(playerRef, ref, store, datos);
+
                 player.getPageManager().openCustomPage(ref, store, new DigiBatallaMenuUI(playerRef));
             }
 
             case "equipo" -> {
-                LOGGER.log(Level.INFO, "Acción: Ver Equipo");
+                LOGGER.log(Level.INFO, "Accion: Ver Equipo");
                 player.getPageManager().openCustomPage(ref, store, new DigiMainMenuUI(playerRef));
             }
 
             case "cerrar" -> {
-                LOGGER.log(Level.INFO, "Acción: Cerrar UI");
+                LOGGER.log(Level.INFO, "Accion: Cerrar UI");
                 player.getPageManager().setPage(ref, store, Page.None);
             }
 
             default -> {
-                LOGGER.log(Level.WARNING, "Acción desconocida: " + data.btnPresionado);
+                LOGGER.log(Level.WARNING, "Accion desconocida: " + data.btnPresionado);
                 sendUpdate(new UICommandBuilder(), null, false);
             }
         }

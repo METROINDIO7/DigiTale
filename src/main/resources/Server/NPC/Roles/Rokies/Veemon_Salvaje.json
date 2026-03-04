@@ -1,16 +1,16 @@
 {
   "Type": "Variant",
-  "Reference": "NPC_DigiSalvaje_Timido",
+  "Reference": "NPC_DigiSalvaje_Neutro",
   "Modify": {
-    "Appearance": "Jyarimon_Model",
-    "MaxHealth": 30,
+    "Appearance": "Veemon_Model",
+    "MaxHealth": 90,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }
   },
   "Parameters": {
     "NameTranslationKey": {
-      "Value": "server.npcRoles.Jyarimon_Salvaje.name",
+      "Value": "server.npcRoles.Veemon_Salvaje.name",
       "Description": "Nombre del Digimon salvaje"
     }
   }
