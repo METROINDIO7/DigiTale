@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "IceDevimon_Model",
+    "MaxHealth": 42,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.IceDevimon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

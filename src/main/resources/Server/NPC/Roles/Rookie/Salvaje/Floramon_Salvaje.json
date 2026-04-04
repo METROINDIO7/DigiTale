@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Floramon_Model",
+    "MaxHealth": 32,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Floramon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

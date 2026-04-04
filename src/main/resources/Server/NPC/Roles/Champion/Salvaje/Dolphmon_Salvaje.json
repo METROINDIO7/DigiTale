@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Nadador_Salvaje",
+  "Modify": {
+    "Appearance": "Dolphmon_Model",
+    "MaxHealth": 50,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Dolphmon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

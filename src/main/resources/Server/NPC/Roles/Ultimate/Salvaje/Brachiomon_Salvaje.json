@@ -1,0 +1,20 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Brachiomon_Model",
+    "MaxHealth": 64,
+    "MaxSpeed": 10,
+    "IsMountable": true,
+    "MountAnchorY": 2.8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Brachiomon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

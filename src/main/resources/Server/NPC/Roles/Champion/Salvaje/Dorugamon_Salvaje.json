@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Dorugamon_Model",
+    "MaxHealth": 46,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Dorugamon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

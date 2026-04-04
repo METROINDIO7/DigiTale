@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Volador_Salvaje",
+  "Modify": {
+    "Appearance": "Vulturemon_Model",
+    "MaxHealth": 58,
+    "MaxSpeed": 7,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Vulturemon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

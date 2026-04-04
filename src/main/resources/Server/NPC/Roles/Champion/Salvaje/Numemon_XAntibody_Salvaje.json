@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Numemon_XAntibody_Model",
+    "MaxHealth": 42,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Numemon_XAntibody_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

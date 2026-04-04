@@ -1,6 +1,6 @@
 {
   "Type": "Variant",
-  "Reference": "Template_Digimon_Combat_Companero",
+  "Reference": "Template_Digimon_Combat_Volador_Companero",
   "Modify": {
     "Appearance": "Crowmon_Model",
     "MaxHealth": 64,

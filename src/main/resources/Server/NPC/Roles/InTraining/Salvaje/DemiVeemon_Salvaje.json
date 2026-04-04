@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "DemiVeemon_Model",
+    "MaxHealth": 23,
+    "MaxSpeed": 4,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.DemiVeemon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

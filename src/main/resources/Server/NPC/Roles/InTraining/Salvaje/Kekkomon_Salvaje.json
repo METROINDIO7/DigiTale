@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Kekkomon_Model",
+    "MaxHealth": 21,
+    "MaxSpeed": 4,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Kekkomon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

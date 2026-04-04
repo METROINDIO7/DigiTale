@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Falcomon_2006AnimeVersion_Model",
+    "MaxHealth": 35,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Falcomon_2006AnimeVersion_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

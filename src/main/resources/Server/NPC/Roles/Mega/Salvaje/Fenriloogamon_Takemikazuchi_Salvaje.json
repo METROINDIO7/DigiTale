@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Fenriloogamon_Takemikazuchi_Model",
+    "MaxHealth": 79,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Fenriloogamon_Takemikazuchi_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

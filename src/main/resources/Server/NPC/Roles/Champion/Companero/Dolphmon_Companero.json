@@ -1,6 +1,6 @@
 {
   "Type": "Variant",
-  "Reference": "Template_Digimon_Combat_Companero",
+  "Reference": "Template_Digimon_Combat_Nadador_Companero",
   "Modify": {
     "Appearance": "Dolphmon_Model",
     "MaxHealth": 50,

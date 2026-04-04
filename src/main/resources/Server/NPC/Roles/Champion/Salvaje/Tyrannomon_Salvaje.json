@@ -1,0 +1,20 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Tyrannomon_Model",
+    "MaxHealth": 42,
+    "MaxSpeed": 8,
+    "IsMountable": true,
+    "MountAnchorY": 2.1,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Tyrannomon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Scorpiomon_Model",
+    "MaxHealth": 58,
+    "MaxSpeed": 7,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Scorpiomon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

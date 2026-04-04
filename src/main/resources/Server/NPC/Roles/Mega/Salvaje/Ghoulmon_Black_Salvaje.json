@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Ghoulmon_Black_Model",
+    "MaxHealth": 79,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Ghoulmon_Black_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "Type": "Variant",
-  "Reference": "Template_Digimon_Baby_Companero",
+  "Reference": "Template_Digimon_Baby_Volador_Companero",
   "Modify": {
     "Appearance": "Hawkmon_Model",
     "MaxHealth": 32,

@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Cotsucomon_Model",
+    "MaxHealth": 18,
+    "MaxSpeed": 3,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Cotsucomon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

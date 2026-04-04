@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Volador_Salvaje",
+  "Modify": {
+    "Appearance": "Angemon_Model",
+    "MaxHealth": 50,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Angemon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

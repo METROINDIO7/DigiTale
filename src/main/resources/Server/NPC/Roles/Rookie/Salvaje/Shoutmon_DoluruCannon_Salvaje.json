@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Shoutmon_DoluruCannon_Model",
+    "MaxHealth": 32,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Shoutmon_DoluruCannon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

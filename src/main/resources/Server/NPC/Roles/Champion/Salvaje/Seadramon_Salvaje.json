@@ -1,0 +1,20 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Nadador_Salvaje",
+  "Modify": {
+    "Appearance": "Seadramon_Model",
+    "MaxHealth": 46,
+    "MaxSpeed": 8,
+    "IsMountable": true,
+    "MountAnchorY": 2.8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Seadramon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

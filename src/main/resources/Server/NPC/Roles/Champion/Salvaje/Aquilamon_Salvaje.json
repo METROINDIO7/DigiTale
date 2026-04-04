@@ -1,0 +1,20 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Volador_Salvaje",
+  "Modify": {
+    "Appearance": "Aquilamon_Model",
+    "MaxHealth": 46,
+    "MaxSpeed": 8,
+    "IsMountable": true,
+    "MountAnchorY": 2.1,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Aquilamon_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

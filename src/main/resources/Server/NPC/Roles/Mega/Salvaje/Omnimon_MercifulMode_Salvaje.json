@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Neutro_Salvaje",
+  "Modify": {
+    "Appearance": "Omnimon_MercifulMode_Model",
+    "MaxHealth": 95,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Omnimon_MercifulMode_Salvaje.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

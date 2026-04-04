@@ -1,6 +1,6 @@
 {
   "Type": "Variant",
-  "Reference": "Template_Digimon_Baby_Companero",
+  "Reference": "Template_Digimon_Baby_Nadador_Companero",
   "Modify": {
     "Appearance": "Jellymon_Model",
     "MaxHealth": 32,
