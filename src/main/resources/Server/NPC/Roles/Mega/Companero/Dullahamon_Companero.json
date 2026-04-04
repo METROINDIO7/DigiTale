@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Dullahamon_Model",
+    "MaxHealth": 79,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Dullahamon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

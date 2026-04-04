@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "LadyDevimon_Model",
+    "MaxHealth": 58,
+    "MaxSpeed": 7,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.LadyDevimon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

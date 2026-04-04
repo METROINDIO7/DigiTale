@@ -1,0 +1,637 @@
+{
+  "Type": "Abstract",
+  "KnockbackScale": 0.5,
+  "StartState": "Idle",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Bluegill",
+      "Description": "Modelo a usar."
+    },
+    "DropList": {
+      "Value": "Empty",
+      "Description": "Drop Items."
+    },
+    "FlockArray": {
+      "Value": [],
+      "TypeHint": "String",
+      "Description": "NPCs de este tipo de banco."
+    },
+    "MaxHealth": {
+      "Value": 55,
+      "Description": "Salud maxima."
+    },
+    "ViewRange": {
+      "Value": 14,
+      "Description": "Rango de vision."
+    },
+    "ViewSector": {
+      "Value": 160,
+      "Description": "Sector de vision en grados."
+    },
+    "HearingRange": {
+      "Value": 6,
+      "Description": "Rango de escucha."
+    },
+    "AbsoluteDetectionRange": {
+      "Value": 3,
+      "Description": "Deteccion garantizada."
+    },
+    "AlertedRange": {
+      "Value": 20,
+      "Description": "Rango mientras esta curioso."
+    },
+    "CuriousStopDistance": {
+      "Value": 4,
+      "Description": "Distancia al jugador mientras lo acompana."
+    },
+    "CuriousFollowSpeed": {
+      "Value": 0.35,
+      "Description": "Velocidad relativa al acompanar al jugador."
+    },
+    "CuriousTimeRange": {
+      "Value": [
+        6,
+        12
+      ],
+      "Description": "Tiempo maximo de curiosidad."
+    },
+    "IsMemory": {
+      "Value": false,
+      "Description": "Define si el NPC es un recuerdo."
+    },
+    "MemoriesCategory": {
+      "Value": "Other",
+      "Description": "Categoria del recuerdo."
+    },
+    "MemoriesNameOverride": {
+      "Value": "",
+      "Description": "Nombre alternativo del recuerdo."
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Template.name",
+      "Description": "Clave de traduccion."
+    },
+    "BreathesInWater": {
+      "Value": true,
+      "Description": "Whether this NPC can breathe underwater."
+    }
+  },
+  "IsMemory": {
+    "Compute": "IsMemory"
+  },
+  "MemoriesCategory": {
+    "Compute": "MemoriesCategory"
+  },
+  "MemoriesNameOverride": {
+    "Compute": "MemoriesNameOverride"
+  },
+  "DropList": {
+    "Compute": "DropList"
+  },
+  "FlockSpawnTypes": {
+    "Compute": "FlockArray"
+  },
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "MotionControllerList": [
+    {
+      "Type": "Dive",
+      "MaxSwimSpeed": 8,
+      "Acceleration": 10,
+      "MaxDiveSpeed": 6,
+      "SwimDepth": 0.6,
+      "SinkRatio": 0.5,
+      "MinDiveDepth": 0,
+      "MaxDiveDepth": 100,
+      "MinDepthAboveGround": 1,
+      "MinDepthBelowSurface": 1,
+      "Gravity": 10,
+      "MaxRotationSpeed": 360,
+      "MaxSwimTurnAngle": 180
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "$Comment": "Siempre receptivo a mensajes de posicion del banco",
+          "Sensor": {
+            "Type": "Beacon",
+            "Message": "Flock_Pos"
+          },
+          "Actions": [
+            {
+              "Type": "SetLeashPosition",
+              "ToTarget": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "Reference": "Component_Instruction_Clear_Status_Animation",
+              "Modify": {}
+            },
+            {
+              "$Comment": "Movimiento de banco",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Eval",
+                    "Expression": "blocked"
+                  },
+                  "BodyMotion": {
+                    "Type": "Timer",
+                    "Time": [
+                      2,
+                      3
+                    ],
+                    "Motion": {
+                      "Type": "Wander",
+                      "MaxHeadingChange": 45,
+                      "RelativeSpeed": 0.2
+                    }
+                  }
+                },
+                {
+                  "Reference": "Component_Instruction_Spread_Out",
+                  "Modify": {
+                    "Range": 1,
+                    "RelativeSpeed": 0.25
+                  }
+                },
+                {
+                  "Sensor": {
+                    "Type": "And",
+                    "Sensors": [
+                      {
+                        "Type": "Not",
+                        "Sensor": {
+                          "Reference": "Component_Sensor_Leads_Flock",
+                          "Modify": {}
+                        }
+                      },
+                      {
+                        "Type": "Leash",
+                        "Range": 4
+                      }
+                    ]
+                  },
+                  "BodyMotion": {
+                    "Type": "Seek",
+                    "SlowDownDistance": 1.5,
+                    "StopDistance": 1,
+                    "RelativeSpeed": 0.25
+                  }
+                },
+                {
+                  "Sensor": {
+                    "Type": "Any"
+                  },
+                  "BodyMotion": {
+                    "Type": "WanderInCircle",
+                    "Radius": 4,
+                    "MaxHeadingChange": 60,
+                    "RelativeSpeed": 0.25
+                  }
+                }
+              ]
+            },
+            {
+              "$Comment": "Lider del banco actualiza posicion leash",
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  {
+                    "Reference": "Component_Sensor_Leads_Flock",
+                    "Modify": {}
+                  },
+                  {
+                    "Type": "Leash",
+                    "Range": 5
+                  }
+                ]
+              },
+              "Actions": [
+                {
+                  "Type": "FlockBeacon",
+                  "Message": "Flock_Pos",
+                  "SendToSelf": false,
+                  "ExpirationTime": 0.5
+                },
+                {
+                  "Type": "SetLeashPosition",
+                  "ToCurrent": true
+                }
+              ]
+            },
+            {
+              "$Comment": "Detecta jugador \u2014 entra en curiosidad",
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange": {
+                    "Compute": "ViewRange"
+                  },
+                  "ViewSector": {
+                    "Compute": "ViewSector"
+                  },
+                  "HearingRange": {
+                    "Compute": "HearingRange"
+                  },
+                  "AbsoluteDetectionRange": {
+                    "Compute": "AbsoluteDetectionRange"
+                  },
+                  "Attitudes": [
+                    "Hostile",
+                    "Neutral"
+                  ]
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Curious"
+                }
+              ]
+            },
+            {
+              "$Comment": "Dano \u2014 panico de banco",
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true,
+                "Environment": true,
+                "Other": true
+              },
+              "Actions": [
+                {
+                  "Type": "FlockState",
+                  "State": "Panic"
+                },
+                {
+                  "Type": "State",
+                  "State": "Panic"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$Comment": "CURIOSO: Nada junto al jugador durante un tiempo, luego vuelve",
+          "Sensor": {
+            "Type": "State",
+            "State": "Curious"
+          },
+          "Instructions": [
+            {
+              "Reference": "Component_Instruction_Clear_Status_Animation",
+              "Modify": {}
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "SpawnParticles",
+                  "Offset": [
+                    0,
+                    0.5,
+                    0
+                  ],
+                  "ParticleSystem": "Question"
+                }
+              ]
+            },
+            {
+              "$Comment": "Si lo atacan, panico inmediato",
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Panic"
+                }
+              ]
+            },
+            {
+              "$Comment": "Mira al jugador mientras nada junto a el",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                }
+              },
+              "HeadMotion": {
+                "Type": "Watch"
+              }
+            },
+            {
+              "$Comment": "Nada manteniendo distancia prudente",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                }
+              },
+              "BodyMotion": {
+                "Type": "MaintainDistance",
+                "DesiredDistanceRange": {
+                  "Compute": "makeRange(CuriousStopDistance \u002B 1)"
+                },
+                "StrafingDurationRange": [
+                  1,
+                  2
+                ],
+                "StrafingFrequencyRange": [
+                  2,
+                  3
+                ],
+                "RelativeForwardsSpeed": {
+                  "Compute": "CuriousFollowSpeed"
+                }
+              }
+            },
+            {
+              "$Comment": "Timeout \u2014 vuelve al banco",
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": {
+                    "Compute": "CuriousTimeRange"
+                  },
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            },
+            {
+              "$Comment": "Si el jugador se aleja, vuelve al banco",
+              "Sensor": {
+                "Type": "Any"
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    1,
+                    1
+                  ],
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Flee"
+          },
+          "Instructions": [
+            {
+              "Reference": "Component_Instruction_Clear_Status_Animation",
+              "Modify": {}
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Eval",
+                    "Expression": "blocked"
+                  },
+                  "BodyMotion": {
+                    "Type": "Timer",
+                    "Time": [
+                      2,
+                      3
+                    ],
+                    "Motion": {
+                      "Type": "Wander",
+                      "MaxHeadingChange": 45,
+                      "RelativeSpeed": 0.2
+                    }
+                  }
+                },
+                {
+                  "Reference": "Component_Instruction_Spread_Out",
+                  "Modify": {
+                    "Range": 1,
+                    "RelativeSpeed": 0.25
+                  }
+                },
+                {
+                  "Sensor": {
+                    "Type": "Player",
+                    "Range": 5,
+                    "LockOnTarget": true
+                  },
+                  "BodyMotion": {
+                    "Type": "Flee",
+                    "SlowDownDistance": 9,
+                    "StopDistance": 12,
+                    "RelativeSpeed": 0.75
+                  }
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Player",
+                  "Range": 5,
+                  "Filters": [
+                    {
+                      "Type": "LineOfSight"
+                    }
+                  ]
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    1,
+                    1
+                  ],
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Panic",
+            "IgnoreMissingSetState": true
+          },
+          "Instructions": [
+            {
+              "Reference": "Component_Instruction_Clear_Status_Animation",
+              "Modify": {}
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Eval",
+                    "Expression": "blocked"
+                  },
+                  "BodyMotion": {
+                    "Type": "Timer",
+                    "Time": [
+                      1,
+                      3
+                    ],
+                    "Motion": {
+                      "Type": "Wander",
+                      "MaxHeadingChange": 45,
+                      "RelativeSpeed": 1
+                    }
+                  }
+                },
+                {
+                  "Reference": "Component_Instruction_Spread_Out",
+                  "Modify": {
+                    "Range": 1,
+                    "RelativeSpeed": 1
+                  }
+                },
+                {
+                  "Sensor": {
+                    "Type": "Any"
+                  },
+                  "BodyMotion": {
+                    "Type": "Sequence",
+                    "Looped": true,
+                    "Motions": [
+                      {
+                        "Type": "Timer",
+                        "Time": [
+                          1,
+                          2
+                        ],
+                        "Motion": {
+                          "Type": "WanderInCircle",
+                          "Radius": 10,
+                          "MaxHeadingChange": 45,
+                          "RelativeSpeed": 1
+                        }
+                      },
+                      {
+                        "Type": "Timer",
+                        "Time": [
+                          0.5,
+                          1
+                        ],
+                        "Motion": {
+                          "Type": "WanderInCircle",
+                          "Radius": 10,
+                          "MaxHeadingChange": 90,
+                          "RelativeSpeed": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Player",
+                "Range": 5,
+                "Filters": [
+                  {
+                    "Type": "LineOfSight"
+                  }
+                ]
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Flee"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Any"
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    3,
+                    6
+                  ],
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  },
+  "DefaultPlayerAttitude": "Neutral",
+  "DefaultNPCAttitude": "Ignore",
+  "BreathesInWater": {
+    "Compute": "BreathesInWater"
+  }
+}

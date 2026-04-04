@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "GulusGammamon_Model",
+    "MaxHealth": 42,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.GulusGammamon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

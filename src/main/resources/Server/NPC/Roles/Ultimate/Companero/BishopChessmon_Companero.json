@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "BishopChessmon_Model",
+    "MaxHealth": 70,
+    "MaxSpeed": 7,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.BishopChessmon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

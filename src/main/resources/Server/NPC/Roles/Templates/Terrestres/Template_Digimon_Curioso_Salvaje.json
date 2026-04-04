@@ -1,0 +1,757 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "$Comment": "CURIOSO (Terrestre): Se acerca al jugador con cautela. Huye si es atacado. NO ataca primero. Ideal para Digimon sociables, inexpertos o con personalidad inocente. Nivel Nino/Adulto — stats medios. Compatible con Update 3+.",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Tokomon",
+      "Description": "Modelo del Digimon — cambiar segun el Digimon"
+    },
+    "MaxHealth": {
+      "Value": 60,
+      "Description": "Salud — nivel Nino/Adulto"
+    },
+    "MaxSpeed": {
+      "Value": 5,
+      "Description": "Velocidad maxima"
+    },
+    "RunThreshold": {
+      "Value": 0.45,
+      "Description": "Umbral de animacion de carrera"
+    },
+    "ClimbHeight": {
+      "Value": 1,
+      "Description": "Altura maxima de escalada"
+    },
+    "WanderRadius": {
+      "Value": 10,
+      "Description": "Radio de deambulacion normal"
+    },
+    "ViewRange": {
+      "Value": 14,
+      "Description": "Distancia de vision para detectar al jugador"
+    },
+    "ViewSector": {
+      "Value": 160,
+      "Description": "Angulo de vision en grados — amplio porque es curioso"
+    },
+    "HearingRange": {
+      "Value": 8,
+      "Description": "Distancia de oido"
+    },
+    "AbsoluteDetectionRange": {
+      "Value": 2,
+      "Description": "Rango garantizado de deteccion — muy cercano activa curiosidad sin importar angulo"
+    },
+    "AlertedRange": {
+      "Value": 18,
+      "Description": "Rango de seguimiento mientras esta curioso o huyendo"
+    },
+    "CuriousApproachSpeed": {
+      "Value": 0.3,
+      "Description": "Velocidad de aproximacion curiosa — lento y cauteloso"
+    },
+    "CuriousStopDistance": {
+      "Value": 3,
+      "Description": "Distancia a la que el curioso se detiene frente al jugador"
+    },
+    "CuriousTimeRange": {
+      "Value": [
+        6,
+        10
+      ],
+      "Description": "Tiempo maximo de curiosidad activa antes de perder interes"
+    },
+    "FleeRelativeSpeed": {
+      "Value": 0.8,
+      "Description": "Velocidad relativa de huida"
+    },
+    "DayTimePeriod": {
+      "Value": [
+        6.01,
+        17.99
+      ],
+      "Description": "Rango horario de dia"
+    },
+    "DayTimeNapWeight": {
+      "Value": 2,
+      "Description": "Peso de siesta diurna — curiosos a veces dormitan pero no mucho"
+    },
+    "DayTimeNapTimeRange": {
+      "Value": [
+        5,
+        8
+      ],
+      "Description": "Duracion de siesta corta"
+    },
+    "AlwaysSleepAtNight": {
+      "Value": true,
+      "Description": "Duerme por la noche — los curiosos son diurnos"
+    },
+    "DropList": {
+      "Value": "Empty",
+      "Description": "Lista de drops"
+    },
+    "IsMemory": {
+      "Value": false,
+      "Description": "Es memoria"
+    },
+    "MemoriesCategory": {
+      "Value": "Digimon",
+      "Description": "Categoria de memoria"
+    },
+    "MemoriesNameOverride": {
+      "Value": "",
+      "Description": "Override del nombre de memoria"
+    },
+    "BreathesInWater": {
+      "Value": false,
+      "Description": "Puede respirar bajo el agua"
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Template.name",
+      "Description": "Clave de traduccion del nombre"
+    }
+  },
+  "IsMemory": {
+    "Compute": "IsMemory"
+  },
+  "MemoriesCategory": {
+    "Compute": "MemoriesCategory"
+  },
+  "MemoriesNameOverride": {
+    "Compute": "MemoriesNameOverride"
+  },
+  "BreathesInWater": {
+    "Compute": "BreathesInWater"
+  },
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "DropList": {
+    "Compute": "DropList"
+  },
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "DefaultPlayerAttitude": "Neutral",
+  "DefaultNPCAttitude": "Ignore",
+  "KnockbackScale": 0.9,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": {
+        "Compute": "MaxSpeed"
+      },
+      "Gravity": 10,
+      "RunThreshold": {
+        "Compute": "RunThreshold"
+      },
+      "RunThresholdRange": 0.05,
+      "MaxFallSpeed": 12,
+      "MaxRotationSpeed": 270,
+      "Acceleration": 10,
+      "MaxClimbHeight": {
+        "Compute": "ClimbHeight"
+      }
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "InteractionVars": {
+    "Melee_Damage": {
+      "Interactions": [
+        {
+          "$Comment": "Los curiosos casi no atacan — pero si los acorralan puede que muerdan",
+          "Parent": "NPC_Attack_Melee_Damage",
+          "DamageCalculator": {
+            "Type": "Absolute",
+            "BaseDamage": {
+              "Physical": 5
+            },
+            "RandomPercentageModifier": 0.1
+          }
+        }
+      ]
+    }
+  },
+  "StateTransitions": [
+    {
+      "States": [
+        {
+          "To": [
+            "Idle"
+          ],
+          "From": []
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "ReleaseTarget"
+        },
+        {
+          "Type": "ResetInstructions"
+        },
+        {
+          "Type": "PlayAnimation",
+          "Slot": "Status"
+        }
+      ]
+    },
+    {
+      "States": [
+        {
+          "To": [],
+          "From": [
+            "Curious",
+            "Flee"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "PlayAnimation",
+          "Slot": "Status"
+        }
+      ]
+    }
+  ],
+  "Instructions": [
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "$Comment": "Si recibe dano, huye directamente — mas prioridad que la curiosidad",
+              "Sensor": {
+                "Type": "Damage",
+                "Environment": true,
+                "Drowning": true,
+                "Combat": true,
+                "Other": true
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Reference": "Component_Sensor_Standard_Detection",
+                    "Modify": {
+                      "ViewRange": {
+                        "Compute": "AlertedRange"
+                      },
+                      "ViewSector": {
+                        "Compute": "ViewSector"
+                      },
+                      "HearingRange": {
+                        "Compute": "HearingRange"
+                      },
+                      "AbsoluteDetectionRange": {
+                        "Compute": "AbsoluteDetectionRange"
+                      },
+                      "Attitudes": [
+                        "Hostile",
+                        "Neutral"
+                      ]
+                    }
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Flee"
+                    }
+                  ]
+                },
+                {
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Panic"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "$Comment": "Deteccion normal del jugador — va a estado Curious",
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange": {
+                    "Compute": "ViewRange"
+                  },
+                  "ViewSector": {
+                    "Compute": "ViewSector"
+                  },
+                  "HearingRange": {
+                    "Compute": "HearingRange"
+                  },
+                  "AbsoluteDetectionRange": {
+                    "Compute": "AbsoluteDetectionRange"
+                  },
+                  "Attitudes": [
+                    "Hostile",
+                    "Neutral"
+                  ]
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Curious"
+                }
+              ]
+            },
+            {
+              "$Comment": "Deambulacion diurna normal",
+              "Type": "Random",
+              "ExecuteFor": [
+                12,
+                18
+              ],
+              "Sensor": {
+                "Type": "Time",
+                "Period": {
+                  "Compute": "DayTimePeriod"
+                },
+                "CheckDay": true
+              },
+              "Instructions": [
+                {
+                  "Weight": 20,
+                  "Instructions": [
+                    {
+                      "BodyMotion": {
+                        "Type": "Sequence",
+                        "Looped": true,
+                        "Motions": [
+                          {
+                            "Type": "Timer",
+                            "Time": [
+                              2,
+                              5
+                            ],
+                            "Motion": {
+                              "Type": "WanderInCircle",
+                              "Radius": {
+                                "Compute": "WanderRadius"
+                              },
+                              "MaxHeadingChange": 60,
+                              "RelativeSpeed": 0.2
+                            }
+                          },
+                          {
+                            "Type": "Timer",
+                            "Time": [
+                              2,
+                              5
+                            ],
+                            "Motion": {
+                              "Type": "Nothing"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Enabled": {
+                    "Compute": "DayTimeNapWeight > 0"
+                  },
+                  "Weight": {
+                    "Compute": "DayTimeNapWeight"
+                  },
+                  "Instructions": [
+                    {
+                      "Actions": [
+                        {
+                          "Type": "State",
+                          "State": "Sleep.Nap"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "$Comment": "Duerme de noche",
+              "Enabled": {
+                "Compute": "AlwaysSleepAtNight"
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    2,
+                    4
+                  ],
+                  "Action": {
+                    "Type": "Sequence",
+                    "Actions": [
+                      {
+                        "Type": "State",
+                        "State": "Sleep"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$Comment": "ESTADO CURIOSO: Se acerca lentamente al jugador. Huye si lo atacan.",
+          "Sensor": {
+            "Type": "State",
+            "State": "Curious"
+          },
+          "Instructions": [
+            {
+              "$Comment": "Animacion y particulas de curiosidad — una sola vez al entrar",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status",
+                  "Animation": "Alerted"
+                },
+                {
+                  "Type": "SpawnParticles",
+                  "Offset": [
+                    0,
+                    0.8,
+                    0
+                  ],
+                  "ParticleSystem": "Question"
+                }
+              ]
+            },
+            {
+              "$Comment": "Si lo atacan en este estado, huye inmediatamente",
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Flee"
+                }
+              ]
+            },
+            {
+              "$Comment": "Mira al jugador mientras se acerca",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                },
+                "Filters": [
+                  {
+                    "Type": "LineOfSight"
+                  }
+                ]
+              },
+              "HeadMotion": {
+                "Type": "Watch"
+              }
+            },
+            {
+              "$Comment": "Se aproxima lentamente al jugador cuando esta en rango",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                }
+              },
+              "BodyMotion": {
+                "Type": "Seek",
+                "SlowDownDistance": {
+                  "Compute": "CuriousStopDistance + 2"
+                },
+                "StopDistance": {
+                  "Compute": "CuriousStopDistance"
+                },
+                "RelativeSpeed": {
+                  "Compute": "CuriousApproachSpeed"
+                }
+              }
+            },
+            {
+              "$Comment": "Tiempo maximo de curiosidad — pierde interes y vuelve a idle",
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": {
+                    "Compute": "CuriousTimeRange"
+                  },
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            },
+            {
+              "$Comment": "Si el jugador se aleja, vuelve a idle tras un momento",
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Target",
+                  "Range": {
+                    "Compute": "AlertedRange"
+                  }
+                }
+              },
+              "ActionsAtomic": true,
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "Type": "State",
+                  "State": "Idle"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$Comment": "ESTADO HUIDA: Corre alejandose del jugador",
+          "Sensor": {
+            "Type": "State",
+            "State": "Flee"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status"
+                }
+              ]
+            },
+            {
+              "$Comment": "Si lo siguen golpeando, busca el objetivo y huye de el",
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                }
+              },
+              "BodyMotion": {
+                "Type": "Flee",
+                "SlowDownDistance": {
+                  "Compute": "AlertedRange - 3"
+                },
+                "StopDistance": {
+                  "Compute": "AlertedRange + 2"
+                },
+                "RelativeSpeed": {
+                  "Compute": "FleeRelativeSpeed"
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    6,
+                    8
+                  ],
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            },
+            {
+              "$Comment": "Si el jugador ya no esta en rango, regresa a idle",
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Idle"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$Comment": "ESTADO PANICO: Huida caotica tras dano inesperado",
+          "Sensor": {
+            "Type": "State",
+            "State": "Panic"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status",
+                  "Animation": "Alerted"
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    5,
+                    8
+                  ],
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true
+              },
+              "BodyMotion": {
+                "Type": "Flee",
+                "SlowDownDistance": 8,
+                "StopDistance": 14,
+                "RelativeSpeed": 1.0,
+                "RelaxedMoveConstraints": false
+              }
+            },
+            {
+              "BodyMotion": {
+                "Type": "WanderInCircle",
+                "Radius": 10,
+                "MaxHeadingChange": 90,
+                "RelativeSpeed": 1.0,
+                "RelaxedMoveConstraints": true
+              }
+            }
+          ]
+        },
+        {
+          "$Comment": "ESTADO SLEEP: Comportamiento de sueno. Mismo patron que templates base.",
+          "Sensor": {
+            "Type": "State",
+            "State": "Sleep"
+          },
+          "Instructions": [
+            {
+              "Enabled": {
+                "Compute": "DayTimeNapWeight > 0"
+              },
+              "Sensor": {
+                "Type": "State",
+                "State": ".Nap"
+              },
+              "Instructions": [
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Any",
+                    "Once": true
+                  },
+                  "Actions": [
+                    {
+                      "Type": "TimerStart",
+                      "Name": "NapTimer",
+                      "StartValueRange": {
+                        "Compute": "DayTimeNapTimeRange"
+                      },
+                      "RestartValueRange": {
+                        "Compute": "DayTimeNapTimeRange"
+                      }
+                    },
+                    {
+                      "Type": "TimerRestart",
+                      "Name": "NapTimer"
+                    }
+                  ]
+                },
+                {
+                  "Reference": "Component_Instruction_Wild_Sleep_State",
+                  "Modify": {
+                    "_ExportStates": [
+                      "Flee",
+                      "Panic",
+                      "Curious",
+                      "Idle"
+                    ],
+                    "HearingRange": {
+                      "Compute": "HearingRange"
+                    },
+                    "Attitudes": [
+                      "Hostile"
+                    ],
+                    "WakeupSensor": "Component_Sensor_Timed_Nap"
+                  }
+                }
+              ]
+            },
+            {
+              "Instructions": [
+                {
+                  "Reference": "Component_Instruction_Wild_Sleep_State",
+                  "Modify": {
+                    "_ExportStates": [
+                      "Flee",
+                      "Panic",
+                      "Curious",
+                      "Idle"
+                    ],
+                    "HearingRange": {
+                      "Compute": "HearingRange"
+                    },
+                    "Attitudes": [
+                      "Hostile"
+                    ],
+                    "DayTimePeriod": {
+                      "Compute": "DayTimePeriod"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Companero",
+  "Modify": {
+    "Appearance": "Pristimon_Model",
+    "MaxHealth": 32,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Pristimon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

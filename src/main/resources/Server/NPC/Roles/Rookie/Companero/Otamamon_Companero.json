@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Companero",
+  "Modify": {
+    "Appearance": "Otamamon_Model",
+    "MaxHealth": 32,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Otamamon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

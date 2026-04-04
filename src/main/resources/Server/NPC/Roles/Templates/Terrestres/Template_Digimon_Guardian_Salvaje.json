@@ -1,0 +1,1354 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "$Comment": "GUARDIÁN VOLADOR: Centinela territorial aéreo. Permanece en suelo vigilando. SOLO VUELA al abandonar el puesto para perseguir. AVISA antes de atacar. Ideal para Digimon que custodian lugares sagrados. Nivel Perfecto/Definitivo. Compatible con Update 3+.",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Angemon",
+      "Description": "Modelo del Digimon guardián"
+    },
+    "MaxHealth": {
+      "Value": 150,
+      "Description": "Salud alta — nivel Perfecto/Definitivo"
+    },
+    "MaxSpeed": {
+      "Value": 6,
+      "Description": "Velocidad maxima en tierra"
+    },
+    "FlySpeed": {
+      "Value": 14,
+      "Description": "Velocidad maxima en vuelo — solo al perseguir"
+    },
+    "RunThreshold": {
+      "Value": 0.35,
+      "Description": "Umbral de animacion de carrera"
+    },
+    "ClimbHeight": {
+      "Value": 1,
+      "Description": "Altura maxima de escalada"
+    },
+    "MinHeightOverGround": {
+      "Value": 0.5,
+      "Description": "Altura minima — casi en suelo cuando vigila"
+    },
+    "MaxHeightOverGround": {
+      "Value": 12,
+      "Description": "Altura maxima en vuelo — limitado al perseguir"
+    },
+    "TerritoryRange": {
+      "Value": 16,
+      "Description": "Zona de vigilancia — mira al jugador pero no ataca"
+    },
+    "GateRange": {
+      "Value": 6,
+      "Description": "Zona de exclusion — ataque inmediato si la cruza"
+    },
+    "ViewRange": {
+      "Value": 18,
+      "Description": "Distancia de vision normal"
+    },
+    "ViewSector": {
+      "Value": 120,
+      "Description": "Angulo de vision — guardian mira al frente"
+    },
+    "HearingRange": {
+      "Value": 8,
+      "Description": "Oido — detecta sonidos cercanos"
+    },
+    "AbsoluteDetectionRange": {
+      "Value": 4,
+      "Description": "Rango garantizado de deteccion"
+    },
+    "AlertedRange": {
+      "Value": 22,
+      "Description": "Rango de combate extendido"
+    },
+    "AttackDistance": {
+      "Value": 3,
+      "Description": "Distancia de ataque cuerpo a cuerpo"
+    },
+    "Attack": {
+      "Value": "Root_NPC_Attack_Melee",
+      "Description": "Ataque principal del guardian"
+    },
+    "AttackPauseRange": {
+      "Value": [
+        1.0,
+        2.0
+      ],
+      "Description": "Pausa entre ataques"
+    },
+    "CombatAttackPreDelay": {
+      "Value": [
+        0.2,
+        0.4
+      ],
+      "Description": "Retraso antes de atacar"
+    },
+    "CombatAttackPostDelay": {
+      "Value": [
+        0.3,
+        0.5
+      ],
+      "Description": "Retraso despues de atacar"
+    },
+    "CombatBehaviorDistance": {
+      "Value": 5,
+      "Description": "Distancia de movimiento de combate"
+    },
+    "CombatStrafeWeight": {
+      "Value": 8,
+      "Description": "Peso strafe — el guardian rodea al jugador"
+    },
+    "CombatDirectWeight": {
+      "Value": 12,
+      "Description": "Peso ataque directo"
+    },
+    "CombatAlwaysMovingWeight": {
+      "Value": 5,
+      "Description": "Peso movimiento constante"
+    },
+    "CombatBackOffAfterAttack": {
+      "Value": false,
+      "Description": "No retrocede tras atacar — implacable"
+    },
+    "CombatBackOffDistanceRange": {
+      "Value": [
+        1,
+        2
+      ],
+      "Description": "Retroceso minimo si se activa"
+    },
+    "CombatBackOffDurationRange": {
+      "Value": [
+        0.5,
+        1
+      ],
+      "Description": "Duracion del retroceso"
+    },
+    "CombatMovingRelativeSpeed": {
+      "Value": 0.7,
+      "Description": "Velocidad de movimiento en combate"
+    },
+    "CombatRelativeTurnSpeed": {
+      "Value": 1.5,
+      "Description": "Velocidad de giro en combate"
+    },
+    "ChaseRelativeSpeed": {
+      "Value": 0.9,
+      "Description": "Velocidad de persecucion — rapido en vuelo"
+    },
+    "LeashDistance": {
+      "Value": 12,
+      "Description": "No persigue muy lejos del punto de guardia"
+    },
+    "LeashMinPlayerDistance": {
+      "Value": 3,
+      "Description": "Distancia minima antes de abandonar persecucion"
+    },
+    "LeashTimer": {
+      "Value": [
+        3,
+        5
+      ],
+      "Description": "Tiempo antes de rendirse en persecucion"
+    },
+    "HardLeashDistance": {
+      "Value": 35,
+      "Description": "Distancia maxima absoluta desde el punto de guardia"
+    },
+    "LeashRelativeSpeed": {
+      "Value": 0.7,
+      "Description": "Velocidad de retorno al puesto"
+    },
+    "TargetSwitchTimer": {
+      "Value": [
+        3,
+        5
+      ],
+      "Description": "Tiempo antes de cambiar de objetivo"
+    },
+    "TargetRange": {
+      "Value": 3,
+      "Description": "Distancia de prioridad de objetivo"
+    },
+    "ConfusedTimeRange": {
+      "Value": [
+        1,
+        2
+      ],
+      "Description": "Tiempo de confusion al perder objetivo"
+    },
+    "SearchTimeRange": {
+      "Value": [
+        3,
+        5
+      ],
+      "Description": "Tiempo buscando antes de volver al puesto"
+    },
+    "BlockAbility": {
+      "Value": "",
+      "Description": "Sin bloqueo"
+    },
+    "DropList": {
+      "Value": "Empty",
+      "Description": "Lista de drops"
+    },
+    "IsMemory": {
+      "Value": false,
+      "Description": "Es memoria"
+    },
+    "MemoriesCategory": {
+      "Value": "Digimon",
+      "Description": "Categoria de memoria"
+    },
+    "MemoriesNameOverride": {
+      "Value": "",
+      "Description": "Override del nombre de memoria"
+    },
+    "BreathesInWater": {
+      "Value": false,
+      "Description": "Puede respirar bajo el agua"
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Template.name",
+      "Description": "Clave de traduccion del nombre"
+    }
+  },
+  "IsMemory": {
+    "Compute": "IsMemory"
+  },
+  "MemoriesCategory": {
+    "Compute": "MemoriesCategory"
+  },
+  "MemoriesNameOverride": {
+    "Compute": "MemoriesNameOverride"
+  },
+  "BreathesInWater": {
+    "Compute": "BreathesInWater"
+  },
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "DropList": {
+    "Compute": "DropList"
+  },
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "DefaultPlayerAttitude": "Neutral",
+  "DefaultNPCAttitude": "Ignore",
+  "KnockbackScale": 0.3,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": {
+        "Compute": "MaxSpeed"
+      },
+      "Gravity": 10,
+      "RunThreshold": {
+        "Compute": "RunThreshold"
+      },
+      "RunThresholdRange": 0.05,
+      "MaxFallSpeed": 15,
+      "MaxRotationSpeed": 200,
+      "Acceleration": 12,
+      "MaxClimbHeight": {
+        "Compute": "ClimbHeight"
+      }
+    },
+    {
+      "Type": "Fly",
+      "MaxHorizontalSpeed": {
+        "Compute": "FlySpeed"
+      },
+      "MaxSinkSpeed": 4,
+      "MaxClimbSpeed": 10,
+      "MinAirSpeed": 3,
+      "Acceleration": 6,
+      "MinHeightOverGround": {
+        "Compute": "MinHeightOverGround"
+      },
+      "MaxHeightOverGround": {
+        "Compute": "MaxHeightOverGround"
+      },
+      "MaxRollAngle": 180,
+      "MaxTurnSpeed": 360
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "InteractionVars": {
+    "Melee_Damage": {
+      "Interactions": [
+        {
+          "$Comment": "Guardián poderoso — daño considerable",
+          "Parent": "NPC_Attack_Melee_Damage",
+          "DamageCalculator": {
+            "Type": "Absolute",
+            "BaseDamage": {
+              "Physical": 16
+            },
+            "RandomPercentageModifier": 0.15
+          }
+        }
+      ]
+    }
+  },
+  "StateTransitions": [
+    {
+      "States": [
+        {
+          "To": [],
+          "From": [
+            "Alerted"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "PlayAnimation",
+          "Slot": "Status"
+        },
+        {
+          "Type": "SetFlag",
+          "Name": "AnimationBlock",
+          "SetTo": false
+        }
+      ]
+    },
+    {
+      "States": [
+        {
+          "To": [
+            "Idle"
+          ],
+          "From": []
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "ReleaseTarget"
+        },
+        {
+          "Type": "ResetInstructions"
+        }
+      ]
+    },
+    {
+      "States": [
+        {
+          "To": [
+            "Combat",
+            "Chase"
+          ],
+          "From": [
+            "Idle",
+            "Alerted"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "$Comment": "Activa vuelo solo al entrar en combate/persecucion",
+          "Type": "SetMotionController",
+          "Index": 1
+        }
+      ]
+    },
+    {
+      "States": [
+        {
+          "To": [
+            "Idle",
+            "ReturnHome"
+          ],
+          "From": [
+            "Combat",
+            "Chase",
+            "Search"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "$Comment": "Vuelve a caminar al regresar al puesto",
+          "Type": "SetMotionController",
+          "Index": 0
+        }
+      ]
+    }
+  ],
+  "Instructions": [
+    {
+      "Continue": true,
+      "Sensor": {
+        "Type": "Leash",
+        "Range": {
+          "Compute": "HardLeashDistance"
+        }
+      },
+      "Actions": [
+        {
+          "Type": "SetLeashPosition",
+          "ToCurrent": true
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "$Comment": "Si recibe daño de combate, ataca directamente",
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Reference": "Component_Sensor_Standard_Detection",
+                    "Modify": {
+                      "ViewRange": {
+                        "Compute": "AlertedRange"
+                      },
+                      "ViewSector": 360,
+                      "HearingRange": {
+                        "Compute": "HearingRange"
+                      },
+                      "AbsoluteDetectionRange": {
+                        "Compute": "AbsoluteDetectionRange"
+                      },
+                      "Attitudes": [
+                        "Hostile",
+                        "Neutral"
+                      ]
+                    }
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Combat.Message"
+                    }
+                  ]
+                },
+                {
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Panic"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "$Comment": "Detecta intruso en TerritoryRange → Alerted (aviso visual)",
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange": {
+                    "Compute": "TerritoryRange"
+                  },
+                  "ViewSector": {
+                    "Compute": "ViewSector"
+                  },
+                  "HearingRange": {
+                    "Compute": "HearingRange"
+                  },
+                  "AbsoluteDetectionRange": {
+                    "Compute": "AbsoluteDetectionRange"
+                  },
+                  "Attitudes": [
+                    "Hostile",
+                    "Neutral"
+                  ]
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Alerted"
+                }
+              ]
+            },
+            {
+              "$Comment": "Guardián QUIETO en su puesto — movimiento minimo en tierra",
+              "BodyMotion": {
+                "Type": "Sequence",
+                "Looped": true,
+                "Motions": [
+                  {
+                    "Type": "Timer",
+                    "Time": [
+                      8,
+                      15
+                    ],
+                    "Motion": {
+                      "Type": "Nothing"
+                    }
+                  },
+                  {
+                    "Type": "Timer",
+                    "Time": [
+                      1,
+                      3
+                    ],
+                    "Motion": {
+                      "Type": "WanderInCircle",
+                      "Radius": 1.5,
+                      "MaxHeadingChange": 30,
+                      "RelativeSpeed": 0.1
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "$Comment": "ALERTED: Aviso — mira fijamente sin moverse (en tierra)",
+          "Sensor": {
+            "Type": "State",
+            "State": "Alerted"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "SetFlag",
+                  "Name": "AnimationBlock",
+                  "SetTo": true
+                },
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status",
+                  "Animation": "Alerted"
+                },
+                {
+                  "Type": "SpawnParticles",
+                  "Offset": [
+                    0,
+                    1.2,
+                    0
+                  ],
+                  "ParticleSystem": "Alerted"
+                }
+              ]
+            },
+            {
+              "$Comment": "Si lo atacan durante el aviso → combate inmediato",
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Combat.Message"
+                }
+              ]
+            },
+            {
+              "$Comment": "Mira FIJAMENTE al intruso — sin moverse del puesto",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                },
+                "Filters": [
+                  {
+                    "Type": "LineOfSight"
+                  }
+                ]
+              },
+              "HeadMotion": {
+                "Type": "Watch"
+              }
+            },
+            {
+              "$Comment": "Si cruza GateRange → ataque INMEDIATO",
+              "Enabled": {
+                "Compute": "GateRange > 0"
+              },
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "GateRange"
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    0.1,
+                    0.1
+                  ],
+                  "Action": {
+                    "Type": "State",
+                    "State": "Combat.Message"
+                  }
+                }
+              ]
+            },
+            {
+              "$Comment": "Si el intruso se aleja, vuelve a hacer guardia",
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Target",
+                  "Range": {
+                    "Compute": "TerritoryRange"
+                  }
+                }
+              },
+              "ActionsAtomic": true,
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "Type": "State",
+                  "State": "Idle"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Combat"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AlertedRange"
+                },
+                "Filters": [
+                  {
+                    "Type": "LineOfSight"
+                  }
+                ]
+              },
+              "HeadMotion": {
+                "Type": "Watch"
+              }
+            },
+            {
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true
+              },
+              "Actions": [
+                {
+                  "Type": "OverrideAttitude",
+                  "Attitude": "Hostile",
+                  "Duration": 90
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "State",
+                "State": ".Message"
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": ".Default"
+                }
+              ]
+            },
+            {
+              "Reference": "Component_Instruction_Combat_Target_Swap",
+              "Modify": {
+                "TargetSwitchTimer": {
+                  "Compute": "TargetSwitchTimer"
+                },
+                "TargetRange": {
+                  "Compute": "TargetRange"
+                },
+                "NextTargetRange": {
+                  "Compute": "max(AlertedRange, HearingRange)"
+                }
+              }
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": ".Chase"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": {
+                      "Compute": "AttackDistance"
+                    },
+                    "Filters": [
+                      {
+                        "Type": "LineOfSight"
+                      }
+                    ]
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": ".Default"
+                    }
+                  ]
+                },
+                {
+                  "Reference": "Component_Instruction_Soft_Leash",
+                  "Modify": {
+                    "_ExportStates": [
+                      "ReturnHome"
+                    ],
+                    "LeashDistance": {
+                      "Compute": "LeashDistance"
+                    },
+                    "LeashMinPlayerDistance": {
+                      "Compute": "LeashMinPlayerDistance"
+                    },
+                    "LeashTimer": {
+                      "Compute": "LeashTimer"
+                    },
+                    "HardLeashDistance": {
+                      "Compute": "HardLeashDistance"
+                    }
+                  }
+                },
+                {
+                  "Reference": "Component_Instruction_Intelligent_Chase",
+                  "Modify": {
+                    "_ExportStates": [
+                      "Search.Confused",
+                      "Search.Confused",
+                      "ReturnHome"
+                    ],
+                    "ViewRange": {
+                      "Compute": "AlertedRange"
+                    },
+                    "HearingRange": {
+                      "Compute": "HearingRange"
+                    },
+                    "RelativeSpeed": {
+                      "Compute": "ChaseRelativeSpeed"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "AttackDistance"
+                },
+                "Filters": [
+                  {
+                    "Type": "LineOfSight"
+                  }
+                ]
+              },
+              "ActionsBlocking": true,
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": {
+                    "Compute": "CombatAttackPreDelay"
+                  }
+                },
+                {
+                  "Type": "Attack",
+                  "Attack": {
+                    "Compute": "Attack"
+                  },
+                  "AttackPauseRange": {
+                    "Compute": "AttackPauseRange"
+                  }
+                },
+                {
+                  "Type": "Timeout",
+                  "Delay": {
+                    "Compute": "CombatAttackPostDelay"
+                  }
+                },
+                {
+                  "Type": "TimerStart",
+                  "Name": "Combat_Back_Off",
+                  "StartValueRange": {
+                    "Compute": "CombatBackOffDurationRange"
+                  },
+                  "RestartValueRange": {
+                    "Compute": "CombatBackOffDurationRange"
+                  }
+                },
+                {
+                  "Type": "TimerRestart",
+                  "Name": "Combat_Back_Off"
+                }
+              ],
+              "HeadMotion": {
+                "Type": "Aim",
+                "RelativeTurnSpeed": {
+                  "Compute": "CombatRelativeTurnSpeed"
+                }
+              }
+            },
+            {
+              "Reference": "Component_Instruction_Soft_Leash",
+              "Modify": {
+                "_ExportStates": [
+                  "ReturnHome"
+                ],
+                "LeashDistance": {
+                  "Compute": "LeashDistance"
+                },
+                "LeashMinPlayerDistance": {
+                  "Compute": "LeashMinPlayerDistance"
+                },
+                "LeashTimer": {
+                  "Compute": "LeashTimer"
+                },
+                "HardLeashDistance": {
+                  "Compute": "HardLeashDistance"
+                }
+              }
+            },
+            {
+              "Reference": "Component_Instruction_Combat_Back_Off",
+              "Modify": {
+                "TimerName": "Combat_Back_Off",
+                "CombatBackOffAfterAttack": {
+                  "Compute": "CombatBackOffAfterAttack"
+                },
+                "CombatBackOffDistanceRange": {
+                  "Compute": "CombatBackOffDistanceRange"
+                },
+                "CombatBackOffDurationRange": {
+                  "Compute": "CombatBackOffDurationRange"
+                },
+                "BlockAbility": {
+                  "Compute": "BlockAbility"
+                },
+                "BlockProbability": 0,
+                "CombatStrafingDurationRange": [
+                  1,
+                  2
+                ],
+                "CombatStrafingFrequencyRange": [
+                  2,
+                  3
+                ],
+                "CombatBehaviorDistance": {
+                  "Compute": "CombatBehaviorDistance"
+                },
+                "CombatMovingRelativeSpeed": {
+                  "Compute": "CombatMovingRelativeSpeed"
+                }
+              }
+            },
+            {
+              "Type": "Random",
+              "ExecuteFor": [
+                5,
+                5
+              ],
+              "Sensor": {
+                "Type": "Target",
+                "Range": {
+                  "Compute": "CombatBehaviorDistance"
+                }
+              },
+              "Instructions": [
+                {
+                  "Enabled": {
+                    "Compute": "CombatStrafeWeight > 0"
+                  },
+                  "Weight": {
+                    "Compute": "CombatStrafeWeight"
+                  },
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": {
+                      "Compute": "CombatBehaviorDistance"
+                    }
+                  },
+                  "BodyMotion": {
+                    "Type": "MaintainDistance",
+                    "DesiredDistanceRange": [
+                      2,
+                      3
+                    ],
+                    "StrafingDurationRange": [
+                      1,
+                      2
+                    ],
+                    "StrafingFrequencyRange": [
+                      1,
+                      2
+                    ],
+                    "RelativeForwardsSpeed": {
+                      "Compute": "CombatMovingRelativeSpeed"
+                    }
+                  },
+                  "HeadMotion": {
+                    "Type": "Watch"
+                  }
+                },
+                {
+                  "Enabled": {
+                    "Compute": "CombatDirectWeight > 0"
+                  },
+                  "Weight": {
+                    "Compute": "CombatDirectWeight"
+                  },
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": {
+                      "Compute": "CombatBehaviorDistance"
+                    }
+                  },
+                  "BodyMotion": {
+                    "Type": "MaintainDistance",
+                    "DesiredDistanceRange": [
+                      2,
+                      3
+                    ],
+                    "StrafingDurationRange": [
+                      0,
+                      0
+                    ],
+                    "RelativeForwardsSpeed": {
+                      "Compute": "ChaseRelativeSpeed"
+                    }
+                  },
+                  "HeadMotion": {
+                    "Type": "Watch"
+                  }
+                },
+                {
+                  "Enabled": {
+                    "Compute": "CombatAlwaysMovingWeight > 0"
+                  },
+                  "Weight": {
+                    "Compute": "CombatAlwaysMovingWeight"
+                  },
+                  "Sensor": {
+                    "Type": "Target",
+                    "Range": {
+                      "Compute": "CombatBehaviorDistance"
+                    }
+                  },
+                  "HeadMotion": {
+                    "Type": "Aim",
+                    "RelativeTurnSpeed": {
+                      "Compute": "CombatRelativeTurnSpeed"
+                    }
+                  },
+                  "BodyMotion": {
+                    "Type": "Seek",
+                    "RelativeSpeed": {
+                      "Compute": "ChaseRelativeSpeed"
+                    },
+                    "StopDistance": {
+                      "Compute": "AttackDistance * 0.8"
+                    },
+                    "SlowDownDistance": {
+                      "Compute": "AttackDistance"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": ".Chase"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Target",
+                  "Range": {
+                    "Compute": "AlertedRange"
+                  }
+                }
+              },
+              "ActionsBlocking": true,
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    4,
+                    6
+                  ]
+                },
+                {
+                  "Type": "State",
+                  "State": "ReturnHome"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Search"
+          },
+          "Instructions": [
+            {
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true,
+                "TargetSlot": "LockedTarget"
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Combat.Message"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": ".Confused"
+              },
+              "Instructions": [
+                {
+                  "Continue": true,
+                  "ActionsBlocking": true,
+                  "Actions": [
+                    {
+                      "Type": "SpawnParticles",
+                      "Offset": [
+                        0,
+                        1.0,
+                        0
+                      ],
+                      "ParticleSystem": "Question"
+                    },
+                    {
+                      "Type": "Timeout",
+                      "Delay": {
+                        "Compute": "ConfusedTimeRange"
+                      }
+                    },
+                    {
+                      "Type": "State",
+                      "State": ".Prowl"
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Reference": "Component_Sensor_Standard_Detection",
+                    "Modify": {
+                      "ViewRange": {
+                        "Compute": "TerritoryRange / 2"
+                      },
+                      "ViewSector": {
+                        "Compute": "ViewSector"
+                      },
+                      "HearingRange": {
+                        "Compute": "HearingRange"
+                      },
+                      "AbsoluteDetectionRange": {
+                        "Compute": "AbsoluteDetectionRange"
+                      },
+                      "Attitudes": [
+                        "Hostile",
+                        "Neutral"
+                      ]
+                    }
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Alerted"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": ".Prowl"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Reference": "Component_Sensor_Standard_Detection",
+                    "Modify": {
+                      "ViewRange": {
+                        "Compute": "TerritoryRange"
+                      },
+                      "ViewSector": {
+                        "Compute": "ViewSector"
+                      },
+                      "HearingRange": {
+                        "Compute": "HearingRange"
+                      },
+                      "AbsoluteDetectionRange": {
+                        "Compute": "AbsoluteDetectionRange"
+                      },
+                      "Attitudes": [
+                        "Hostile",
+                        "Neutral"
+                      ]
+                    }
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Alerted"
+                    }
+                  ]
+                },
+                {
+                  "BodyMotion": {
+                    "Type": "Sequence",
+                    "Motions": [
+                      {
+                        "Type": "Timer",
+                        "Time": [
+                          1,
+                          2
+                        ],
+                        "Motion": {
+                          "Type": "Wander",
+                          "MaxHeadingChange": 1,
+                          "RelativeSpeed": 0.3
+                        }
+                      },
+                      {
+                        "Type": "Sequence",
+                        "Looped": true,
+                        "Motions": [
+                          {
+                            "Type": "Timer",
+                            "Time": [
+                              2,
+                              3
+                            ],
+                            "Motion": {
+                              "Type": "WanderInCircle",
+                              "Radius": 3,
+                              "MaxHeadingChange": 60,
+                              "RelativeSpeed": 0.3
+                            }
+                          },
+                          {
+                            "Type": "Timer",
+                            "Time": [
+                              1,
+                              2
+                            ],
+                            "Motion": {
+                              "Type": "Nothing"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "ActionsBlocking": true,
+                  "Actions": [
+                    {
+                      "Type": "Timeout",
+                      "Delay": {
+                        "Compute": "SearchTimeRange"
+                      }
+                    },
+                    {
+                      "Type": "State",
+                      "State": "ReturnHome"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$Comment": "RETURN HOME: Vuelve al puesto CAMINANDO (no volando)",
+          "Sensor": {
+            "Type": "State",
+            "State": "ReturnHome"
+          },
+          "Instructions": [
+            {
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  {
+                    "Type": "Damage",
+                    "Combat": true,
+                    "TargetSlot": "LockedTarget"
+                  },
+                  {
+                    "Enabled": {
+                      "Compute": "AbsoluteDetectionRange > 0"
+                    },
+                    "Type": "Target",
+                    "TargetSlot": "LockedTarget",
+                    "Range": {
+                      "Compute": "AbsoluteDetectionRange"
+                    }
+                  }
+                ]
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Combat"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Leash",
+                "Range": {
+                  "Compute": "LeashDistance * 0.3"
+                }
+              },
+              "BodyMotion": {
+                "Type": "Seek",
+                "SlowDownDistance": {
+                  "Compute": "LeashDistance * 0.4"
+                },
+                "StopDistance": {
+                  "Compute": "LeashDistance * 0.1"
+                },
+                "RelativeSpeed": {
+                  "Compute": "LeashRelativeSpeed"
+                },
+                "UsePathfinder": true
+              }
+            },
+            {
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Idle"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$Comment": "PANICO: Solo ante daño ambiental",
+          "Sensor": {
+            "Type": "State",
+            "State": "Panic"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status"
+                },
+                {
+                  "Type": "SpawnParticles",
+                  "Offset": [
+                    0,
+                    1.0,
+                    0
+                  ],
+                  "ParticleSystem": "Alerted"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange": {
+                    "Compute": "TerritoryRange"
+                  },
+                  "ViewSector": 360,
+                  "HearingRange": {
+                    "Compute": "HearingRange"
+                  },
+                  "AbsoluteDetectionRange": {
+                    "Compute": "AbsoluteDetectionRange"
+                  },
+                  "Attitudes": [
+                    "Hostile",
+                    "Neutral"
+                  ]
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Alerted"
+                }
+              ]
+            },
+            {
+              "BodyMotion": {
+                "Type": "WanderInCircle",
+                "Radius": 3,
+                "MaxHeadingChange": 60,
+                "RelativeSpeed": 0.5
+              },
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    3,
+                    5
+                  ],
+                  "Action": {
+                    "Type": "State",
+                    "State": "Idle"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  }
+}

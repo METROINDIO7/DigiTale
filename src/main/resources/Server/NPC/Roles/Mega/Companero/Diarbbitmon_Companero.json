@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Diarbbitmon_Model",
+    "MaxHealth": 87,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Diarbbitmon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

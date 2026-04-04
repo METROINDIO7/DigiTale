@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Companero",
+  "Modify": {
+    "Appearance": "Lucemon_Model",
+    "MaxHealth": 35,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Lucemon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

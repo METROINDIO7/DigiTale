@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Companero",
+  "Modify": {
+    "Appearance": "Bakomon_Model",
+    "MaxHealth": 29,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Bakomon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

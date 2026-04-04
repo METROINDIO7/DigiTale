@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "ShineGreymon_BurstMode_Model",
+    "MaxHealth": 95,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.ShineGreymon_BurstMode_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

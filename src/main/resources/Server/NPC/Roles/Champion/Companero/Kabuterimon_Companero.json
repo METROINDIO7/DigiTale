@@ -1,0 +1,20 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Kabuterimon_Model",
+    "MaxHealth": 46,
+    "MaxSpeed": 8,
+    "IsMountable": true,
+    "MountAnchorY": 1.5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Kabuterimon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

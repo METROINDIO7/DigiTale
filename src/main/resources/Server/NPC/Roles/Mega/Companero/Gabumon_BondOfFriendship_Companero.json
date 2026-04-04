@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Gabumon_BondOfFriendship_Model",
+    "MaxHealth": 95,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Gabumon_BondOfFriendship_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

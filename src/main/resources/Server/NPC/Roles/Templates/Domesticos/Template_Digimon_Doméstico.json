@@ -1,0 +1,487 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Koromon_Model",
+      "Description": "Modelo visual"
+    },
+    "MaxHealth": {
+      "Value": 30,
+      "Description": "Salud máxima"
+    },
+    "MaxSpeed": {
+      "Value": 3,
+      "Description": "Velocidad de movimiento (más lento, es doméstico)"
+    },
+    "HomePosition": {
+      "Value": [
+        0,
+        0,
+        0
+      ],
+      "Description": "Posición de anclaje (se actualizará al spawnear)"
+    },
+    "HomeRadius": {
+      "Value": 10,
+      "Description": "Radio máximo de desplazamiento desde casa"
+    },
+    "AvailableTasks": {
+      "Value": [
+        "cook",
+        "farm",
+        "chop"
+      ],
+      "Description": "Tareas que puede realizar"
+    },
+    "WorkDuration": {
+      "Value": [
+        10,
+        20
+      ],
+      "Description": "Tiempo de trabajo en segundos"
+    },
+    "RestDuration": {
+      "Value": [
+        5,
+        10
+      ],
+      "Description": "Tiempo de descanso entre tareas"
+    },
+    "PetAnimation": {
+      "Value": "Happy",
+      "Description": "Animación al ser acariciado"
+    },
+    "PetCooldown": {
+      "Value": [
+        "PT30S",
+        "PT60S"
+      ],
+      "Description": "Cooldown entre caricias"
+    },
+    "ParticleOffset": {
+      "Value": [
+        0,
+        0.8,
+        0
+      ],
+      "Description": "Offset de partículas"
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.DomesticDigimon.name",
+      "Description": "Clave de nombre"
+    }
+  },
+  "modules": {
+    "hytale:memories": {
+      "memory_duration": {
+        "CURRENT_TASK": -1,
+        "TASK_ASSIGNED_BY": 24000,
+        "LAST_WORK_CYCLE": 6000,
+        "PLAYER_LAST_PET": 6000
+      }
+    },
+    "hytale:npc_interaction": {
+      "interactions": [
+        {
+          "type": "PET",
+          "conditions": {
+            "cooldown_passed": "pet_cooldown"
+          },
+          "effects": {
+            "play_sound": "mod_digimon:digimon_pet",
+            "show_particles": "Hearts_Subtle",
+            "animation": {
+              "Compute": "PetAnimation"
+            },
+            "set_cooldown": {
+              "name": "pet_cooldown",
+              "duration": {
+                "Compute": "PetCooldown"
+              }
+            },
+            "set_memory": "PLAYER_LAST_PET"
+          }
+        },
+        {
+          "type": "TALK",
+          "conditions": {},
+          "effects": {
+            "open_dialog": "mod_digimon:task_assignment_dialog"
+          }
+        }
+      ]
+    }
+  },
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "DefaultPlayerAttitude": "Revered",
+  "DefaultNPCAttitude": "Ignore",
+  "AttitudeGroup": "Prey",
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "KnockbackScale": 0.5,
+  "Invulnerable": true,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": {
+        "Compute": "MaxSpeed"
+      },
+      "Gravity": 10,
+      "MaxFallSpeed": 8,
+      "Acceleration": 8,
+      "MaxRotationSpeed": 360
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "StateTransitions": [
+    {
+      "States": [
+        {
+          "To": [
+            "Idle",
+            "Working"
+          ],
+          "From": []
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "ReleaseTarget"
+        },
+        {
+          "Type": "ResetInstructions"
+        }
+      ]
+    }
+  ],
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Continue": true,
+          "Sensor": {
+            "Type": "Alarm",
+            "Name": "Rest_Ready",
+            "State": "Passed",
+            "Clear": true
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        },
+        {
+          "Continue": true,
+          "Sensor": {
+            "Type": "Alarm",
+            "Name": "Work_Ready",
+            "State": "Passed",
+            "Clear": true
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "Sensor": {
+                "Type": "Memory",
+                "Memory": "CURRENT_TASK",
+                "Condition": "Exists"
+              },
+              "Instructions": [
+                {
+                  "Actions": [
+                    {
+                      "Type": "SetState",
+                      "State": "Working"
+                    },
+                    {
+                      "Type": "SetAlarm",
+                      "Name": "Work_Ready",
+                      "Duration": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "BodyMotion": {
+                "Type": "Sequence",
+                "Looped": true,
+                "Motions": [
+                  {
+                    "Type": "Timer",
+                    "Time": [
+                      3,
+                      6
+                    ],
+                    "Motion": {
+                      "Type": "WanderInCircle",
+                      "Radius": 4,
+                      "MaxHeadingChange": 90,
+                      "RelativeSpeed": 0.2
+                    }
+                  },
+                  {
+                    "Type": "Timer",
+                    "Time": [
+                      4,
+                      8
+                    ],
+                    "Motion": {
+                      "Type": "Nothing"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Working"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Alarm",
+                "Name": "Work_Ready",
+                "State": "Passed"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Memory",
+                    "Memory": "CURRENT_TASK",
+                    "Condition": "Exists"
+                  },
+                  "Actions": [
+                    {
+                      "Type": "RunTask",
+                      "Task": {
+                        "Memory": "CURRENT_TASK"
+                      },
+                      "Duration": {
+                        "Compute": "WorkDuration"
+                      }
+                    },
+                    {
+                      "Type": "SetAlarm",
+                      "Name": "Rest_Ready",
+                      "Duration": {
+                        "Compute": "RestDuration"
+                      }
+                    },
+                    {
+                      "Type": "SetState",
+                      "State": "Idle"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "DistanceFromHome",
+            "HomePosition": {
+              "Compute": "HomePosition"
+            },
+            "MaxDistance": {
+              "Compute": "HomeRadius"
+            },
+            "Condition": "Greater"
+          },
+          "BodyMotion": {
+            "Type": "GoToPosition",
+            "Position": {
+              "Compute": "HomePosition"
+            },
+            "RelativeSpeed": 0.8
+          }
+        }
+      ]
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Continue": true,
+        "Actions": [
+          {
+            "Type": "LockOnInteractionTarget",
+            "TargetSlot": "InteractionTarget"
+          }
+        ]
+      },
+      {
+        "TreeMode": true,
+        "Instructions": [
+          {
+            "InvertTreeModeResult": true,
+            "Sensor": {
+              "Type": "And",
+              "Sensors": [
+                {
+                  "Type": "Alarm",
+                  "Name": "Pet_Ready",
+                  "State": "Unset"
+                },
+                {
+                  "Type": "Target",
+                  "TargetSlot": "InteractionTarget",
+                  "Filters": [
+                    {
+                      "Type": "Not",
+                      "Filter": {
+                        "Type": "ItemInHand",
+                        "Hand": "Main",
+                        "Items": [
+                          "*"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "Actions": [
+              {
+                "Type": "SetInteractable",
+                "Interactable": true,
+                "Hint": "server.interactionHints.pet"
+              }
+            ]
+          },
+          {
+            "InvertTreeModeResult": true,
+            "Continue": true,
+            "Sensor": {
+              "Type": "Any"
+            },
+            "Actions": [
+              {
+                "Type": "SetInteractable",
+                "Interactable": true,
+                "Hint": "server.interactionHints.assignTask"
+              }
+            ]
+          },
+          {
+            "Sensor": {
+              "Type": "HasInteracted"
+            },
+            "Instructions": [
+              {
+                "Sensor": {
+                  "Type": "Target",
+                  "Filters": [
+                    {
+                      "Type": "ItemInHand",
+                      "Hand": "Main",
+                      "Items": [
+                        "*"
+                      ]
+                    }
+                  ]
+                },
+                "Actions": [
+                  {
+                    "Type": "OpenDialog",
+                    "Dialog": "mod_digimon:task_assignment",
+                    "Target": "InteractionTarget"
+                  }
+                ]
+              },
+              {
+                "Sensor": {
+                  "Type": "Not",
+                  "Sensor": {
+                    "Type": "Target",
+                    "Filters": [
+                      {
+                        "Type": "ItemInHand",
+                        "Hand": "Main",
+                        "Items": [
+                          "*"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "Actions": [
+                  {
+                    "Type": "PlayAnimation",
+                    "Slot": "Status",
+                    "Animation": {
+                      "Compute": "PetAnimation"
+                    }
+                  },
+                  {
+                    "Type": "SpawnParticles",
+                    "ParticleSystem": "Hearts_Subtle",
+                    "Offset": {
+                      "Compute": "ParticleOffset"
+                    },
+                    "TargetNodeName": "Head"
+                  },
+                  {
+                    "Type": "SetAlarm",
+                    "Name": "Pet_Ready",
+                    "DurationRange": {
+                      "Compute": "PetCooldown"
+                    }
+                  },
+                  {
+                    "Type": "SetMemory",
+                    "Memory": "PLAYER_LAST_PET",
+                    "Value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": false
+          }
+        ]
+      }
+    ]
+  },
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  }
+}

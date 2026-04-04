@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Nadador_Companero",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 80,
+    "IsMountable": true,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Gomamon_Companion_SemiAcuatico_Montable.name",
+      "Description": "Nombre del Gomamon compañero semi-acuático montable"
+    }
+  }
+}

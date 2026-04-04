@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Companero",
+  "Modify": {
+    "Appearance": "Gazimon_XAntibody_Model",
+    "MaxHealth": 29,
+    "MaxSpeed": 5,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Gazimon_XAntibody_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

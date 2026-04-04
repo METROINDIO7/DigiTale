@@ -1,0 +1,691 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "$Comment": "COMPAÑERO SEMI-ACUÁTICO MONTABLE: Walk (InitialMotionController forzado, probado funcional) + Dive + bloque Mount. IsMountable false por defecto, activar en variante.",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Gomamon_Model",
+      "Description": "Modelo visual del Digimon"
+    },
+    "MaxHealth": {
+      "Value": 80,
+      "Description": "Salud maxima"
+    },
+    "ViewRange": {
+      "Value": 18,
+      "Description": "Rango de vision"
+    },
+    "ViewSector": {
+      "Value": 200,
+      "Description": "Sector de vision en grados"
+    },
+    "HearingRange": {
+      "Value": 8,
+      "Description": "Rango de oido"
+    },
+    "AbsoluteDetectionRange": {
+      "Value": 4,
+      "Description": "Rango de deteccion garantizada"
+    },
+    "AlertedRange": {
+      "Value": 22,
+      "Description": "Rango alerta"
+    },
+    "FollowItemDistance": {
+      "Value": [
+        2,
+        4
+      ],
+      "Description": "Distancia de seguimiento al jugador"
+    },
+    "LandMaxSpeed": {
+      "Value": 2.5,
+      "Description": "Velocidad en tierra. Baja: se arrastra."
+    },
+    "ParticleOffset": {
+      "Value": [
+        0,
+        0.7,
+        0
+      ],
+      "Description": "Offset de particulas"
+    },
+    "SeparationDistance": {
+      "Value": 1.0,
+      "Description": "Distancia de separacion entre NPCs del mismo tipo"
+    },
+    "DefaultPlayerAttitude": {
+      "Value": "Revered",
+      "Description": "Actitud por defecto hacia el jugador"
+    },
+    "PetAnimation": {
+      "Value": "Curious",
+      "Description": "Animacion al ser acariciado"
+    },
+    "PetTimeout": {
+      "Value": [
+        "PT1M",
+        "PT1M"
+      ],
+      "Description": "Cooldown entre pets (formato ISO 8601)"
+    },
+    "PetRequiredAttitudes": {
+      "Value": [
+        "Friendly",
+        "Revered"
+      ],
+      "Description": "Actitudes que pueden acariciar al Digimon"
+    },
+    "AttractiveItemSet": {
+      "Value": [
+        "Tool_Feedbag"
+      ],
+      "Description": "Items con los que se puede alimentar al Digimon"
+    },
+    "FeedRequiredAttitudes": {
+      "Value": [
+        "Friendly",
+        "Revered"
+      ],
+      "Description": "Actitudes que pueden alimentar al Digimon"
+    },
+    "EatTimeout": {
+      "Value": [
+        "PT4H",
+        "PT8H"
+      ],
+      "Description": "Cooldown entre comidas (formato ISO 8601)"
+    },
+    "AttitudeGroup": {
+      "Value": "Prey",
+      "Description": "Grupo de actitud"
+    },
+    "DropList": {
+      "Value": "Empty",
+      "Description": "Items al morir"
+    },
+    "BreathesInWater": {
+      "Value": true,
+      "Description": "Puede respirar bajo el agua"
+    },
+    "IsMemory": {
+      "Value": false,
+      "Description": "Si es un recuerdo"
+    },
+    "MemoriesCategory": {
+      "Value": "Other",
+      "Description": "Categoria del recuerdo"
+    },
+    "MemoriesNameOverride": {
+      "Value": "",
+      "Description": "Nombre override del recuerdo"
+    },
+    "IsMountable": {
+      "Value": false,
+      "Description": "Si el Digimon puede ser montado. Activar en variantes Champion/Ultimate/Mega."
+    },
+    "MountAnchorX": {
+      "Value": 0,
+      "Description": "Offset X del punto de montaje"
+    },
+    "MountAnchorY": {
+      "Value": 1.8,
+      "Description": "Offset Y del punto de montaje (altura de la silla)"
+    },
+    "MountAnchorZ": {
+      "Value": 0,
+      "Description": "Offset Z del punto de montaje"
+    },
+    "MountMovementConfig": {
+      "Value": "Mount",
+      "Description": "Configuracion de movimiento al montar"
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Template.name",
+      "Description": "Clave de nombre para la UI"
+    }
+  },
+  "modules": {
+    "hytale:memories": {
+      "memory_duration": {
+        "PLAYER_LAST_FED": 14400,
+        "PLAYER_LAST_PET": 6000,
+        "PLAYER_HIT": 24000
+      }
+    }
+  },
+  "IsMemory": {
+    "Compute": "IsMemory"
+  },
+  "MemoriesCategory": {
+    "Compute": "MemoriesCategory"
+  },
+  "MemoriesNameOverride": {
+    "Compute": "MemoriesNameOverride"
+  },
+  "DropList": {
+    "Compute": "DropList"
+  },
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "DefaultPlayerAttitude": {
+    "Compute": "DefaultPlayerAttitude"
+  },
+  "DefaultNPCAttitude": "Ignore",
+  "AttitudeGroup": {
+    "Compute": "AttitudeGroup"
+  },
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "KnockbackScale": 0.3,
+  "ApplySeparation": true,
+  "SeparationDistance": {
+    "Compute": "SeparationDistance"
+  },
+  "SeparationWeight": 1,
+  "SeparationDistanceTarget": {
+    "Compute": "SeparationDistance"
+  },
+  "SeparationNearRadiusTarget": 1,
+  "SeparationFarRadiusTarget": 3,
+  "BreathesInWater": {
+    "Compute": "BreathesInWater"
+  },
+  "$Comment_MotionController": "InitialMotionController Walk forzado — critico para que no arranque en Dive. Dive presente para comportamiento en agua.",
+  "InitialMotionController": "Walk",
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": {
+        "Compute": "LandMaxSpeed"
+      },
+      "Gravity": 10,
+      "MaxFallSpeed": 8,
+      "Acceleration": 5,
+      "MaxRotationSpeed": 270
+    },
+    {
+      "Type": "Dive",
+      "MaxSwimSpeed": 10,
+      "Acceleration": 12,
+      "MaxDiveSpeed": 8,
+      "SwimDepth": 0.6,
+      "SinkRatio": 0.5,
+      "MinDiveDepth": 0,
+      "MaxDiveDepth": 100,
+      "MinDepthAboveGround": 1,
+      "MinDepthBelowSurface": 1,
+      "Gravity": 10,
+      "MaxRotationSpeed": 360,
+      "MaxSwimTurnAngle": 180
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "StateTransitions": [
+    {
+      "States": [
+        {
+          "To": [
+            "Idle"
+          ],
+          "From": []
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "ReleaseTarget"
+        },
+        {
+          "Type": "ResetInstructions"
+        },
+        {
+          "Type": "PlayAnimation",
+          "Slot": "Status"
+        }
+      ]
+    }
+  ],
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Continue": true,
+          "Sensor": {
+            "Type": "Alarm",
+            "Name": "Pet_Ready",
+            "State": "Passed",
+            "Clear": true
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        },
+        {
+          "Continue": true,
+          "Sensor": {
+            "Type": "Alarm",
+            "Name": "Eat_Ready",
+            "State": "Passed",
+            "Clear": true
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "$Comment": "Detecta jugador amigable y lo sigue. Walk controller activo — lento en tierra.",
+              "Continue": true,
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange": {
+                    "Compute": "ViewRange"
+                  },
+                  "ViewSector": {
+                    "Compute": "ViewSector"
+                  },
+                  "HearingRange": {
+                    "Compute": "HearingRange"
+                  },
+                  "AbsoluteDetectionRange": {
+                    "Compute": "AbsoluteDetectionRange"
+                  },
+                  "Attitudes": [
+                    "Revered",
+                    "Friendly"
+                  ],
+                  "GetNPCs": false
+                }
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Target",
+                    "Filters": [
+                      {
+                        "Type": "Attitude",
+                        "Attitudes": [
+                          "Revered",
+                          "Friendly"
+                        ]
+                      }
+                    ]
+                  },
+                  "HeadMotion": {
+                    "Type": "Watch"
+                  },
+                  "BodyMotion": {
+                    "Type": "MaintainDistance",
+                    "DesiredDistanceRange": {
+                      "Compute": "FollowItemDistance"
+                    },
+                    "RelativeForwardsSpeed": 0.7,
+                    "RelativeBackwardsSpeed": 0.3
+                  },
+                  "Actions": [
+                    {
+                      "Type": "PlayAnimation",
+                      "Slot": "Status",
+                      "Animation": "Curious"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "$Comment": "Sin jugador cerca: merodear lento con pausas largas.",
+              "BodyMotion": {
+                "Type": "Sequence",
+                "Looped": true,
+                "Motions": [
+                  {
+                    "Type": "Timer",
+                    "Time": [
+                      3,
+                      6
+                    ],
+                    "Motion": {
+                      "Type": "WanderInCircle",
+                      "Radius": 4,
+                      "MaxHeadingChange": 45,
+                      "RelativeSpeed": 0.15
+                    }
+                  },
+                  {
+                    "Type": "Timer",
+                    "Time": [
+                      2,
+                      5
+                    ],
+                    "Motion": {
+                      "Type": "Nothing"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Continue": true,
+        "Actions": [
+          {
+            "Type": "LockOnInteractionTarget",
+            "TargetSlot": "InteractionTarget"
+          }
+        ]
+      },
+      {
+        "$Comment": "--- BLOQUE PET ---",
+        "TreeMode": true,
+        "Instructions": [
+          {
+            "InvertTreeModeResult": true,
+            "Sensor": {
+              "Type": "Not",
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  {
+                    "Type": "Alarm",
+                    "Name": "Pet_Ready",
+                    "State": "Unset"
+                  },
+                  {
+                    "Type": "CanInteract",
+                    "Attitudes": {
+                      "Compute": "PetRequiredAttitudes"
+                    }
+                  },
+                  {
+                    "Type": "Target",
+                    "TargetSlot": "InteractionTarget",
+                    "Filters": [
+                      {
+                        "Type": "Not",
+                        "Filter": {
+                          "Type": "ItemInHand",
+                          "Hand": "Main",
+                          "Items": [
+                            "*"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "Actions": [
+              {
+                "Type": "Nothing"
+              }
+            ]
+          },
+          {
+            "InvertTreeModeResult": true,
+            "Continue": true,
+            "Sensor": {
+              "Type": "Any"
+            },
+            "Actions": [
+              {
+                "Type": "SetInteractable",
+                "Interactable": true,
+                "Hint": "server.interactionHints.pet"
+              }
+            ]
+          },
+          {
+            "Sensor": {
+              "Type": "HasInteracted"
+            },
+            "Instructions": [
+              {
+                "Sensor": {
+                  "Type": "Target"
+                },
+                "Actions": [
+                  {
+                    "Type": "PlayAnimation",
+                    "Slot": "Status",
+                    "Animation": {
+                      "Compute": "PetAnimation"
+                    }
+                  },
+                  {
+                    "Type": "SpawnParticles",
+                    "ParticleSystem": "Hearts_Subtle",
+                    "Offset": {
+                      "Compute": "ParticleOffset"
+                    },
+                    "TargetNodeName": "Head"
+                  },
+                  {
+                    "Type": "SetAlarm",
+                    "Name": "Pet_Ready",
+                    "DurationRange": {
+                      "Compute": "PetTimeout"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$Comment": "--- BLOQUE ALIMENTAR ---",
+        "TreeMode": true,
+        "Instructions": [
+          {
+            "InvertTreeModeResult": true,
+            "Sensor": {
+              "Type": "Not",
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  {
+                    "Type": "Alarm",
+                    "Name": "Eat_Ready",
+                    "State": "Unset"
+                  },
+                  {
+                    "Type": "CanInteract",
+                    "Attitudes": {
+                      "Compute": "FeedRequiredAttitudes"
+                    }
+                  },
+                  {
+                    "Type": "Target",
+                    "TargetSlot": "InteractionTarget",
+                    "Filters": [
+                      {
+                        "Type": "ItemInHand",
+                        "Hand": "Main",
+                        "Items": {
+                          "Compute": "AttractiveItemSet"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "Actions": [
+              {
+                "Type": "Nothing"
+              }
+            ]
+          },
+          {
+            "InvertTreeModeResult": true,
+            "Continue": true,
+            "Sensor": {
+              "Type": "Any"
+            },
+            "Actions": [
+              {
+                "Type": "SetInteractable",
+                "Interactable": true,
+                "Hint": "server.interactionHints.feed"
+              }
+            ]
+          },
+          {
+            "Sensor": {
+              "Type": "HasInteracted"
+            },
+            "Instructions": [
+              {
+                "Sensor": {
+                  "Type": "Target",
+                  "TargetSlot": "InteractionTarget"
+                },
+                "Actions": [
+                  {
+                    "Type": "Inventory",
+                    "UseTarget": true,
+                    "Operation": "RemoveHeldItem",
+                    "Count": 1
+                  },
+                  {
+                    "Type": "SpawnParticles",
+                    "ParticleSystem": "Hearts_Subtle",
+                    "Offset": {
+                      "Compute": "ParticleOffset"
+                    },
+                    "TargetNodeName": "Head"
+                  },
+                  {
+                    "Type": "SetStat",
+                    "Stat": "Health",
+                    "Value": {
+                      "Compute": "MaxHealth"
+                    }
+                  },
+                  {
+                    "Type": "SetAlarm",
+                    "Name": "Eat_Ready",
+                    "DurationRange": {
+                      "Compute": "EatTimeout"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$Comment": "--- BLOQUE MONTAR (solo activo si IsMountable = true) ---",
+        "Enabled": {
+          "Compute": "IsMountable"
+        },
+        "TreeMode": true,
+        "Instructions": [
+          {
+            "InvertTreeModeResult": true,
+            "Sensor": {
+              "Type": "Not",
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  {
+                    "Type": "CanInteract",
+                    "ViewSector": 360,
+                    "Attitudes": [
+                      "Revered",
+                      "Friendly"
+                    ]
+                  }
+                ]
+              }
+            },
+            "Actions": [
+              {
+                "Type": "Nothing"
+              }
+            ]
+          },
+          {
+            "InvertTreeModeResult": true,
+            "Continue": true,
+            "Sensor": {
+              "Type": "Any"
+            },
+            "Actions": [
+              {
+                "Type": "SetInteractable",
+                "Interactable": true,
+                "Hint": "server.interactionHints.mount"
+              }
+            ]
+          },
+          {
+            "Sensor": {
+              "Type": "HasInteracted"
+            },
+            "Actions": [
+              {
+                "Type": "PlayAnimation",
+                "Slot": "Status"
+              },
+              {
+                "Type": "Mount",
+                "AnchorX": {
+                  "Compute": "MountAnchorX"
+                },
+                "AnchorY": {
+                  "Compute": "MountAnchorY"
+                },
+                "AnchorZ": {
+                  "Compute": "MountAnchorZ"
+                },
+                "MovementConfig": {
+                  "Compute": "MountMovementConfig"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$Comment": "Solo ahora que fallaron todas las interacciones posibles, desactivar interactividad.",
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": false
+          }
+        ]
+      }
+    ]
+  },
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  }
+}

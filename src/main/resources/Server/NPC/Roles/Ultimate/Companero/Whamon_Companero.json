@@ -1,0 +1,20 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Whamon_Model",
+    "MaxHealth": 70,
+    "MaxSpeed": 10,
+    "IsMountable": true,
+    "MountAnchorY": 2.8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Whamon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

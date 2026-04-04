@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Titamon_SkullBaluchimon_Model",
+    "MaxHealth": 79,
+    "MaxSpeed": 8,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Titamon_SkullBaluchimon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

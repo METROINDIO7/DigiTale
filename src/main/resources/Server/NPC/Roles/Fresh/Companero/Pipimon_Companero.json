@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Companero",
+  "Modify": {
+    "Appearance": "Pipimon_Model",
+    "MaxHealth": 22,
+    "MaxSpeed": 3,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Pipimon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

@@ -1,0 +1,650 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Botamon_Model",
+      "Description": "Modelo visual del Digimon"
+    },
+    "MaxHealth": {
+      "Value": 20,
+      "Description": "Salud maxima. Los Baby son invulnerables, pero el valor se usa para restaurar salud al alimentarlos."
+    },
+    "ViewRange": {
+      "Value": 16,
+      "Description": "Rango de vision"
+    },
+    "ViewSector": {
+      "Value": 180,
+      "Description": "Sector de vision en grados"
+    },
+    "HearingRange": {
+      "Value": 8,
+      "Description": "Rango de oido"
+    },
+    "AbsoluteDetectionRange": {
+      "Value": 4,
+      "Description": "Rango de deteccion garantizada"
+    },
+    "AlertedRange": {
+      "Value": 20,
+      "Description": "Rango alerta"
+    },
+    "FollowItemDistance": {
+      "Value": [
+        2,
+        3
+      ],
+      "Description": "Rango de distancia al seguir al jugador. Los Baby son mas pequenos, se acercan mas."
+    },
+    "MaxSpeed": {
+      "Value": 5,
+      "Description": "Velocidad maxima"
+    },
+    "ParticleOffset": {
+      "Value": [
+        0,
+        0.6,
+        0
+      ],
+      "Description": "Offset de particulas. Bajo porque los Baby son pequenos."
+    },
+    "SeparationDistance": {
+      "Value": 0.8,
+      "Description": "Distancia de separacion entre NPCs del mismo tipo para evitar que se solapen."
+    },
+    "DefaultPlayerAttitude": {
+      "Value": "Revered",
+      "Description": "Actitud por defecto hacia el jugador. Revered para companeros de confianza."
+    },
+    "PetAnimation": {
+      "Value": "Curious",
+      "Description": "Animacion al ser acariciado"
+    },
+    "PetTimeout": {
+      "Value": [
+        "PT1M",
+        "PT1M"
+      ],
+      "Description": "Cooldown entre pets (formato ISO 8601)"
+    },
+    "PetRequiredAttitudes": {
+      "Value": [
+        "Friendly",
+        "Revered"
+      ],
+      "Description": "Actitudes que pueden acariciar al Digimon"
+    },
+    "AttractiveItemSet": {
+      "Value": [
+        "Tool_Feedbag"
+      ],
+      "Description": "Items con los que se puede alimentar al Digimon"
+    },
+    "FeedRequiredAttitudes": {
+      "Value": [
+        "Friendly",
+        "Revered"
+      ],
+      "Description": "Actitudes que pueden alimentar al Digimon"
+    },
+    "EatTimeout": {
+      "Value": [
+        "PT30M",
+        "PT1H"
+      ],
+      "Description": "Cooldown entre comidas. Los Baby comen mas seguido que los Combat. (formato ISO 8601)"
+    },
+    "IdleFlavorAnimation": {
+      "Value": "",
+      "Description": "Animacion de flavor que el Digimon puede reproducir al merodear. Ignorada si esta vacia."
+    },
+    "IdleFlavorAnimationLength": {
+      "Value": [
+        2,
+        4
+      ],
+      "Description": "Duracion en segundos de la animacion de flavor idle."
+    },
+    "AttitudeGroup": {
+      "Value": "Prey",
+      "Description": "Grupo de actitud"
+    },
+    "DropList": {
+      "Value": "Empty",
+      "Description": "Items al morir. Los Baby son invulnerables, por seguridad se deja en Empty."
+    },
+    "IsMemory": {
+      "Value": false,
+      "Description": "Si es un recuerdo"
+    },
+    "MemoriesCategory": {
+      "Value": "Other",
+      "Description": "Categoria del recuerdo"
+    },
+    "MemoriesNameOverride": {
+      "Value": "",
+      "Description": "Nombre override del recuerdo"
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Template.name",
+      "Description": "Clave de nombre para la UI"
+    }
+  },
+  "modules": {
+    "hytale:memories": {
+      "memory_duration": {
+        "PLAYER_LAST_FED": 3600,
+        "PLAYER_LAST_PET": 6000,
+        "PLAYER_HIT": 24000
+      }
+    }
+  },
+  "IsMemory": {
+    "Compute": "IsMemory"
+  },
+  "MemoriesCategory": {
+    "Compute": "MemoriesCategory"
+  },
+  "MemoriesNameOverride": {
+    "Compute": "MemoriesNameOverride"
+  },
+  "DropList": {
+    "Compute": "DropList"
+  },
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "DefaultPlayerAttitude": {
+    "Compute": "DefaultPlayerAttitude"
+  },
+  "DefaultNPCAttitude": "Ignore",
+  "AttitudeGroup": {
+    "Compute": "AttitudeGroup"
+  },
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "KnockbackScale": 0.5,
+  "ApplySeparation": true,
+  "SeparationDistance": {
+    "Compute": "SeparationDistance"
+  },
+  "SeparationWeight": 1,
+  "SeparationDistanceTarget": {
+    "Compute": "SeparationDistance"
+  },
+  "SeparationNearRadiusTarget": 1,
+  "SeparationFarRadiusTarget": 3,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": {
+        "Compute": "MaxSpeed"
+      },
+      "Gravity": 10,
+      "MaxFallSpeed": 8,
+      "Acceleration": 10,
+      "MaxRotationSpeed": 360
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "StateTransitions": [
+    {
+      "$Comment": "Al volver a Idle: limpiar target, reiniciar instrucciones y borrar animacion de estado.",
+      "States": [
+        {
+          "To": [
+            "Idle"
+          ],
+          "From": []
+        }
+      ],
+      "Actions": [
+        {
+          "Type": "ReleaseTarget"
+        },
+        {
+          "Type": "ResetInstructions"
+        },
+        {
+          "Type": "PlayAnimation",
+          "Slot": "Status"
+        }
+      ]
+    }
+  ],
+  "Instructions": [
+    {
+      "$Comment": "Bloque continuo: limpia alarmas cuando expiran. Corre independientemente del resto del script.",
+      "Continue": true,
+      "Instructions": [
+        {
+          "$Comment": "Limpiar alarma de Pet cuando termina",
+          "Continue": true,
+          "Sensor": {
+            "Type": "Alarm",
+            "Name": "Pet_Ready",
+            "State": "Passed",
+            "Clear": true
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        },
+        {
+          "$Comment": "Limpiar alarma de Eat cuando termina",
+          "Continue": true,
+          "Sensor": {
+            "Type": "Alarm",
+            "Name": "Eat_Ready",
+            "State": "Passed",
+            "Clear": true
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "$Comment": "Si hay un jugador amigable cerca, seguirlo y mirarlo.",
+              "Continue": true,
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange": {
+                    "Compute": "ViewRange"
+                  },
+                  "ViewSector": {
+                    "Compute": "ViewSector"
+                  },
+                  "HearingRange": {
+                    "Compute": "HearingRange"
+                  },
+                  "AbsoluteDetectionRange": {
+                    "Compute": "AbsoluteDetectionRange"
+                  },
+                  "Attitudes": [
+                    "Revered",
+                    "Friendly"
+                  ],
+                  "GetNPCs": false
+                }
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Target",
+                    "Filters": [
+                      {
+                        "Type": "Attitude",
+                        "Attitudes": [
+                          "Revered",
+                          "Friendly"
+                        ]
+                      }
+                    ]
+                  },
+                  "HeadMotion": {
+                    "Type": "Watch"
+                  },
+                  "BodyMotion": {
+                    "Type": "MaintainDistance",
+                    "DesiredDistanceRange": {
+                      "Compute": "FollowItemDistance"
+                    },
+                    "RelativeForwardsSpeed": 0.5,
+                    "RelativeBackwardsSpeed": 0.3
+                  },
+                  "Actions": [
+                    {
+                      "Type": "PlayAnimation",
+                      "Slot": "Status",
+                      "Animation": "Curious"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "$Comment": "Sin jugador cerca: merodear. Comportamiento aleatorio entre wander, pausa y flavor animation.",
+              "Type": "Random",
+              "ExecuteFor": [
+                8,
+                15
+              ],
+              "Instructions": [
+                {
+                  "$Comment": "Merodear suavemente en circulo.",
+                  "Weight": 20,
+                  "BodyMotion": {
+                    "Type": "Sequence",
+                    "Looped": true,
+                    "Motions": [
+                      {
+                        "Type": "Timer",
+                        "Time": [
+                          2,
+                          4
+                        ],
+                        "Motion": {
+                          "Type": "WanderInCircle",
+                          "Radius": 3,
+                          "MaxHeadingChange": 60,
+                          "RelativeSpeed": 0.15
+                        }
+                      },
+                      {
+                        "Type": "Timer",
+                        "Time": [
+                          2,
+                          5
+                        ],
+                        "Motion": {
+                          "Type": "Nothing"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "$Comment": "Quedarse quieto un momento.",
+                  "Weight": 10,
+                  "ActionsBlocking": true,
+                  "Actions": [
+                    {
+                      "Type": "Timeout",
+                      "Delay": [
+                        2,
+                        4
+                      ]
+                    },
+                    {
+                      "Type": "ResetInstructions"
+                    }
+                  ]
+                },
+                {
+                  "$Comment": "Reproducir animacion de flavor idle (solo si esta configurada en la variante).",
+                  "Enabled": {
+                    "Compute": "!isEmpty(IdleFlavorAnimation)"
+                  },
+                  "Weight": 5,
+                  "ActionsBlocking": true,
+                  "Actions": [
+                    {
+                      "Type": "PlayAnimation",
+                      "Slot": "Status",
+                      "Animation": {
+                        "Compute": "IdleFlavorAnimation"
+                      }
+                    },
+                    {
+                      "Type": "Timeout",
+                      "Delay": {
+                        "Compute": "IdleFlavorAnimationLength"
+                      }
+                    },
+                    {
+                      "Type": "PlayAnimation",
+                      "Slot": "Status"
+                    },
+                    {
+                      "Type": "ResetInstructions"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "$Comment": "Siempre bloquear el objetivo de interaccion primero.",
+        "Continue": true,
+        "Actions": [
+          {
+            "Type": "LockOnInteractionTarget",
+            "TargetSlot": "InteractionTarget"
+          }
+        ]
+      },
+      {
+        "$Comment": "--- BLOQUE PET ---",
+        "TreeMode": true,
+        "Instructions": [
+          {
+            "InvertTreeModeResult": true,
+            "Sensor": {
+              "$Comment": "Condiciones para habilitar pet: alarma libre + actitud correcta + manos vacias.",
+              "Type": "Not",
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  {
+                    "Type": "Alarm",
+                    "Name": "Pet_Ready",
+                    "State": "Unset"
+                  },
+                  {
+                    "Type": "CanInteract",
+                    "Attitudes": {
+                      "Compute": "PetRequiredAttitudes"
+                    }
+                  },
+                  {
+                    "Type": "Target",
+                    "TargetSlot": "InteractionTarget",
+                    "Filters": [
+                      {
+                        "Type": "Not",
+                        "Filter": {
+                          "Type": "ItemInHand",
+                          "Hand": "Main",
+                          "Items": [
+                            "*"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "Actions": [
+              {
+                "Type": "Nothing"
+              }
+            ]
+          },
+          {
+            "InvertTreeModeResult": true,
+            "Continue": true,
+            "Sensor": {
+              "Type": "Any"
+            },
+            "Actions": [
+              {
+                "Type": "SetInteractable",
+                "Interactable": true,
+                "Hint": "server.interactionHints.pet"
+              }
+            ]
+          },
+          {
+            "Sensor": {
+              "Type": "HasInteracted"
+            },
+            "Instructions": [
+              {
+                "Sensor": {
+                  "Type": "Target"
+                },
+                "Actions": [
+                  {
+                    "Type": "PlayAnimation",
+                    "Slot": "Status",
+                    "Animation": {
+                      "Compute": "PetAnimation"
+                    }
+                  },
+                  {
+                    "Type": "SpawnParticles",
+                    "ParticleSystem": "Hearts_Subtle",
+                    "Offset": {
+                      "Compute": "ParticleOffset"
+                    },
+                    "TargetNodeName": "Head"
+                  },
+                  {
+                    "Type": "SetAlarm",
+                    "Name": "Pet_Ready",
+                    "DurationRange": {
+                      "Compute": "PetTimeout"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$Comment": "--- BLOQUE ALIMENTAR --- Consume el item, restaura salud y pone cooldown.",
+        "TreeMode": true,
+        "Instructions": [
+          {
+            "InvertTreeModeResult": true,
+            "Sensor": {
+              "$Comment": "Condiciones: alarma de comida libre + actitud correcta + item atractivo en mano.",
+              "Type": "Not",
+              "Sensor": {
+                "Type": "And",
+                "Sensors": [
+                  {
+                    "Type": "Alarm",
+                    "Name": "Eat_Ready",
+                    "State": "Unset"
+                  },
+                  {
+                    "Type": "CanInteract",
+                    "Attitudes": {
+                      "Compute": "FeedRequiredAttitudes"
+                    }
+                  },
+                  {
+                    "Type": "Target",
+                    "TargetSlot": "InteractionTarget",
+                    "Filters": [
+                      {
+                        "Type": "ItemInHand",
+                        "Hand": "Main",
+                        "Items": {
+                          "Compute": "AttractiveItemSet"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "Actions": [
+              {
+                "Type": "Nothing"
+              }
+            ]
+          },
+          {
+            "InvertTreeModeResult": true,
+            "Continue": true,
+            "Sensor": {
+              "Type": "Any"
+            },
+            "Actions": [
+              {
+                "Type": "SetInteractable",
+                "Interactable": true,
+                "Hint": "server.interactionHints.feed"
+              }
+            ]
+          },
+          {
+            "Sensor": {
+              "Type": "HasInteracted"
+            },
+            "Instructions": [
+              {
+                "Sensor": {
+                  "Type": "Target",
+                  "TargetSlot": "InteractionTarget"
+                },
+                "Actions": [
+                  {
+                    "Type": "Inventory",
+                    "UseTarget": true,
+                    "Operation": "RemoveHeldItem",
+                    "Count": 1
+                  },
+                  {
+                    "Type": "SpawnParticles",
+                    "ParticleSystem": "Hearts_Subtle",
+                    "Offset": {
+                      "Compute": "ParticleOffset"
+                    },
+                    "TargetNodeName": "Head"
+                  },
+                  {
+                    "$Comment": "Aunque son invulnerables, resetear la stat de salud es util para la memoria del juego.",
+                    "Type": "SetStat",
+                    "Stat": "Health",
+                    "Value": {
+                      "Compute": "MaxHealth"
+                    }
+                  },
+                  {
+                    "Type": "SetAlarm",
+                    "Name": "Eat_Ready",
+                    "DurationRange": {
+                      "Compute": "EatTimeout"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$Comment": "Solo ahora que fallaron todas las interacciones posibles, desactivar interactividad.",
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": false
+          }
+        ]
+      }
+    ]
+  },
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  }
+}

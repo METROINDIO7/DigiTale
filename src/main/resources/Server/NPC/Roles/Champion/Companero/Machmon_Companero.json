@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Machmon_Model",
+    "MaxHealth": 46,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Machmon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

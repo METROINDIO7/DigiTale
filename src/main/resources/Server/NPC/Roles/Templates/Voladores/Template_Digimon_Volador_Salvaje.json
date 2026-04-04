@@ -1,0 +1,584 @@
+{
+  "Type": "Abstract",
+  "StartState": "Idle",
+  "$Comment": "CURIOSO VOLADOR (Aéreo): Vuela libremente, huye si el jugador se acerca. Nivel Común.",
+  "Parameters": {
+    "Appearance": {
+      "Value": "Bluebird",
+      "Description": "Modelo a usar."
+    },
+    "DropList": {
+      "Value": "Empty",
+      "Description": "Drop Items."
+    },
+    "FlockArray": {
+      "Value": [
+        "Template_Curioso_Volador"
+      ],
+      "Description": "Tipos de NPC que pueden formar bandada."
+    },
+    "WanderRadius": {
+      "Value": 15,
+      "Description": "Radio de vuelo libre."
+    },
+    "MinHeightOverGround": {
+      "Value": 8,
+      "Description": "Altura minima sobre el suelo."
+    },
+    "MaxHeightOverGround": {
+      "Value": 25,
+      "Description": "Altura maxima sobre el suelo."
+    },
+    "MaxHealth": {
+      "Value": 55,
+      "Description": "Salud maxima."
+    },
+    "AlertedRange": {
+      "Value": 28,
+      "Description": "Rango de alerta."
+    },
+    "OrbitRadius": {
+      "Value": 6,
+      "Description": "Radio de orbita alrededor del jugador."
+    },
+    "CuriousTimeRange": {
+      "Value": [
+        8,
+        15
+      ],
+      "Description": "Cuanto tiempo dura la curiosidad."
+    },
+    "IsMemory": {
+      "Value": false,
+      "Description": "Define si el NPC es un recuerdo."
+    },
+    "MemoriesCategory": {
+      "Value": "Other",
+      "Description": "Categoria del recuerdo."
+    },
+    "MemoriesNameOverride": {
+      "Value": "",
+      "Description": "Nombre alternativo del recuerdo."
+    },
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Template.name",
+      "Description": "Clave de traduccion del nombre."
+    }
+  },
+  "IsMemory": {
+    "Compute": "IsMemory"
+  },
+  "MemoriesCategory": {
+    "Compute": "MemoriesCategory"
+  },
+  "MemoriesNameOverride": {
+    "Compute": "MemoriesNameOverride"
+  },
+  "DropList": {
+    "Compute": "DropList"
+  },
+  "FlockSpawnTypes": {
+    "Compute": "FlockArray"
+  },
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "Appearance": {
+    "Compute": "Appearance"
+  },
+  "KnockbackScale": 0.5,
+  "MotionControllerList": [
+    {
+      "Type": "Fly",
+      "MaxHorizontalSpeed": 14,
+      "MaxSinkSpeed": 3,
+      "MaxClimbSpeed": 8,
+      "MinAirSpeed": 3,
+      "Acceleration": 5,
+      "MinHeightOverGround": {
+        "Compute": "MinHeightOverGround"
+      },
+      "MaxHeightOverGround": {
+        "Compute": "MaxHeightOverGround"
+      },
+      "MaxRollAngle": 180,
+      "MaxTurnSpeed": 360
+    }
+  ],
+  "MaxHealth": {
+    "Compute": "MaxHealth"
+  },
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "$Comment": "Siempre receptivo a mensajes de posicion del grupo",
+          "Sensor": {
+            "Type": "Beacon",
+            "Message": "Flock_Pos"
+          },
+          "Actions": [
+            {
+              "Type": "SetLeashPosition",
+              "ToTarget": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": ".Default"
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status"
+                },
+                {
+                  "Type": "State",
+                  "State": ".Fly"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": ".Fly"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Eval",
+                    "Expression": "blocked"
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": ".Blocked"
+                    }
+                  ]
+                },
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Any"
+                  },
+                  "Instructions": [
+                    {
+                      "Reference": "Component_Instruction_Spread_Out",
+                      "Modify": {
+                        "Range": 1
+                      }
+                    },
+                    {
+                      "Sensor": {
+                        "Type": "Leash",
+                        "Range": {
+                          "Compute": "WanderRadius"
+                        }
+                      },
+                      "BodyMotion": {
+                        "Type": "Seek",
+                        "SlowDownDistance": 1.5,
+                        "StopDistance": 1,
+                        "RelativeSpeed": 0.25
+                      }
+                    },
+                    {
+                      "Sensor": {
+                        "Type": "Any"
+                      },
+                      "BodyMotion": {
+                        "Type": "WanderInCircle",
+                        "Radius": {
+                          "Compute": "WanderRadius"
+                        },
+                        "MaxHeadingChange": 60,
+                        "RelativeSpeed": 0.25
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "And",
+                    "Sensors": [
+                      {
+                        "Type": "Or",
+                        "Sensors": [
+                          {
+                            "Type": "Self",
+                            "Filters": [
+                              {
+                                "Type": "Flock",
+                                "FlockStatus": "NotMember"
+                              }
+                            ]
+                          },
+                          {
+                            "Type": "And",
+                            "Sensors": [
+                              {
+                                "Type": "FlockLeader"
+                              },
+                              {
+                                "Type": "Self",
+                                "Filters": [
+                                  {
+                                    "Type": "Flock",
+                                    "FlockStatus": "Leader"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Type": "Leash",
+                        "Range": {
+                          "Compute": "WanderRadius + 1"
+                        }
+                      }
+                    ]
+                  },
+                  "Actions": [
+                    {
+                      "Type": "FlockBeacon",
+                      "Message": "Flock_Pos",
+                      "SendToSelf": false,
+                      "ExpirationTime": 0.5
+                    },
+                    {
+                      "Type": "SetLeashPosition",
+                      "ToCurrent": true
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "Damage",
+                    "Combat": true,
+                    "TargetSlot": "LockedTarget"
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Panic"
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "Damage",
+                    "Combat": false,
+                    "Other": true
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Panic"
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "Player",
+                    "Range": {
+                      "Compute": "WanderRadius + 1"
+                    },
+                    "Filters": [
+                      {
+                        "Type": "LineOfSight"
+                      }
+                    ]
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": "Flee"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "State",
+                "State": ".Blocked"
+              },
+              "Instructions": [
+                {
+                  "Continue": true,
+                  "Sensor": {
+                    "Type": "Any",
+                    "Once": true
+                  },
+                  "Actions": [
+                    {
+                      "Type": "PlayAnimation",
+                      "Slot": "Status",
+                      "Animation": "Walk"
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "Not",
+                    "Sensor": {
+                      "Type": "Eval",
+                      "Expression": "blocked"
+                    }
+                  },
+                  "Actions": [
+                    {
+                      "Type": "State",
+                      "State": ".Default"
+                    }
+                  ]
+                },
+                {
+                  "Sensor": {
+                    "Type": "Any"
+                  },
+                  "BodyMotion": {
+                    "Type": "Wander",
+                    "MinHeadingChange": 150,
+                    "MaxHeadingChange": 180,
+                    "RelativeSpeed": 1
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Flee"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status"
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Eval",
+                    "Expression": "blocked"
+                  },
+                  "BodyMotion": {
+                    "Type": "Wander",
+                    "MinHeadingChange": 150,
+                    "MaxHeadingChange": 180,
+                    "RelativeSpeed": 1
+                  }
+                },
+                {
+                  "Reference": "Component_Instruction_Spread_Out",
+                  "Modify": {
+                    "Range": 1
+                  }
+                },
+                {
+                  "Sensor": {
+                    "Type": "Player",
+                    "Range": 10,
+                    "LockOnTarget": true
+                  },
+                  "BodyMotion": {
+                    "Type": "Flee",
+                    "SlowDownDistance": 9,
+                    "StopDistance": 12,
+                    "RelativeSpeed": 0.75
+                  }
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": true,
+                "TargetSlot": "LockedTarget"
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Panic"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Damage",
+                "Combat": false,
+                "Other": true
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Panic"
+                }
+              ]
+            },
+            {
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Player",
+                  "Range": {
+                    "Compute": "WanderRadius + 1"
+                  },
+                  "Filters": [
+                    {
+                      "Type": "LineOfSight"
+                    }
+                  ]
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Idle"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Panic"
+          },
+          "Instructions": [
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Status",
+                  "Animation": "FlyFast"
+                }
+              ]
+            },
+            {
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any"
+              },
+              "Instructions": [
+                {
+                  "Sensor": {
+                    "Type": "Eval",
+                    "Expression": "blocked"
+                  },
+                  "BodyMotion": {
+                    "Type": "Timer",
+                    "Time": [
+                      1,
+                      3
+                    ],
+                    "Motion": {
+                      "Type": "Wander",
+                      "MaxHeadingChange": 45,
+                      "RelativeSpeed": 1
+                    }
+                  }
+                },
+                {
+                  "Reference": "Component_Instruction_Spread_Out",
+                  "Modify": {
+                    "Range": 1,
+                    "RelativeSpeed": 1
+                  }
+                },
+                {
+                  "Sensor": {
+                    "Type": "Any"
+                  },
+                  "BodyMotion": {
+                    "Type": "Sequence",
+                    "Looped": true,
+                    "Motions": [
+                      {
+                        "Type": "Timer",
+                        "Time": [
+                          1,
+                          2
+                        ],
+                        "Motion": {
+                          "Type": "WanderInCircle",
+                          "Radius": 12,
+                          "MaxHeadingChange": 45,
+                          "RelativeSpeed": 1
+                        }
+                      },
+                      {
+                        "Type": "Timer",
+                        "Time": [
+                          0.5,
+                          1
+                        ],
+                        "Motion": {
+                          "Type": "WanderInCircle",
+                          "Radius": 12,
+                          "MaxHeadingChange": 90,
+                          "RelativeSpeed": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "Reference": "Component_Instruction_State_Timeout",
+              "Modify": {
+                "_ExportStates": [
+                  "Idle"
+                ],
+                "Delay": [
+                  4,
+                  7
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  }
+}

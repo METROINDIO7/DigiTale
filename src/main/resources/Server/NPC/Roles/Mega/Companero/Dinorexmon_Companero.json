@@ -1,0 +1,20 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Dinorexmon_Model",
+    "MaxHealth": 79,
+    "MaxSpeed": 12,
+    "IsMountable": true,
+    "MountAnchorY": 2.1,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Dinorexmon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}

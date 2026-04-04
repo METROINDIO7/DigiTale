@@ -1,0 +1,98 @@
+{
+  "Model": "NPC/Models/BEBE 1/Chibimon.blockymodel",
+  "Texture": "NPC/Textures/BEBE 1/Chibimon.png",
+  "EyeHeight": 0.9,
+  "CrouchOffset": -0.3,
+  "HitBox": {
+    "Max": {
+      "X": 0.2,
+      "Y": 0.4,
+      "Z": 0.2
+    },
+    "Min": {
+      "X": -0.2,
+      "Y": 0,
+      "Z": -0.2
+    }
+  },
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Idle.blockyanim"
+        }
+      ]
+    },
+    "Walk": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Walk.blockyanim"
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Run.blockyanim"
+        }
+      ]
+    },
+    "Jump": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Jump.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Fall": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Fall.blockyanim"
+        }
+      ]
+    },
+    "Hurt": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Damage/Hurt.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Death": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Damage/Death.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Spawn": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Spawn.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Eat": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Idle.blockyanim",
+          "Speed": 0.6
+        }
+      ]
+    },
+    "GreetAnimation": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Idle.blockyanim",
+          "Looping": false
+        }
+      ]
+    }
+  },
+  "MinScale": 1.55,
+  "MaxScale": 1.65
+}

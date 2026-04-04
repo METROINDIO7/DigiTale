@@ -1,0 +1,18 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Liamon_Model",
+    "MaxHealth": 50,
+    "MaxSpeed": 6,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Liamon_Companero.name",
+      "Description": "Nombre del Digimon companero"
+    }
+  }
+}
