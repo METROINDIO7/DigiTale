@@ -1,4 +1,5 @@
 {
+  "$Comment": "TEST — Compañero semi-acuático montable. Testea Template_Digimon_Combat_Nadador_Companero + soporte de movimiento en agua vía MountMovementSupport (modo SWIM). Usa Botamon_Model como placeholder visual.",
   "Type": "Variant",
   "Reference": "Template_Digimon_Combat_Nadador_Companero",
   "Modify": {
@@ -11,8 +12,8 @@
   },
   "Parameters": {
     "NameTranslationKey": {
-      "Value": "server.npcRoles.Gomamon_Companion_SemiAcuatico_Montable.name",
-      "Description": "Nombre del Gomamon compañero semi-acuático montable"
+      "Value": "server.npcRoles.Test_Botamon_Nadador_Montable.name",
+      "Description": "Test: Botamon como compañero semi-acuático montable"
     }
   }
 }

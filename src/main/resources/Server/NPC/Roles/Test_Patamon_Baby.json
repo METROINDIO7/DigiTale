@@ -1,0 +1,18 @@
+{
+  "$Comment": "TEST — Compañero baby volador (no montable). Testea Template_Digimon_Baby_Volador_Companero: seguimiento aéreo con Seek, altura controlada, sin combate. Patamon_Model como baby alado típico.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Volador_Companero",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 25,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Patamon_Baby_Volador.name",
+      "Description": "Test: Patamon como compañero baby volador (sin montura)"
+    }
+  }
+}

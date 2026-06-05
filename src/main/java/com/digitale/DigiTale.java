@@ -4,7 +4,9 @@ import com.digitale.comandos.*;
 import com.digitale.componentes.ComponentRegistry;
 import com.digitale.componentes.PetProgressComponent;
 import com.digitale.datos.AlmacenJugadores;
+import com.digitale.item.DigiMountInputFilter;
 import com.digitale.item.SapotamaInputFilter;
+import com.digitale.sistema.MountMovementSupport;
 import com.digitale.sistema.SistemaPaseo;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
@@ -26,6 +28,7 @@ import java.util.logging.Level;
 public class DigiTale extends JavaPlugin {
 
     private PacketFilter sapotamaFilter;
+    private PacketFilter mountSupportFilter;
     private ComponentType<EntityStore, PetProgressComponent> petProgressType;
 
     // Cache de Ref<EntityStore> por UUID para usarlo al desconectar
@@ -40,6 +43,8 @@ public class DigiTale extends JavaPlugin {
                 PetProgressComponent.class, "PetProgressComponent", PetProgressComponent.CODEC);
         ComponentRegistry.registerPetProgressType(this.petProgressType);
         sapotamaFilter = PacketAdapters.registerInbound(new SapotamaInputFilter());
+        mountSupportFilter = PacketAdapters.registerInbound(new DigiMountInputFilter());
+        MountMovementSupport.initializeRoleProfiles();
         registrarEventosJugador();
         this.getCommandRegistry().registerCommand(new DigiMenuComando("digi_menu", "Abre el menu principal de DigiTale"));
         this.getCommandRegistry().registerCommand(new DigiStartComando("digi_start", "Elige companeros"));
@@ -49,6 +54,7 @@ public class DigiTale extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new DigiCuidarComando("digi_cuidar", "Cuidar"));
         this.getCommandRegistry().registerCommand(new DigiEvolucionarComando("digi_evolucionar", "Evolucionar"));
         this.getCommandRegistry().registerCommand(new DigiPasearComando("digi_pasear", "Alternar paseo"));
+        this.getCommandRegistry().registerCommand(new DigiMountModeComando("digi_mountmode", "Control de montura: default/auto/fly/swim"));
         this.getCommandRegistry().registerCommand(new DigiProgressComando("digi_progress", "Ver progreso"));
         this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiResetProgressComando("digi_resetprogress", "Reset progreso"));
         this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiSetProgressComando("digi_setprogress", "Set progreso"));
@@ -100,6 +106,8 @@ public class DigiTale extends JavaPlugin {
                     datos.paseoActivo = false;
                 }
 
+                MountMovementSupport.clearPlayer(uuid);
+
                 // Guardar datos al componente persistente
                 PetProgressComponent progress = ComponentRegistry.getProgress(store, storeRef);
                 if (progress == null) return;
@@ -115,6 +123,7 @@ public class DigiTale extends JavaPlugin {
     protected void shutdown() {
         super.shutdown();
         if (sapotamaFilter != null) PacketAdapters.deregisterInbound(sapotamaFilter);
+        if (mountSupportFilter != null) PacketAdapters.deregisterInbound(mountSupportFilter);
         storeRefCache.clear();
 
     }

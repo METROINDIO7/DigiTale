@@ -1,0 +1,19 @@
+{
+  "$Comment": "TEST — Compañero terrestre montable. Testea Template_Digimon_Combat_Companero + soporte de movimiento en tierra vía MountMovementSupport (modo DEFAULT). IsMountable: true activa el bloque Mount del template. Usa Agumon_Model.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 100,
+    "IsMountable": true,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Agumon_Terrestre_Montable.name",
+      "Description": "Test: Agumon como compañero terrestre montable"
+    }
+  }
+}

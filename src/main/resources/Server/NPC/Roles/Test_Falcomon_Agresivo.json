@@ -1,0 +1,18 @@
+{
+  "$Comment": "TEST — Enemigo salvaje agresivo volador. Testea Template_Digimon_Agresivo_Volador_Salvaje: patrulla aérea, detecta al jugador y ataca en picada con frenado. Falcomon_Model como ave de presa territorial.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Agresivo_Volador_Salvaje",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 55,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Falcomon_Agresivo_Volador.name",
+      "Description": "Test: Falcomon como enemigo salvaje agresivo volador"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$Comment": "TEST — Compañero baby semi-acuático (no montable). Testea Template_Digimon_Baby_Nadador_Companero: Walk en tierra + Dive en agua con InitialMotionController forzado. Otamamon_Model como baby acuático representativo.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Baby_Nadador_Companero",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 22,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Otamamon_Baby_Nadador.name",
+      "Description": "Test: Otamamon como compañero baby semi-acuático (sin montura)"
+    }
+  }
+}

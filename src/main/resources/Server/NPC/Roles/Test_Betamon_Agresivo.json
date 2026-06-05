@@ -1,0 +1,18 @@
+{
+  "$Comment": "TEST — Enemigo salvaje agresivo acuático. Testea Template_Digimon_Agresivo_Nadador_Salvaje: patrulla en agua, detecta al jugador y ataca. Betamon_Model como criatura acuática depredadora.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Agresivo_Nadador_Salvaje",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 65,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Betamon_Agresivo_Nadador.name",
+      "Description": "Test: Betamon como enemigo salvaje agresivo acuático"
+    }
+  }
+}

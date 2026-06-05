@@ -8,13 +8,11 @@ import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketFilter;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
-import javax.annotation.Nonnull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +26,7 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
     private static final Logger LOGGER = Logger.getLogger(SapotamaInputFilter.class.getName());
 
     @Override
-    public boolean test(@Nonnull PlayerRef playerRef, @Nonnull Packet packet) {
+    public boolean test(PlayerRef playerRef, Packet packet) {
         if (!(packet instanceof SyncInteractionChains syncPacket)) {
             return false;
         }
@@ -81,7 +79,7 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
         return false;
     }
 
-    private boolean tieneSapotamaEnMano(@Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> entityRef) {
+    private boolean tieneSapotamaEnMano(Store<EntityStore> store, Ref<EntityStore> entityRef) {
         try {
             Player player = store.getComponent(entityRef, Player.getComponentType());
             if (player == null) {
@@ -89,7 +87,7 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
                 return false;
             }
 
-            Inventory inv = player.getInventory();
+            var inv = player.getInventory();
             if (inv == null) {
                 LOGGER.log(Level.WARNING, "Inventario es null");
                 return false;

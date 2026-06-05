@@ -1,0 +1,18 @@
+{
+  "$Comment": "TEST — Enemigo salvaje agresivo terrestre. Testea Template_Digimon_Agresivo_Salvaje: deambula, detecta al jugador, observa brevemente y ataca. Gazimon_Model como predador terrestre compact.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Agresivo_Salvaje",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 60,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Gazimon_Agresivo_Salvaje.name",
+      "Description": "Test: Gazimon como enemigo salvaje agresivo terrestre"
+    }
+  }
+}

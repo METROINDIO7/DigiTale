@@ -1,0 +1,19 @@
+{
+  "$Comment": "TEST — Compañero volador montable. Testea Template_Digimon_Combat_Volador_Companero + soporte de vuelo en montura vía MountMovementSupport (modo FLY o AUTO). IsMountable: true activa el bloque Mount. Biyomon_Model como ave voladora representativa.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Volador_Companero",
+  "Modify": {
+    "Appearance": "Botamon_Model",
+    "MaxHealth": 80,
+    "IsMountable": true,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Biyomon_Volador_Montable.name",
+      "Description": "Test: Biyomon como compañero volador montable"
+    }
+  }
+}
