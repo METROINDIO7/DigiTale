@@ -1,0 +1,44 @@
+$TextHighlightGradientMask = "Common/SelectedIconGradient.png";
+
+// ==================== INTRODUCCION ====================
+@PanelIntro = Group {
+    LayoutMode: Top;
+    Background: (Color: #12121e);
+    Padding: (Full: 8);
+};
+
+@IntroTabStyle = TabNavigationStyle(
+    TabStyle: (
+        Default: (
+            Anchor: (Height: 66, Left: 2, Right: 0),
+            IconOpacity: 0.4
+        ),
+        Hovered: (
+            IconOpacity: 0.6
+        ),
+        Pressed: (
+            IconOpacity: 0.8
+        )
+    ),
+    SelectedTabStyle: (
+        Default: (
+            IconOpacity: 1,
+            Background: (TexturePath: "Common/HeaderTabSelectedBackground.png", Border: 7),
+            ContentMaskTexturePath: "Common/SelectedIconGradient.png"
+        )
+    )
+);
+
+@IntroPanel = Group {
+    LayoutMode: Top;
+    Anchor: (Height: 100, Width: 200);
+    Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
+    Padding: (Full: 8);
+};
+
+@IntroProgressBar = Group {
+    Anchor: (Bottom: 4, Left: 0, Width: 200);
+    Value: 1.0;
+    Background: (Color: #333344);
+    Border: (Size: 2, Color: #555566);
+};

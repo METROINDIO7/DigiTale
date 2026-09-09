@@ -1,7 +1,7 @@
 plugins {
     id("java")
-    // Se añade el plugin de Shadow para habilitar la tarea 'shadowJar'
-    id("com.gradleup.shadow") version "9.0.0-beta12"
+    // Shadow plugin para crear fat/uber JARs
+    id("com.gradleup.shadow") version "9.4.3"
 }
 
 group = "org.example"
@@ -9,7 +9,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    // Repositorio oficial de Hytale necesario para las dependencias del servidor [3]
+    // Repositorio oficial de Hytale necesario para las dependencias del servidor
     maven {
         name = "hytale"
         url = uri("https://maven.hytale.com/release")
@@ -21,9 +21,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // En lugar de usar un archivo local, se recomienda la dependencia oficial [4]
-    implementation("com.hypixel.hytale:Server:+")
-    // Se añade Gson para la serialización y deserialización de datos
+    // Hytale Server API - compileOnly porque el servidor ya provee estas clases en runtime
+    compileOnly("com.hypixel.hytale:Server:+")
+    // Gson se empaqueta dentro del JAR porque es dependencia propia
     implementation("com.google.code.gson:gson:2.10.1")
 }
 

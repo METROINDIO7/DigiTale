@@ -1,0 +1,196 @@
+$Common = "Common.ui";
+$P = "Digi.ui";
+
+// Barra de vida compacta para usar en HUDs de combate y selección
+// Se actualiza dinámicamente desde el servidor con cmd.set()
+
+@CompactHPBar = Group {
+    LayoutMode: Top;
+    Anchor: (Height: 20);
+    Background: (Color: #333344);
+    Border: (Size: 1, Color: #555566);
+
+    Label #CurrentHP {
+        Text: "";
+        Style: (TextColor: #00ff88, FontSize: 12);
+        Anchor: (Left: 4);
+    }
+
+    Group {
+        LayoutMode: Left;
+        Anchor: (Height: 8);
+        Background: (Color: #222233);
+        Border: (Size: 1, Color: #444455);
+
+        Group #HPBar {
+            LayoutMode: Left;
+            Anchor: (Width: 100);
+            Background: (Color: #00ff88);
+        }
+    }
+}
+
+// Panel de HP con imagen de digimon (usa las PNGs de png_Digis/)
+@DigiHPBarWithImg = Group {
+    LayoutMode: Top;
+    Anchor: (Height: 90);
+    Background: (Color: #16213e);
+    Border: (Size: 2, Color: #00d4ff);
+    Padding: 6;
+
+    AssetImage #DigimonImg {
+        Anchor: (Width: 48, Height: 48);
+        AssetPath: "Common/UI/Custom/png_Digis/DigiPlaceholder.png";
+    }
+
+    Group { Anchor: (Height: 2); }
+
+    Label #DigiName {
+        Text: "-";
+        Style: (TextColor: #e0e8f0, FontSize: 12, RenderBold: true);
+        Anchor: (Width: 100);
+    }
+
+    Group { Anchor: (Height: 1); }
+
+    Label #DigiLevel {
+        Text: "-";
+        Style: (TextColor: #8899aa, FontSize: 10);
+        Anchor: (Width: 100);
+    }
+
+    Group { Anchor: (Height: 4); }
+
+    Label #DigiHP {
+        Text: "HP: --/--";
+        Style: (TextColor: #00ff88, FontSize: 11);
+        Anchor: (Width: 100);
+    }
+
+    Group {
+        LayoutMode: Left;
+        Anchor: (Height: 6);
+        Background: (Color: #222233);
+        Border: (Size: 1, Color: #444455);
+
+        Group #HpBarFill {
+            LayoutMode: Left;
+            Anchor: (Width: 100);
+            Background: (Color: #00ff88);
+        }
+    }
+}
+
+// Grupo de barras rotativas para combate (hasta 6 digimons: 3 aliados + 3 enemigos)
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 400, Width: 600);
+    Background: (Color: #0d1117);
+    Border: (Size: 2, Color: #333344);
+    Padding: 12;
+
+    Label {
+        Text: "COMBATE DIGIMON";
+        Style: (TextColor: #ff00ff, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
+        Anchor: (Height: 22);
+    }
+
+    Group { Anchor: (Height: 6); }
+
+    // Turno actual
+    Label #TurnLabel {
+        Text: "Turno: --";
+        Style: (TextColor: #ffcc00, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+        Anchor: (Height: 20);
+    }
+
+    Group { Anchor: (Height: 8); }
+
+    // Fila aliados
+    Group {
+        LayoutMode: Left;
+        Padding: (Vertical: 4);
+
+        $P.@DigiHPBarWithImg #Ally1 {
+            Anchor: (Width: 170, Height: 80);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@DigiHPBarWithImg #Ally2 {
+            Anchor: (Width: 170, Height: 80);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@DigiHPBarWithImg #Ally3 {
+            Anchor: (Width: 170, Height: 80);
+        }
+    }
+
+    Group { Anchor: (Height: 6); }
+
+    // VS separator
+    Label {
+        Text: "VS";
+        Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+        Anchor: (Height: 18);
+    }
+
+    Group { Anchor: (Height: 6); }
+
+    // Fila enemigos
+    Group {
+        LayoutMode: Left;
+        Padding: (Vertical: 4);
+
+        $P.@DigiHPBarWithImg #Enemy1 {
+            Anchor: (Width: 170, Height: 80);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@DigiHPBarWithImg #Enemy2 {
+            Anchor: (Width: 170, Height: 80);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@DigiHPBarWithImg #Enemy3 {
+            Anchor: (Width: 170, Height: 80);
+        }
+    }
+
+    Group { Anchor: (Height: 8); }
+
+    // Leyenda de turno (quien ataca)
+    Label #AttackerLabel {
+        Text: "Atacante: --";
+        Style: (TextColor: #ffcc00, FontSize: 12, HorizontalAlignment: Center);
+        Anchor: (Height: 16);
+    }
+
+    Group { Anchor: (Height: 4); }
+
+    // Panel de acciones del turno actual
+    Group #ActionPanel {
+        LayoutMode: Left;
+        Anchor: (Height: 40);
+        Background: (Color: #1a1a2e);
+        Border: (Size: 1, Color: #333344);
+        Padding: 6;
+
+        Label {
+            Text: "ACCIONES";
+            Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
+            Anchor: (Width: 100);
+        }
+
+        Group { FlexWeight: 1; }
+
+        Label #ActionDesc {
+            Text: "Selecciona una acción";
+            Style: (TextColor: #8899aa, FontSize: 11);
+        }
+    }
+}

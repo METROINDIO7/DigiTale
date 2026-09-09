@@ -4,7 +4,6 @@
   "Modify": {
     "Appearance": "Botamon_Model",
     "MaxHealth": 20,
-    "MaxSpeed": 3,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

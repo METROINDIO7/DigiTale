@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Raptordramon_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 42,
-    "MaxSpeed": 6,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

@@ -6,15 +6,15 @@ import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.datos.EstadoCombate;
 import com.digitale.sistema.SistemaBatalla;
-import com.hypixel.hytale.codec.Codec;
-import com.hypixel.hytale.codec.KeyedCodec;
-import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
-import com.hypixel.hytale.protocol.packets.interface_.Page;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
+import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
+import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -24,172 +24,125 @@ import javax.annotation.Nonnull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * UI interactiva del combate — overlay transparente.
- * Ocupa pantalla completa con fondo invisible; la info se
- * distribuye en los bordes para no tapar el campo de batalla.
- *
- * TOP CENTER   : estado del enemigo
- * CENTER       : alerta de refuerzo (solo cuando aparece)
- * BOTTOM LEFT  : equipo del jugador (HP / OP)
- * BOTTOM CENTER: log de combate + resultado
- * BOTTOM RIGHT : botones de accion
- */
-public class DigiBatallaMenuUI extends InteractiveCustomUIPage<DigiBatallaMenuUI.Data> {
-
+public class DigiBatallaMenuUI extends CustomUIPage {
     private static final Logger LOGGER = Logger.getLogger(DigiBatallaMenuUI.class.getName());
 
-    // ── Codec ──────────────────────────────────────────────────────
-    public static class Data {
-        public String accion = "";
-        public static final BuilderCodec<Data> CODEC = BuilderCodec
-                .builder(Data.class, Data::new)
-                .append(new KeyedCodec<>("Accion", Codec.STRING), (d, v) -> d.accion = v, d -> d.accion).add()
-                .build();
-    }
-
-    private final PlayerRef playerRef;
-
     public DigiBatallaMenuUI(@Nonnull PlayerRef playerRef) {
-        super(playerRef, CustomPageLifetime.CanDismiss, Data.CODEC);
-        this.playerRef = playerRef;
+        super(playerRef, CustomPageLifetime.CanDismiss);
     }
 
-    // ── Build inicial ──────────────────────────────────────────────
-    @Override
-    public void build(@Nonnull Ref<EntityStore> ref,
-                      @Nonnull UICommandBuilder ui,
-                      @Nonnull UIEventBuilder ev,
-                      @Nonnull Store<EntityStore> store) {
-
-        ui.append("Pages/DigiBatallaMenu.ui");
+    public static void open(@Nonnull PlayerRef playerRef,
+                            @Nonnull Ref<EntityStore> ref,
+                            @Nonnull Store<EntityStore> store) {
+        LOGGER.log(Level.INFO, "DigiBatallaMenuUI.abrir()");
 
         AlmacenJugadores.DatosJugador datos = AlmacenJugadores.getDatos(playerRef.getUuid());
         if (datos == null || !datos.enCombateUI()) {
-            ui.set("#LblTurno.Text", "Sin combate activo");
+            LOGGER.log(Level.WARNING, "Sin combate activo");
             return;
         }
 
-        EstadoCombate c = datos.combate;
-        DatoDigimon a = datos.companeroA;
-        DatoDigimon b = datos.companeroB;
-
-        aplicarEstado(ui, c, a, b);
-
-        if (c.fase == EstadoCombate.Fase.ORDER_RING) {
-            aplicarTextosBotonesOrderRing(ui, c);
-            bindOrderRing(ev);
-        } else if (c.fase == EstadoCombate.Fase.FIN_COMBATE) {
-            aplicarTextosBotonesFin(ui);
-            DigiUIHelper.bindClick(ev, "#BtnSupport", "Accion", "cerrar");
-        } else {
-            aplicarTextosBotonesNormal(ui, c);
-            bindNormal(ev, c);
+        DigiBatallaMenuUI page = new DigiBatallaMenuUI(playerRef);
+        Player player = store.getComponent(ref, Player.getComponentType());
+        if (player != null) {
+            player.getPageManager().openCustomPage(ref, store, page);
         }
     }
 
-    // ── Poblar labels con el estado actual ─────────────────────────
-    private void aplicarEstado(UICommandBuilder ui, EstadoCombate c, DatoDigimon a, DatoDigimon b) {
+    @Override
+    public void build(@Nonnull Ref<EntityStore> ref,
+                      @Nonnull UICommandBuilder cmd,
+                      @Nonnull UIEventBuilder event,
+                      @Nonnull Store<EntityStore> store) {
+        String ui = """
+            Group {
+                LayoutMode: Top;
+                Anchor: (Height: 550, Width: 600);
+                Style: (BackgroundColor: #0d1117);
+                Padding: 12;
 
-        // Turno / resultado
-        if (c.fase == EstadoCombate.Fase.FIN_COMBATE) {
-            ui.set("#LblTurno.Text",     c.victoria ? "VICTORIA!" : "DERROTA...");
-            ui.set("#LblResultado.Text", c.victoria
-                    ? "+" + c.expTotal + " XP ganados"
-                    : "Tus Digimon necesitan descanso");
-        } else {
-            ui.set("#LblTurno.Text",     "Ronda " + c.ronda
-                    + (c.fase == EstadoCombate.Fase.ORDER_RING ? "  [ORDER RING]" : ""));
-            ui.set("#LblResultado.Text", "");
+                Label {
+                    Text: "BATALLA DIGIMON";
+                    Style: (FontSize: 18, TextColor: #ff00ff, Alignment: Center, Padding: (Bottom: 6));
+                }
+                Label #LblTurno {
+                    Text: "Ronda 1";
+                    Style: (FontSize: 14, TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 4));
+                }
+                Label #LblResultado {
+                    Text: "";
+                    Style: (FontSize: 13, TextColor: #ffcc00, Alignment: Center, Padding: (Bottom: 6));
+                }
+
+                Label { Text: "=== ENEMIGO ==="; Style: (FontSize: 13, TextColor: #ff4444, Alignment: Center, Padding: (Bottom: 2)); }
+                Label #LblEnemigo { Text: "---"; Style: (FontSize: 13, TextColor: #e0e8f0, Alignment: Center); }
+                Label #LblEnemHp { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #ff4444, Alignment: Center); }
+                Label #LblBarraEnem { Text: ""; Style: (FontSize: 12, TextColor: #ff4444, Alignment: Center, FontFamily: Monospace); }
+                Label #LblEnemGauge { Text: "GAUGE: "; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 6)); }
+                Label #LblAlerta { Text: ""; Style: (FontSize: 13, TextColor: #ffcc00, Alignment: Center, Padding: (Bottom: 4)); }
+
+                Label { Text: "________________________"; Style: (TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 4)); }
+
+                Label { Text: "--- COMPANERO A ---"; Style: (FontSize: 13, TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 2)); }
+                Label #LblNombreA { Text: "---"; Style: (FontSize: 13, TextColor: #00d4ff, Alignment: Center); }
+                Label #LblHpA { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center); }
+                Label #LblBarraA { Text: ""; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center, FontFamily: Monospace); }
+                Label #LblOpA { Text: "OP: "; Style: (FontSize: 11, TextColor: #ffcc00, Alignment: Center); }
+                Label #LblGaugeA { Text: "GAUGE: "; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 4)); }
+
+                Label { Text: "--- COMPANERO B ---"; Style: (FontSize: 13, TextColor: #ff00ff, Alignment: Center, Padding: (Bottom: 2)); }
+                Label #LblNombreB { Text: "---"; Style: (FontSize: 13, TextColor: #ff00ff, Alignment: Center); }
+                Label #LblHpB { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center); }
+                Label #LblBarraB { Text: ""; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center, FontFamily: Monospace); }
+                Label #LblOpB { Text: "OP: "; Style: (FontSize: 11, TextColor: #ffcc00, Alignment: Center); }
+                Label #LblGaugeB { Text: "GAUGE: "; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 6)); }
+
+                Label { Text: "________________________"; Style: (TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 4)); }
+
+                Label #LblCombo { Text: ""; Style: (FontSize: 14, TextColor: #ffcc00, Alignment: Center, Padding: (Bottom: 4)); }
+                Label #LblLog { Text: ""; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 8)); }
+
+                Group {
+                    LayoutMode: Left;
+                    Padding: (Bottom: 4);
+                    Label #BtnSupport { Text: "Support"; Anchor: (Width: 90, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
+                    Label #BtnOrderRing { Text: "Order Ring"; Anchor: (Width: 90, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
+                    Label #BtnHuir { Text: "Huir"; Anchor: (Width: 90, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #3d1a1a); };
+                }
+                Group {
+                    LayoutMode: Left;
+                    Label #BtnTacticaA { Text: "Tactica A"; Anchor: (Width: 120, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
+                    Label { Style: (FlexWeight: 1); };
+                    Label #BtnTacticaB { Text: "Tactica B"; Anchor: (Width: 120, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
+                }
+            }
+            """;
+        cmd.appendInline(null, ui);
+
+        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnSupport",
+            EventData.of("action", "support"), false);
+        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnOrderRing",
+            EventData.of("action", "order_ring"), false);
+        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnTacticaA",
+            EventData.of("action", "tactica_a"), false);
+        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnTacticaB",
+            EventData.of("action", "tactica_b"), false);
+        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnHuir",
+            EventData.of("action", "huir"), false);
+
+        AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
+        if (d != null && d.combate != null) {
+            aplicarEstado(cmd, d.combate, d.companeroA, d.companeroB);
         }
-
-        // Enemigo principal
-        String nomEnem = c.enemigoNombre + " [" + c.enemigoElemento + "]"
-                + (c.enemigoCargando ? "  !!CARGANDO!!" : "");
-        ui.set("#LblEnemigo.Text",   nomEnem);
-        ui.set("#LblEnemHp.Text",    "HP: " + c.enemigoHp + "/" + c.enemigoMaxHp);
-        ui.set("#LblBarraEnem.Text", EstadoCombate.barraHp(c.enemigoHp, c.enemigoMaxHp));
-
-        // Alerta central — refuerzo
-        if (c.refuerzoActivo) {
-            String nomRef = c.refuerzoNombre + " [" + c.refuerzoElemento + "]"
-                    + (c.refuerzoCargando ? "  !!CARGANDO!!" : "");
-            ui.set("#LblAlerta.Text", "REFUERZO: " + nomRef
-                    + "  HP:" + c.refuerzoHp + "/" + c.refuerzoMaxHp
-                    + "  " + EstadoCombate.barraHp(c.refuerzoHp, c.refuerzoMaxHp));
-        } else {
-            ui.set("#LblAlerta.Text", "");
-        }
-
-        // Digimon A
-        String nomA = a != null ? a.nombre + " [" + a.elemento + "]" : "---";
-        ui.set("#LblNombreA.Text", nomA);
-        ui.set("#LblBarraA.Text",  EstadoCombate.barraHp(c.hpCombateA, a != null ? a.maxHp : 1));
-        ui.set("#LblHpA.Text",     "HP: " + c.hpCombateA + (a != null ? "/" + a.maxHp : ""));
-        ui.set("#LblOpA.Text",     "OP: " + c.opA + "  " + EstadoCombate.barraOp(c.opA));
-
-        // Digimon B
-        String nomB = b != null ? b.nombre + " [" + b.elemento + "]" : "---";
-        ui.set("#LblNombreB.Text", nomB);
-        ui.set("#LblBarraB.Text",  EstadoCombate.barraHp(c.hpCombateB, b != null ? b.maxHp : 1));
-        ui.set("#LblHpB.Text",     "HP: " + c.hpCombateB + (b != null ? "/" + b.maxHp : ""));
-        ui.set("#LblOpB.Text",     "OP: " + c.opB + "  " + EstadoCombate.barraOp(c.opB));
-
-        // Log
-        ui.set("#LblLog.Text", c.getLogFormateado());
     }
 
-    // ── Textos de botones por fase ─────────────────────────────────
-    private void aplicarTextosBotonesNormal(UICommandBuilder ui, EstadoCombate c) {
-        ui.set("#BtnSupport.Text",   "Support");
-        ui.set("#BtnOrderRing.Text", "Order Ring");
-        ui.set("#BtnTacticaA.Text",  "Tactica A: " + c.tacticaA);
-        ui.set("#BtnTacticaB.Text",  "Tactica B: " + c.tacticaB);
-        ui.set("#BtnHuir.Text",      "Huir");
-    }
-
-    private void aplicarTextosBotonesOrderRing(UICommandBuilder ui, EstadoCombate c) {
-        ui.set("#BtnSupport.Text",   "Guard A (" + EstadoCombate.OP_GUARD + " OP)");
-        ui.set("#BtnOrderRing.Text", "Guard B (" + EstadoCombate.OP_GUARD + " OP)");
-        ui.set("#BtnTacticaA.Text",  "Atk A (" + EstadoCombate.OP_ATTACK + " OP)");
-        ui.set("#BtnTacticaB.Text",  "Atk B (" + EstadoCombate.OP_ATTACK + " OP)");
-        ui.set("#BtnHuir.Text",      "Cerrar OR");
-    }
-
-    private void aplicarTextosBotonesFin(UICommandBuilder ui) {
-        ui.set("#BtnSupport.Text",   "Continuar");
-        ui.set("#BtnOrderRing.Text", "");
-        ui.set("#BtnTacticaA.Text",  "");
-        ui.set("#BtnTacticaB.Text",  "");
-        ui.set("#BtnHuir.Text",      "");
-    }
-
-    // ── Bind de eventos ────────────────────────────────────────────
-    private void bindNormal(UIEventBuilder ev, EstadoCombate c) {
-        DigiUIHelper.bindClick(ev, "#BtnSupport",  "Accion", "support");
-        if (c.opA >= EstadoCombate.OP_GUARD || c.opB >= EstadoCombate.OP_GUARD) {
-            DigiUIHelper.bindClick(ev, "#BtnOrderRing", "Accion", "open_order_ring");
-        }
-        DigiUIHelper.bindClick(ev, "#BtnTacticaA", "Accion", "tactica_a");
-        DigiUIHelper.bindClick(ev, "#BtnTacticaB", "Accion", "tactica_b");
-        DigiUIHelper.bindClick(ev, "#BtnHuir",     "Accion", "huir");
-    }
-
-    private void bindOrderRing(UIEventBuilder ev) {
-        DigiUIHelper.bindClick(ev, "#BtnSupport",   "Accion", "orden_guard_a");
-        DigiUIHelper.bindClick(ev, "#BtnOrderRing", "Accion", "orden_guard_b");
-        DigiUIHelper.bindClick(ev, "#BtnTacticaA",  "Accion", "orden_attack_a");
-        DigiUIHelper.bindClick(ev, "#BtnTacticaB",  "Accion", "orden_attack_b");
-        DigiUIHelper.bindClick(ev, "#BtnHuir",      "Accion", "cerrar_order_ring");
-    }
-
-    // ── Handle de eventos del cliente ──────────────────────────────
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref,
                                 @Nonnull Store<EntityStore> store,
-                                @Nonnull Data data) {
-        super.handleDataEvent(ref, store, data);
-        LOGGER.log(Level.INFO, "DigiBatallaMenuUI accion: " + data.accion);
+                                @Nonnull String jsonData) {
+        JsonObject json = JsonParser.parseString(jsonData).getAsJsonObject();
+        String action = json.has("action") ? json.get("action").getAsString() : "";
+        LOGGER.log(Level.INFO, "DigiBatallaMenuUI accion: " + action);
 
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
@@ -201,89 +154,86 @@ public class DigiBatallaMenuUI extends InteractiveCustomUIPage<DigiBatallaMenuUI
         DatoDigimon a = datos.companeroA;
         DatoDigimon b = datos.companeroB;
 
-        // Combate ya terminado: solo cerrar
         if (c == null || !c.activa) {
-            if (data.accion.equals("cerrar") || c == null) {
+            if (c == null) {
                 datos.combate = null;
                 guardarYCerrar(ref, store, player, datos);
             }
             return;
         }
 
-        switch (data.accion) {
-
-            case "support"  -> SistemaBatalla.support(c, a, b);
-
-            case "open_order_ring" -> {
-                c.fase = EstadoCombate.Fase.ORDER_RING;
-                c.logear("Order Ring abierto");
-            }
-
-            case "cerrar_order_ring" -> {
-                c.fase = EstadoCombate.Fase.RESOLVIENDO;
-                c.logear("Order Ring cerrado");
-            }
-
-            case "huir"     -> SistemaBatalla.huir(c, a, b);
-
-            case "tactica_a" -> {
-                c.tacticaA = ciclarTactica(c.tacticaA);
-                c.logear("Tactica A -> " + c.tacticaA);
-            }
-
-            case "tactica_b" -> {
-                c.tacticaB = ciclarTactica(c.tacticaB);
-                c.logear("Tactica B -> " + c.tacticaB);
-            }
-
-            case "orden_guard_a"   -> SistemaBatalla.ejecutarOrden(c, EstadoCombate.Orden.GUARD_A,    a, b);
-            case "orden_guard_b"   -> SistemaBatalla.ejecutarOrden(c, EstadoCombate.Orden.GUARD_B,    a, b);
-            case "orden_attack_a"  -> SistemaBatalla.ejecutarOrden(c, EstadoCombate.Orden.ATTACK_A,   a, b);
-            case "orden_attack_b"  -> SistemaBatalla.ejecutarOrden(c, EstadoCombate.Orden.ATTACK_B,   a, b);
-            case "orden_special_a" -> SistemaBatalla.ejecutarOrden(c, EstadoCombate.Orden.SPECIAL_A,  a, b);
-            case "orden_special_b" -> SistemaBatalla.ejecutarOrden(c, EstadoCombate.Orden.SPECIAL_B,  a, b);
-            case "orden_exe"       -> SistemaBatalla.ejecutarOrden(c, EstadoCombate.Orden.EXE_FUSION, a, b);
-
-            case "cerrar" -> {
-                datos.combate = null;
-                guardarYCerrar(ref, store, player, datos);
-                return;
-            }
+        switch (action) {
+            case "support" -> SistemaBatalla.support(c, a, b);
+            case "order_ring" -> { c.fase = EstadoCombate.Fase.ORDER_RING; c.logear("Order Ring abierto"); }
+            case "huir" -> SistemaBatalla.huir(c, a, b);
+            case "tactica_a" -> { c.tacticaA = ciclarTactica(c.tacticaA); c.logear("Tactica A -> " + c.tacticaA); }
+            case "tactica_b" -> { c.tacticaB = ciclarTactica(c.tacticaB); c.logear("Tactica B -> " + c.tacticaB); }
         }
 
-        // ── Enviar update con el nuevo estado ─────────────────────
-        UICommandBuilder update = new UICommandBuilder();
-        UIEventBuilder ev = new UIEventBuilder();
-
-        aplicarEstado(update, c, a, b);
-
-        if (!c.activa || c.fase == EstadoCombate.Fase.FIN_COMBATE) {
-            aplicarTextosBotonesFin(update);
-            DigiUIHelper.bindClick(ev, "#BtnSupport", "Accion", "cerrar");
-        } else if (c.fase == EstadoCombate.Fase.ORDER_RING) {
-            aplicarTextosBotonesOrderRing(update, c);
-            bindOrderRing(ev);
-        } else {
-            aplicarTextosBotonesNormal(update, c);
-            bindNormal(ev, c);
-        }
-
-        sendUpdate(update, ev, false);
+        player.getPageManager().setPage(ref, store,
+            com.hypixel.hytale.protocol.packets.interface_.Page.None);
+        open(playerRef, ref, store);
     }
 
-    // ── Helpers ───────────────────────────────────────────────────
+    private void aplicarEstado(UICommandBuilder cmd, EstadoCombate c, DatoDigimon a, DatoDigimon b) {
+        if (c.fase == EstadoCombate.Fase.FIN_COMBATE) {
+            cmd.set("#LblTurno.Text", c.victoria ? "VICTORIA!" : "DERROTA...");
+            cmd.set("#LblResultado.Text", c.victoria
+                ? "+" + c.expTotal + " XP ganados | Combo max: " + c.comboMax
+                : "Tus Digimon necesitan descanso");
+        } else {
+            String faseLabel = switch (c.fase) {
+                case INICIATIVA -> "INICIATIVA";
+                case ORDER_RING -> "ORDER RING";
+                case RESOLVIENDO -> "RESOLVIENDO";
+                default -> "";
+            };
+            cmd.set("#LblTurno.Text", "Ronda " + c.ronda + "  [" + faseLabel + "]");
+            cmd.set("#LblResultado.Text", "");
+        }
+
+        cmd.set("#LblEnemigo.Text", c.enemigoNombre + " [" + c.enemigoElemento + "]"
+            + (c.enemigoCargando ? "  !!CARGANDO!!" : ""));
+        cmd.set("#LblEnemHp.Text", "HP: " + c.enemigoHp + "/" + c.enemigoMaxHp);
+        cmd.set("#LblBarraEnem.Text", EstadoCombate.barraHp(c.enemigoHp, c.enemigoMaxHp));
+        cmd.set("#LblEnemGauge.Text", "GAUGE: " + EstadoCombate.barraGauge(c.gaugeEnemigo));
+
+        if (c.refuerzoActivo) {
+            cmd.set("#LblAlerta.Text", "REFUERZO: " + c.refuerzoNombre + " [" + c.refuerzoElemento + "]");
+        } else {
+            cmd.set("#LblAlerta.Text", "");
+        }
+
+        String nomA = a != null ? a.nombre + " [" + a.elemento + "]" : "---";
+        cmd.set("#LblNombreA.Text", nomA);
+        cmd.set("#LblHpA.Text", "HP: " + c.hpCombateA + (a != null ? "/" + a.maxHp : ""));
+        cmd.set("#LblBarraA.Text", EstadoCombate.barraHp(c.hpCombateA, a != null ? a.maxHp : 1));
+        cmd.set("#LblOpA.Text", "OP: " + c.opA + "  " + EstadoCombate.barraOp(c.opA));
+        cmd.set("#LblGaugeA.Text", "GAUGE: " + EstadoCombate.barraGauge(c.gaugeA));
+
+        String nomB = b != null ? b.nombre + " [" + b.elemento + "]" : "---";
+        cmd.set("#LblNombreB.Text", nomB);
+        cmd.set("#LblHpB.Text", "HP: " + c.hpCombateB + (b != null ? "/" + b.maxHp : ""));
+        cmd.set("#LblBarraB.Text", EstadoCombate.barraHp(c.hpCombateB, b != null ? b.maxHp : 1));
+        cmd.set("#LblOpB.Text", "OP: " + c.opB + "  " + EstadoCombate.barraOp(c.opB));
+        cmd.set("#LblGaugeB.Text", "GAUGE: " + EstadoCombate.barraGauge(c.gaugeB));
+
+        cmd.set("#LblLog.Text", c.getLogFormateado());
+        cmd.set("#LblCombo.Text", c.comboCount > 1 ? "Combo x" + c.comboCount : "");
+    }
+
     private EstadoCombate.Tactica ciclarTactica(EstadoCombate.Tactica t) {
         return switch (t) {
-            case AGRESIVO    -> EstadoCombate.Tactica.EQUILIBRADO;
+            case AGRESIVO -> EstadoCombate.Tactica.EQUILIBRADO;
             case EQUILIBRADO -> EstadoCombate.Tactica.DEFENSIVO;
-            case DEFENSIVO   -> EstadoCombate.Tactica.AGRESIVO;
+            case DEFENSIVO -> EstadoCombate.Tactica.AGRESIVO;
         };
     }
 
-    private void guardarYCerrar(Ref<EntityStore> ref, Store<EntityStore> store,
-                                Player player, AlmacenJugadores.DatosJugador datos) {
+    private void guardarYCerrar(Ref<EntityStore> ref, Store<EntityStore> store, Player player, AlmacenJugadores.DatosJugador datos) {
         PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, ref);
         progress.guardarDesde(datos);
-        player.getPageManager().setPage(ref, store, Page.None);
+        player.getPageManager().setPage(ref, store,
+            com.hypixel.hytale.protocol.packets.interface_.Page.None);
     }
 }

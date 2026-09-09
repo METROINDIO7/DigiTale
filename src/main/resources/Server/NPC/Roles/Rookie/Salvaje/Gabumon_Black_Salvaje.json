@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Gabumon_Black_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 29,
-    "MaxSpeed": 5,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

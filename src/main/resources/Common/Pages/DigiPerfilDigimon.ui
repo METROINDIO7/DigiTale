@@ -1,0 +1,12 @@
+$TextHighlightGradientMask = "Common/SelectedIconGradient.png";
+
+// ==================== PERFIL DEL DIGIMON ====================
+@Panel = Group {
+    LayoutMode: Top;
+    Background: (Color: #12121e);
+    Padding: (Full: 8);
+};
+
+@SimpleContainer = Group {
+    Background: (TexturePath: "Digi/Digi_Container.png", Border: 20);
+};

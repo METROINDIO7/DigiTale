@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Junomon_HystericMode_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 79,
-    "MaxSpeed": 8,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

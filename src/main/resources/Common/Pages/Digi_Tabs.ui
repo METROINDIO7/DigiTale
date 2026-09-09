@@ -1,0 +1,77 @@
+$TextHighlightGradientMask = "Common/SelectedIconGradient.png";
+
+// ==================== TABS ====================
+@TabNavigation = Group {
+    LayoutMode: Left;
+    Anchor: (Height: 520, Width: 460);
+    Background: (Color: #1a1a2e);
+    Padding: (Full: 8);
+
+    Label #LblEquipo {
+        Text: "NAVEGACION";
+        Style: (TextColor: #00d4ff, FontSize: 18, RenderBold: true);
+        Anchor: (Left: 8);
+    }
+
+    Group { FlexWeight: 1; }
+
+    Label #LblPaseo {
+        Text: "Paseo: INACTIVO";
+        Style: (TextColor: #8899aa, FontSize: 12);
+        Anchor: (Left: 8);
+    }
+};
+
+@TabButton = Group {
+    LayoutMode: Left;
+    Background: (Color: #16213e);
+    Padding: (Full: 4);
+
+    Label #TabLabel {
+        Text: "";
+        Style: (TextColor: #e0e8f0, FontSize: 14);
+        Anchor: (Width: 100);
+    }
+};
+
+@TabPanelEquipo = Group {
+    LayoutMode: Left;
+    Anchor: (Height: 320, Width: 440);
+    Background: (Color: #16213e);
+    Padding: (Full: 8);
+
+    Group #PanelEquipo {
+        LayoutMode: Top;
+        Anchor: (Width: 200, Height: 300);
+        Background: (Color: #16213e);
+        Padding: (Full: 4);
+    }
+};
+
+@TabPanelPaseo = Group {
+    LayoutMode: Left;
+    Anchor: (Height: 320, Width: 440);
+    Background: (Color: #1a1a2e);
+    Padding: (Full: 8);
+
+    Group #PanelPaseo {
+        LayoutMode: Top;
+        Anchor: (Width: 200, Height: 300);
+        Background: (Color: #1a1a2e);
+        Padding: (Full: 4);
+    }
+};
+
+@TabPanelBatalla = Group {
+    LayoutMode: Left;
+    Anchor: (Height: 320, Width: 440);
+    Background: (Color: #1a1a2e);
+    Padding: (Full: 8);
+
+    Group #PanelBatalla {
+        LayoutMode: Top;
+        Anchor: (Width: 200, Height: 300);
+        Background: (Color: #1a1a2e);
+        Padding: (Full: 4);
+    }
+};

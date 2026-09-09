@@ -1,0 +1,116 @@
+$C = "Common.ui";
+$P = "Digi.ui";
+
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 500, Width: 600);
+
+    $C.@DecoratedContainer {
+        #Title {
+            Group {
+                LayoutMode: Top;
+                Padding: (Horizontal: 32, Vertical:8);
+
+                Label #TxtInfo {
+                    Anchor: (Left:8);
+                    Text: "Elige tu primer companero Digimon!";
+                    Style: (TextColor: #00d4ff, FontSize: 20, RenderBold: true);
+                }
+                Label #TxtInfo2 {
+                    Anchor: (Left:8);
+                    Text: "Selecciona 2 diferentes";
+                    Style: (TextColor: #8899aa, FontSize: 14);
+                }
+            }
+        }
+
+        #Content {
+            Group #Grid {
+                LayoutMode: Top;
+                Padding: (Full: 8);
+
+                Group #Row1 {
+                    LayoutMode: Left;
+                    Padding: (Horizontal: 8, Vertical: 4);
+
+                    $C.@SecondaryButton #BtnAgumon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Agumon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                    Group { FlexWeight: 1; }
+                    $C.@SecondaryButton #BtnGabumon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Gabumon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                }
+
+                Group #Row2 {
+                    LayoutMode: Left;
+                    Padding: (Horizontal: 8, Vertical: 4);
+
+                    $C.@SecondaryButton #BtnBiyomon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Biyomon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                    Group { FlexWeight: 1; }
+                    $C.@SecondaryButton #BtnTentomon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Tentomon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                }
+
+                Group #Row3 {
+                    LayoutMode: Left;
+                    Padding: (Horizontal: 8, Vertical: 4);
+
+                    $C.@SecondaryButton #BtnPalmon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Palmon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                    Group { FlexWeight: 1; }
+                    $C.@SecondaryButton #BtnGomamon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Gomamon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                }
+
+                Group #Row4 {
+                    LayoutMode: Left;
+                    Padding: (Horizontal: 8, Vertical: 4);
+
+                    $C.@SecondaryButton #BtnPatamon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Patamon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                    Group { FlexWeight: 1; }
+                    $C.@SecondaryButton #BtnTsunomon {
+                        Anchor: (Width: 128, Height: 48);
+                        Padding: (Horizontal: 8, Vertical: 8);
+                        Label { Text: "Tsunomon"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                    }
+                }
+
+                $C.@ContentSeparator {}
+
+                Label #MsgInfo {
+                    Anchor: (Left:8);
+                    Text: "";
+                    Style: (TextColor: #ff00ff, FontSize: 14);
+                }
+
+                $C.@SecondaryButton #BtnConfirmar {
+                    Anchor: (Left: 8, Width: 200, Height: 48);
+                    Padding: (Horizontal: 8, Vertical: 8);
+                    Label { Text: "Confirmar"; Style: (TextColor: #00d4ff, FontSize: 16, RenderBold: true, VerticalAlignment: Center); }
+                }
+            }
+        }
+    }
+}

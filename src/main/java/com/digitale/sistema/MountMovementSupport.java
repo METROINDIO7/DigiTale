@@ -3,15 +3,19 @@ package com.digitale.sistema;
 import com.hypixel.hytale.builtin.mounts.NPCMountComponent;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.FlyMode;
 import com.hypixel.hytale.protocol.MovementSettings;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
+import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementConfig;
 import com.hypixel.hytale.server.core.modules.physics.component.PhysicsValues;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +40,33 @@ public final class MountMovementSupport {
     private static final Set<String> SWIMMING_ROLE_IDS = ConcurrentHashMap.newKeySet();
 
     private static final Pattern RE_REFERENCE = Pattern.compile("\\\"Reference\\\"\\s*:\\s*\\\"([^\\\"]+)\\\"");
+
+    private static final Method SET_FLY_METHOD;
+    private static final Method SET_HORIZONTAL_FLY_SPEED_METHOD;
+    private static final Method SET_VERTICAL_FLY_SPEED_METHOD;
+    private static final Method SET_SWIM_JUMP_FORCE_METHOD;
+
+    static {
+        Method setFly = null, setH = null, setV = null, setSwim = null;
+        try {
+            Class<?> mc = MovementConfig.class;
+            setFly = mc.getDeclaredMethod("setFly", FlyMode.class);
+            setFly.setAccessible(true);
+            setH = mc.getDeclaredMethod("setHorizontalFlySpeed", float.class);
+            setH.setAccessible(true);
+            setV = mc.getDeclaredMethod("setVerticalFlySpeed", float.class);
+            setV.setAccessible(true);
+            setSwim = mc.getDeclaredMethod("setSwimJumpForce", float.class);
+            setSwim.setAccessible(true);
+            LOGGER.log(Level.INFO, "[MountSupport] Reflection setters encontrados para MovementConfig");
+        } catch (NoSuchMethodException e) {
+            LOGGER.log(Level.WARNING, "[MountSupport] No se pudieron encontrar setters de MovementConfig via reflection: " + e.getMessage());
+        }
+        SET_FLY_METHOD = setFly;
+        SET_HORIZONTAL_FLY_SPEED_METHOD = setH;
+        SET_VERTICAL_FLY_SPEED_METHOD = setV;
+        SET_SWIM_JUMP_FORCE_METHOD = setSwim;
+    }
 
     public enum MountMode {
         DEFAULT,
@@ -164,40 +195,56 @@ public final class MountMovementSupport {
             return;
         }
 
-        PLAYER_ORIGINAL_SETTINGS.putIfAbsent(uuid, new MovementSettings(manager.getDefaultSettings()));
+        MovementSettings originalSettings = manager.getDefaultSettings();
+        PLAYER_ORIGINAL_SETTINGS.putIfAbsent(uuid, originalSettings);
 
         MountMode alreadyApplied = PLAYER_APPLIED_MODE.get(uuid);
         if (alreadyApplied == mode) {
             return;
         }
 
-        MovementSettings tuned = new MovementSettings(PLAYER_ORIGINAL_SETTINGS.get(uuid));
+        MovementConfig baseConfig = MovementConfig.DEFAULT_MOVEMENT;
+        MovementConfig tunedConfig = new MovementConfig(baseConfig);
+
         switch (mode) {
             case FLY -> {
-                tuned.canFly = true;
-                tuned.horizontalFlySpeed = Math.max(tuned.horizontalFlySpeed, 16.0f);
-                tuned.verticalFlySpeed = Math.max(tuned.verticalFlySpeed, 11.0f);
-                tuned.airSpeedMultiplier = Math.max(tuned.airSpeedMultiplier, 1.40f);
-                tuned.baseSpeed = Math.max(tuned.baseSpeed, 8.0f);
-                tuned.forwardRunSpeedMultiplier = Math.max(tuned.forwardRunSpeedMultiplier, 1.15f);
+                if (SET_FLY_METHOD != null) {
+                    try {
+                        SET_FLY_METHOD.invoke(tunedConfig, FlyMode.Forced);
+                    } catch (Exception e) {
+                        LOGGER.log(Level.WARNING, "[MountSupport] setFly fallo: " + e.getMessage());
+                    }
+                }
+                if (SET_HORIZONTAL_FLY_SPEED_METHOD != null) {
+                    try {
+                        SET_HORIZONTAL_FLY_SPEED_METHOD.invoke(tunedConfig, 15.0f);
+                    } catch (Exception e) {
+                        LOGGER.log(Level.WARNING, "[MountSupport] setHorizontalFlySpeed fallo: " + e.getMessage());
+                    }
+                }
+                if (SET_VERTICAL_FLY_SPEED_METHOD != null) {
+                    try {
+                        SET_VERTICAL_FLY_SPEED_METHOD.invoke(tunedConfig, 10.0f);
+                    } catch (Exception e) {
+                        LOGGER.log(Level.WARNING, "[MountSupport] setVerticalFlySpeed fallo: " + e.getMessage());
+                    }
+                }
             }
             case SWIM -> {
-                // En V4, permitir movimiento vertical ayuda a sumergirse al montar nadadores.
-                tuned.canFly = true;
-                tuned.baseSpeed = Math.max(tuned.baseSpeed, 9.5f);
-                tuned.horizontalFlySpeed = Math.max(tuned.horizontalFlySpeed, 8.0f);
-                tuned.verticalFlySpeed = Math.max(tuned.verticalFlySpeed, 6.5f);
-                tuned.swimJumpForce = Math.max(tuned.swimJumpForce, tuned.jumpForce * 1.85f);
-                tuned.jumpForce = Math.max(2.8f, tuned.jumpForce * 0.55f);
-                tuned.velocityResistance = Math.max(0.06f, tuned.velocityResistance * 0.78f);
-                tuned.forwardRunSpeedMultiplier = Math.max(tuned.forwardRunSpeedMultiplier, 1.20f);
+                if (SET_SWIM_JUMP_FORCE_METHOD != null) {
+                    try {
+                        SET_SWIM_JUMP_FORCE_METHOD.invoke(tunedConfig, 12.0f);
+                    } catch (Exception e) {
+                        LOGGER.log(Level.WARNING, "[MountSupport] setSwimJumpForce fallo: " + e.getMessage());
+                    }
+                }
             }
             default -> {
                 return;
             }
         }
 
-        manager.setDefaultSettings(tuned, physics, player.getGameMode());
+        manager.setDefaultSettings(tunedConfig, physics, player.getGameMode());
         manager.applyDefaultSettings();
         manager.update(playerRef.getPacketHandler());
         PLAYER_APPLIED_MODE.put(uuid, mode);
@@ -224,7 +271,7 @@ public final class MountMovementSupport {
             return;
         }
 
-        manager.setDefaultSettings(original, physics, player.getGameMode());
+        manager.setDefaultSettings(MovementConfig.DEFAULT_MOVEMENT, physics, player.getGameMode());
         manager.applyDefaultSettings();
         manager.update(playerRef.getPacketHandler());
         LOGGER.log(Level.INFO, "[MountSupport] Restaurado movement default para " + playerRef.getUsername());

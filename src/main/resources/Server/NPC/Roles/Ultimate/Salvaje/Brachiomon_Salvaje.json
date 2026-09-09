@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Brachiomon_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 64,
-    "MaxSpeed": 10,
     "IsMountable": true,
     "MountAnchorY": 2.8,
     "NameTranslationKey": {

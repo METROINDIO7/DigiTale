@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Nadador_Salvaje",
   "Modify": {
-    "Appearance": "Whamon_Champion_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 50,
-    "MaxSpeed": 6,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

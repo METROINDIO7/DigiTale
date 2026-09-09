@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Gigadramon_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 58,
-    "MaxSpeed": 10,
     "IsMountable": true,
     "MountAnchorY": 2.8,
     "NameTranslationKey": {

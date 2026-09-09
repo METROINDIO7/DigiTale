@@ -1,6 +1,6 @@
 package com.digitale.item;
 
-import com.digitale.ui.SapotamaMenuUI;
+import com.digitale.ui.SapotamaTabUI;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.InteractionType;
@@ -17,8 +17,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Intercepta el uso del ítem Sapotama (tecla F / Use).
- * Abre el menú de mascotas en lugar del comportamiento normal del ítem.
+ * Intercepta el uso del ítem Sapotama (clic izquierdo/derecho, tecla F/Uso o habilidades).
+ * Abre el menú de tabs de Sapotama en lugar del comportamiento normal del ítem.
+ *
+ * No bloquea el paquete (siempre devuelve false): solo dispara la apertura de la UI.
+ * El ítem Sapotama.json define una interacción "Simple" en TODOS los slots de uso
+ * (Primary, Secondary, Use, Ability1-3) para que el cliente siempre envíe el paquete
+ * SyncInteractionChains sin importar el botón/tecla que use el jugador.
  */
 public class SapotamaInputFilter implements PlayerPacketFilter {
 
@@ -32,51 +37,86 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
         }
 
         for (SyncInteractionChain chain : syncPacket.updates) {
-            // SOLO interceptar Primary (click derecho al usar item)
-            if (chain.interactionType != InteractionType.Primary || !chain.initial) {
-                continue;  // No es Primary - dejar pasar
-            }
-            
-            LOGGER.log(Level.INFO, "Primary detectado");
-
-            Ref<EntityStore> entityRef = playerRef.getReference();
-            if (entityRef == null || !entityRef.isValid()) {
-                return false;  // Ref inválida - no hacer nada
+            if (chain == null || !chain.initial) {
+                continue;
             }
 
-            Store<EntityStore> store = entityRef.getStore();
-            
-            // IMPORTANTE: Ejecutar TODO en WorldThread (incluyendo verificación de items)
-            // Los accesos a Store deben ocurrir SIEMPRE en el WorldThread
-            store.getExternalData().getWorld().execute(() -> {
-                // Verificar si tiene Sapotama EN el WorldThread
-                if (!tieneSapotamaEnMano(store, entityRef)) {
-                    LOGGER.log(Level.INFO, "No es Sapotama - permitiendo default");
-                    return;  // No es Sapotama, dejar que Hytale lo maneje
+            InteractionType tipo = chain.interactionType;
+            // Detectamos CUALQUIER tipo de interacción (Primary, Secondary, Use, Abilities)
+            // El F key debe generar InteractionType.Use en Hytale
+            boolean esUso = tipo == InteractionType.Primary
+                    || tipo == InteractionType.Secondary
+                    || tipo == InteractionType.Use
+                    || tipo == InteractionType.Ability1
+                    || tipo == InteractionType.Ability2
+                    || tipo == InteractionType.Ability3;
+            if (!esUso) {
+                continue;
+            }
+
+            // Prioridad 1: El paquete trae el id del ítem en mano
+            if (chain.itemInHandId != null && !chain.itemInHandId.isEmpty()) {
+                if (SAPOTAMA_ID.equals(chain.itemInHandId)) {
+                    LOGGER.log(Level.INFO, "Sapotama detectado vía itemInHandId (tipo=" + tipo + ")");
+                    abrirMenu(playerRef);
                 }
-                
-                // ES SAPOTAMA - abrir UI
-                LOGGER.log(Level.INFO, "¡Sapotama Primary! Abriendo UI...");
-                Player player = store.getComponent(entityRef, Player.getComponentType());
-                if (player != null) {
-                    try {
-                        player.getPageManager().openCustomPage(
-                                entityRef, store, new SapotamaMenuUI(playerRef));
-                        LOGGER.log(Level.INFO, "SapotamaMenuUI abierto");
-                    } catch (Exception e) {
-                        LOGGER.log(Level.SEVERE, "Error abriendo SapotamaMenuUI: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                } else {
-                    LOGGER.log(Level.WARNING, "Player component es null");
-                }
-            });
-            
-            // Retornar false de cualquier forma (no bloquear mientras se procesa)
+                return false;
+            }
+
+            // Prioridad 2: Verificar inventario directamente (más fiable para F key)
+            LOGGER.log(Level.INFO, "Interacción detectada (tipo=" + tipo + ") - verificando inventario");
+            abrirMenuSiTieneSapotama(playerRef);
             return false;
         }
 
         return false;
+    }
+
+    /** Abre el menú si el paquete ya confirmó que el ítem en mano es el Sapotama. */
+    private void abrirMenu(PlayerRef playerRef) {
+        Ref<EntityStore> entityRef = playerRef.getReference();
+        if (entityRef == null || !entityRef.isValid()) {
+            return;
+        }
+        Store<EntityStore> store = entityRef.getStore();
+        store.getExternalData().getWorld().execute(() -> {
+            Player player = store.getComponent(entityRef, Player.getComponentType());
+            if (player == null) {
+                return;
+            }
+            try {
+                SapotamaTabUI.open(playerRef, entityRef, store);
+                LOGGER.log(Level.INFO, "SapotamaTabUI abierto");
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Error abriendo SapotamaTabUI: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /** Verifica en el inventario (dentro del WorldThread) antes de abrir el menú. */
+    private void abrirMenuSiTieneSapotama(PlayerRef playerRef) {
+        Ref<EntityStore> entityRef = playerRef.getReference();
+        if (entityRef == null || !entityRef.isValid()) {
+            return;
+        }
+        Store<EntityStore> store = entityRef.getStore();
+        store.getExternalData().getWorld().execute(() -> {
+            if (!tieneSapotamaEnMano(store, entityRef)) {
+                return;
+            }
+            Player player = store.getComponent(entityRef, Player.getComponentType());
+            if (player == null) {
+                return;
+            }
+            try {
+                SapotamaTabUI.open(playerRef, entityRef, store);
+                LOGGER.log(Level.INFO, "SapotamaTabUI abierto");
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Error abriendo SapotamaTabUI: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 
     private boolean tieneSapotamaEnMano(Store<EntityStore> store, Ref<EntityStore> entityRef) {
@@ -93,6 +133,7 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
                 return false;
             }
 
+            @SuppressWarnings("removal")
             ItemStack mano = inv.getItemInHand();
             if (mano == null) {
                 LOGGER.log(Level.INFO, "Mano vacía");
@@ -101,7 +142,7 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
 
             String itemId = mano.getItemId();
             LOGGER.log(Level.INFO, "Item en mano: {" + itemId + "}");
-            
+
             boolean tieneItem = SAPOTAMA_ID.equals(itemId);
             LOGGER.log(Level.INFO, "¿Es Sapotama?: {" + tieneItem + "}");
             return tieneItem;
@@ -112,5 +153,3 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
         }
     }
 }
-
-

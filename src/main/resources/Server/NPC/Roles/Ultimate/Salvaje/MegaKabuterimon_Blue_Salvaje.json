@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "MegaKabuterimon_Blue_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 64,
-    "MaxSpeed": 10,
     "IsMountable": true,
     "MountAnchorY": 1.5,
     "NameTranslationKey": {

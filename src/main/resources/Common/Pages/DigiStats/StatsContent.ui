@@ -1,0 +1,97 @@
+$C = "../Common.ui";
+$P = "../Digi.ui";
+
+@StatsContent = Group {
+    Visible: false;
+    LayoutMode: Left;
+
+    Group #LeftSide {
+        LayoutMode: Top;
+
+        $C.@SimpleContainer #Portait {
+            Padding: (Horizontal: 48, Vertical:2);
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 160, Height:160);
+                Padding: (Full: 8);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+        }
+
+        $C.@ContentSeparator {}
+
+        $P.@DigiHP #Health {}
+
+        $P.@DigiExp #Exp {}
+    }
+
+    Group #Stats {
+        LayoutMode: Top;
+        Anchor: (Top: 0, Right:0);
+        Padding: (Full: 8);
+
+        Group #RowAttack {
+            Padding: (Horizontal: 8, Vertical:2);
+            LayoutMode: Left;
+            $P.@FieldLabel  {
+                Anchor: (Top: 0, Left: 0, Width: 96);
+                Text: "ATAQUE";
+            }
+            $P.@FieldContainer {
+                Anchor: (Top: 0, Left: 8, Width: 64);
+                $P.@FieldValue #AtkValue { Text: "-"; }
+            }
+        }
+
+        Group #RowDefense {
+            Padding: (Horizontal: 8, Vertical:2);
+            LayoutMode: Left;
+            $P.@FieldLabel  {
+                Anchor: (Top: 0, Left: 0, Width: 96);
+                Text: "DEFENSA";
+            }
+            $P.@FieldContainer {
+                Anchor: (Top: 0, Left: 8, Width: 64);
+                $P.@FieldValue #DefValue { Text: "-"; }
+            }
+        }
+
+        Group #RowSpAtk {
+            Padding: (Horizontal: 8, Vertical:2);
+            LayoutMode: Left;
+            $P.@FieldLabel  {
+                Anchor: (Top: 0, Left: 0, Width: 96);
+                Text: "ATAQUE-ESP";
+            }
+            $P.@FieldContainer {
+                Anchor: (Top: 0, Left: 8, Width: 64);
+                $P.@FieldValue #SpAtkValue { Text: "-"; }
+            }
+        }
+
+        Group #RowSpDef {
+            Padding: (Horizontal: 8, Vertical:2);
+            LayoutMode: Left;
+            $P.@FieldLabel  {
+                Anchor: (Top: 0, Left: 0, Width: 96);
+                Text: "DEFENSA-ESP";
+            }
+            $P.@FieldContainer {
+                Anchor: (Top: 0, Left: 8, Width: 64);
+                $P.@FieldValue #SpDefValue { Text: "-"; }
+            }
+        }
+
+        Group #RowSpeed {
+            Padding: (Horizontal: 8, Vertical:2);
+            LayoutMode: Left;
+            $P.@FieldLabel  {
+                Anchor: (Top: 0, Left: 0, Width: 96);
+                Text: "VELOCIDAD";
+            }
+            $P.@FieldContainer {
+                Anchor: (Top: 0, Left: 8, Width: 64);
+                $P.@FieldValue #SpeedValue{ Text: "-"; }
+            }
+        }
+    }
+};

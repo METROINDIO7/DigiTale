@@ -1,0 +1,89 @@
+$C = "../Common.ui";
+$P = "../Digi.ui";
+
+@OverviewContent = Group {
+    LayoutMode: Top;
+
+    Group #Top{
+        Padding: (Full: 8);
+        LayoutMode: Left;
+
+        $C.@SimpleContainer #Portrait {
+            Padding: (Horizontal: 48, Vertical:2);
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 160, Height:160);
+                Padding: (Full: 8);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+        }
+
+        Group #TopRight {
+            LayoutMode: Top;
+            Anchor: (Top: 0, Right:0);
+            Padding: (Full: 8);
+
+            Group #Row1 {
+                Padding: (Horizontal: 8, Vertical:2);
+                LayoutMode: Left;
+                $P.@FieldLabel  { Text: "No"; }
+                $P.@FieldContainer { $P.@FieldValue #DexNum { Text: "???"; } }
+            }
+
+            Group #Row2 {
+                Padding: (Horizontal: 8, Vertical:2);
+                LayoutMode: Left;
+                $P.@FieldLabel  { Text: "NOMBRE"; }
+                $P.@FieldContainer { $P.@FieldValue #Name { Text: "-"; } }
+            }
+
+            Group #Row3 {
+                Padding: (Horizontal: 8, Vertical:2);
+                LayoutMode: Left;
+                $P.@FieldLabel  { Text: "ELEMENTO"; }
+                $P.@FieldContainer {
+                    AssetImage #Type1 {
+                        Anchor: (Left: 0, Width: 64, Height:24);
+                        AssetPath: "UI/Textures/Icons/Types/FireType.png";
+                    }
+                    AssetImage #Type2 {
+                        Anchor: (Left: 8, Width: 64, Height:24);
+                        AssetPath: "UI/Textures/Icons/Types/UnknownType.png";
+                    }
+                }
+            }
+
+            Group #Row4 {
+                Padding: (Horizontal: 8, Vertical:2);
+                LayoutMode: Left;
+                $P.@FieldLabel  { Text: "TUTOR"; }
+                $P.@FieldContainer { $P.@FieldValue #Owner { Text: "-"; } }
+            }
+
+            Group #Row5 {
+                Padding: (Horizontal: 8, Vertical:2);
+                LayoutMode: Left;
+                $P.@FieldLabel  { Text: "ID"; }
+                $P.@FieldContainer { $P.@FieldValue #ID { Text: "-"; } }
+            }
+
+            Group #Row6 {
+                Padding: (Horizontal: 8, Vertical:2);
+                LayoutMode: Left;
+                $P.@FieldLabel  { Text: "OBJETO"; }
+                $P.@FieldContainer { $P.@FieldValue #HeldItem { Text: "-"; } }
+            }
+
+        }
+
+    }
+    $P.@FieldLabel  {
+        Anchor: (Top: 0, Left: 8, Width: 128);
+        Text: "Datos";
+    }
+    $P.@FieldContainer #Memo {
+        LayoutMode: Top;
+        Anchor: (Full:0);
+        $P.@FieldValue #MemoLine1 { Text: "- natureza."; }
+        $P.@FieldValue #MemoLine2 { Text: "Encontrado en - Nv -."; }
+    }
+};

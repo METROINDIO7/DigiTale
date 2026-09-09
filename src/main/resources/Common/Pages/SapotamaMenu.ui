@@ -1,0 +1,90 @@
+$C = "Common.ui";
+$P = "Digi.ui";
+
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 400, Width: 500);
+
+    $C.@DecoratedContainer {
+        #Title {
+            Group {
+                LayoutMode: Top;
+                Padding: (Horizontal: 32, Vertical:8);
+
+                Label #LblEquipo {
+                    Anchor: (Left:8);
+                    Text: "";
+                    Style: (TextColor: #00d4ff, FontSize: 18, RenderBold: true);
+                }
+
+                Group #InfoDigimons {
+                    LayoutMode: Left;
+                    Padding: (Horizontal: 8, Vertical: 4);
+
+                    Group #InfoA {
+                        LayoutMode: Top;
+                        Label #NombreA {
+                            Text: "";
+                            Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true);
+                        }
+                        $P.@DigiHP #HealthA {}
+                    }
+
+                    Group { FlexWeight: 1; }
+
+                    Group #InfoB {
+                        LayoutMode: Top;
+                        Label #NombreB {
+                            Text: "";
+                            Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true);
+                        }
+                        $P.@DigiHP #HealthB {}
+                    }
+                }
+
+                Label #LblPaseo {
+                    Anchor: (Left:8);
+                    Text: "Paseo: INACTIVO";
+                    Style: (TextColor: #8899aa, FontSize: 12);
+                }
+
+                Label #InfoStats {
+                    Anchor: (Left:8);
+                    Text: "";
+                    Style: (TextColor: #8899aa, FontSize: 12);
+                }
+            }
+        }
+
+        #Content {
+            Group #Buttons {
+                LayoutMode: Left;
+                Padding: (Horizontal: 16, Vertical: 8);
+
+                $C.@SecondaryButton #BtnPasear {
+                    Anchor: (Width: 100, Height: 48);
+                    Padding: (Horizontal: 8, Vertical: 8);
+                    Label { Text: "Pasear"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                }
+                Group { FlexWeight: 1; }
+                $C.@SecondaryButton #BtnBatallar {
+                    Anchor: (Width: 100, Height: 48);
+                    Padding: (Horizontal: 8, Vertical: 8);
+                    Label { Text: "Batallar"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                }
+                Group { FlexWeight: 1; }
+                $C.@SecondaryButton #BtnEquipo {
+                    Anchor: (Width: 100, Height: 48);
+                    Padding: (Horizontal: 8, Vertical: 8);
+                    Label { Text: "Equipo"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
+                }
+                Group { FlexWeight: 1; }
+                $C.@SecondaryButton #BtnCerrar {
+                    Anchor: (Width: 100, Height: 48);
+                    Padding: (Horizontal: 8, Vertical: 8);
+                    Label { Text: "Cerrar"; Style: (TextColor: #8899aa, FontSize: 14, VerticalAlignment: Center); }
+                }
+            }
+        }
+    }
+}

@@ -9,7 +9,8 @@ public class DatoDigimon {
     // ── Identidad ──────────────────────────────────────────────────
     public String nombre        = "Sin nombre";
     public String especie       = "Ninguno";
-    public String elemento      = "NEUTRO";
+    public String elemento      = "NEUTRO";    // Elemento (Fuego/Agua/etc.) — debilidades
+    public String atributo      = "NONE";       // Attribute (DATA/VIRUS/VACCINE/FREE/NONE)
     public int    nivel         = 1;  // 1=Baby, 2=In-Training, 3=Rookie, 4=Champion, 5=Ultimate, 6=Mega
 
     // ── Stats de combate ───────────────────────────────────────────
@@ -49,12 +50,14 @@ public class DatoDigimon {
     /**
      * Starters disponibles (Baby / In-Training):
      *
-     *  Botamon  → Koromon   → Agumon    (Fuego)
-     *  Punimon  → Tsunomon  → Gabumon   (Hielo)
-     *  Poyomon  → Tokomon   → Patamon   (Luz)
-     *  Yuramon  → Tanemon   → Palmon    (Naturaleza)
-     *  Pichimon → Bukamon   → Gomamon   (Agua)
-     *  Nyokimon → Yokomon   → Biyomon   (Viento)
+     *  Botamon  → Koromon   → Agumon       (Fuego)
+     *  Punimon  → Tsunomon  → Gabumon      (Hielo)
+     *  Poyomon  → Tokomon   → Patamon      (Luz)
+     *  Yuramon  → Tanemon   → Palmon       (Naturaleza)
+     *  Pichimon → Bukamon   → Gomamon      (Agua)
+     *  Nyokimon → Yokomon   → Biyomon      (Viento)
+     *  Kuramon  → Koromon   → Agumon       (Fuego)
+     *  Chibimon → Tanemon   → Palmon       (Naturaleza)
      */
     public static DatoDigimon crearInicial(String especie) {
         DatoDigimon d = new DatoDigimon();
@@ -64,27 +67,38 @@ public class DatoDigimon {
 
         switch (especie) {
             // ── Baby (nivel 1) ──────────────────────────────────────
-            case "Botamon" -> { d.elemento = "FUEGO";      d.maxHp = 40; d.atk = 3; d.def = 3; d.spd = 4; d.wis = 3; }
-            case "Punimon" -> { d.elemento = "HIELO";      d.maxHp = 38; d.atk = 2; d.def = 5; d.spd = 3; d.wis = 3; }
-            case "Poyomon" -> { d.elemento = "LUZ";        d.maxHp = 35; d.atk = 2; d.def = 3; d.spd = 5; d.wis = 5; }
-            case "Yuramon" -> { d.elemento = "NATURALEZA"; d.maxHp = 36; d.atk = 3; d.def = 4; d.spd = 3; d.wis = 4; }
-            case "Pichimon"-> { d.elemento = "AGUA";       d.maxHp = 38; d.atk = 3; d.def = 3; d.spd = 5; d.wis = 3; }
-            case "Nyokimon"-> { d.elemento = "VIENTO";     d.maxHp = 36; d.atk = 2; d.def = 3; d.spd = 6; d.wis = 4; }
-            // ── In-Training (nivel 2) ───────────────────────────────
-            case "Koromon"  -> { d.elemento = "FUEGO";     d.maxHp = 65; d.atk = 7; d.def = 6; d.spd = 6; d.wis = 5; }
-            case "Tsunomon" -> { d.elemento = "HIELO";     d.maxHp = 60; d.atk = 5; d.def = 9; d.spd = 5; d.wis = 6; }
-            case "Tokomon"  -> { d.elemento = "LUZ";       d.maxHp = 55; d.atk = 5; d.def = 5; d.spd = 8; d.wis = 8; }
-            case "Tanemon"  -> { d.elemento = "NATURALEZA";d.maxHp = 60; d.atk = 6; d.def = 7; d.spd = 5; d.wis = 7; }
-            case "Bukamon"  -> { d.elemento = "AGUA";      d.maxHp = 62; d.atk = 6; d.def = 6; d.spd = 8; d.wis = 5; }
-            case "Yokomon"  -> { d.elemento = "VIENTO";    d.maxHp = 58; d.atk = 5; d.def = 5; d.spd = 9; d.wis = 7; }
+            case "Botamon"  -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 40; d.atk = 3; d.def = 3; d.spd = 4; d.wis = 3; }
+            case "Punimon"  -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 38; d.atk = 2; d.def = 5; d.spd = 3; d.wis = 3; }
+            case "Poyomon"  -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 35; d.atk = 2; d.def = 3; d.spd = 5; d.wis = 5; }
+            case "Yuramon"  -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 36; d.atk = 3; d.def = 4; d.spd = 3; d.wis = 4; }
+            case "Pichimon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 38; d.atk = 3; d.def = 3; d.spd = 5; d.wis = 3; }
+            case "Nyokimon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 36; d.atk = 2; d.def = 3; d.spd = 6; d.wis = 4; }
+            case "Kuramon"  -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 39; d.atk = 3; d.def = 4; d.spd = 3; d.wis = 3; }
+            case "Chibimon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 35; d.atk = 2; d.def = 3; d.spd = 5; d.wis = 5; }
+            // ── In-Training 1 (nivel 2) — adquieren atributo DATA ──────
+            case "Koromon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 65; d.atk = 7; d.def = 6; d.spd = 6; d.wis = 5; }
+            case "Tsunomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 60; d.atk = 5; d.def = 9; d.spd = 5; d.wis = 6; }
+            case "Tokomon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 55; d.atk = 5; d.def = 5; d.spd = 8; d.wis = 8; }
+            case "Tanemon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 60; d.atk = 6; d.def = 7; d.spd = 5; d.wis = 7; }
+            case "Bukamon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 62; d.atk = 6; d.def = 6; d.spd = 8; d.wis = 5; }
+            case "Yokomon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 58; d.atk = 5; d.def = 5; d.spd = 9; d.wis = 7; }
+            // ── In-Training 2 (nivel 3) — VIRUS o VACCINE ───────────────
+            case "Agumon"   -> { d.elemento = "FUEGO"; d.atributo = "VACCINE"; d.maxHp = 90; d.atk = 12; d.def = 10; d.spd = 8; d.wis = 7; }
+            case "Gabumon"  -> { d.elemento = "HIELO"; d.atributo = "VIRUS";   d.maxHp = 85; d.atk = 10; d.def = 14; d.spd = 7; d.wis = 8; }
+            case "Patamon"  -> { d.elemento = "LUZ";   d.atributo = "VACCINE"; d.maxHp = 80; d.atk = 10; d.def = 9;  d.spd = 10; d.wis = 12; }
+            case "Palmon"   -> { d.elemento = "NATURALEZA"; d.atributo = "VIRUS"; d.maxHp = 85; d.atk = 11; d.def = 12; d.spd = 7; d.wis = 11; }
+            case "Gomamon"  -> { d.elemento = "AGUA"; d.atributo = "VACCINE"; d.maxHp = 88; d.atk = 11; d.def = 11; d.spd = 12; d.wis = 8; }
+            case "Biyomon"  -> { d.elemento = "VIENTO"; d.atributo = "VIRUS";  d.maxHp = 82; d.atk = 9;  d.def = 10; d.spd = 14; d.wis = 12; }
             default -> { d.elemento = "NEUTRO"; d.maxHp = 40; d.atk = 3; d.def = 3; d.spd = 4; d.wis = 3; }
         }
 
         d.hp = d.maxHp;
         d.hpCombate = d.maxHp;
         d.nivel = switch (especie) {
-            case "Botamon","Punimon","Poyomon","Yuramon","Pichimon","Nyokimon" -> 1;
-            default -> 2;
+            case "Botamon","Punimon","Poyomon","Yuramon","Pichimon","Nyokimon","Kuramon","Chibimon" -> 1;
+            case "Koromon","Tsunomon","Tokomon","Tanemon","Bukamon","Yokomon" -> 2;
+            case "Agumon","Gabumon","Patamon","Palmon","Gomamon","Biyomon" -> 3;
+            default -> 1;
         };
         d.lazo = 20;
         d.disciplina = 20;
@@ -140,34 +154,41 @@ public class DatoDigimon {
             case "Tanemon"   -> especie.equals("Yuramon")  && nivel == 1 && (lazo >= 30 || victorias >= 1);
             case "Bukamon"   -> especie.equals("Pichimon") && nivel == 1 && (lazo >= 30 || victorias >= 1);
             case "Yokomon"   -> especie.equals("Nyokimon") && nivel == 1 && (lazo >= 30 || victorias >= 1);
-            // In-Training → Rookie
+            // In-Training 1 → In-Training 2
             case "Agumon"   -> especie.equals("Koromon")   && nivel == 2 && victorias >= 3  && lazo >= 40;
             case "Gabumon"  -> especie.equals("Tsunomon")  && nivel == 2 && victorias >= 3  && def >= 12;
             case "Patamon"  -> especie.equals("Tokomon")   && nivel == 2 && victorias >= 3  && wis >= 12;
             case "Palmon"   -> especie.equals("Tanemon")   && nivel == 2 && victorias >= 3  && wis >= 11;
             case "Gomamon"  -> especie.equals("Bukamon")   && nivel == 2 && victorias >= 3  && spd >= 14;
             case "Biyomon"  -> especie.equals("Yokomon")   && nivel == 2 && victorias >= 3  && spd >= 15;
-            // Rookie → Champion
+            // In-Training 2 → Rookie
             case "Greymon"       -> especie.equals("Agumon")  && nivel == 3 && victorias >= 10 && lazo >= 50;
             case "GarurumonA"    -> especie.equals("Gabumon") && nivel == 3 && victorias >= 10 && def >= 20;
             case "Angemon"       -> especie.equals("Patamon") && nivel == 3 && victorias >= 10 && wis >= 20;
             case "Togemon"       -> especie.equals("Palmon")  && nivel == 3 && victorias >= 10 && def >= 18;
             case "Ikkakumon"     -> especie.equals("Gomamon") && nivel == 3 && victorias >= 10 && hp >= 160;
             case "Birdramon"     -> especie.equals("Biyomon") && nivel == 3 && victorias >= 10 && spd >= 22;
-            // Champion → Ultimate
+            // Rookie → Champion
             case "MetalGreymon"  -> especie.equals("Greymon")    && nivel == 4 && victorias >= 25 && atk >= 40 && lazo >= 70;
             case "WereGarurumon" -> especie.equals("GarurumonA") && nivel == 4 && victorias >= 25 && def >= 45 && disciplina >= 60;
             case "MagnaAngemon"  -> especie.equals("Angemon")    && nivel == 4 && victorias >= 25 && wis >= 45;
             case "Lillymon"      -> especie.equals("Togemon")    && nivel == 4 && victorias >= 25 && wis >= 40;
             case "Zudomon"       -> especie.equals("Ikkakumon")  && nivel == 4 && victorias >= 25 && def >= 50;
             case "Garudamon"     -> especie.equals("Birdramon")  && nivel == 4 && victorias >= 25 && spd >= 50;
+            // Champion → Ultimate
+            case "WarGreymon"       -> especie.equals("MetalGreymon")  && nivel == 5 && victorias >= 50 && atk >= 80 && lazo >= 90 && abi >= 20;
+            case "MetalGarurumon"  -> especie.equals("WereGarurumon")&& nivel == 5 && victorias >= 50 && def >= 80 && abi >= 20;
+            case "Seraphimon"      -> especie.equals("MagnaAngemon")  && nivel == 5 && victorias >= 50 && wis >= 90 && abi >= 20;
+            case "Rosemon"         -> especie.equals("Lillymon")      && nivel == 5 && victorias >= 50 && wis >= 85 && lazo >= 85 && abi >= 20;
+            case "MarineAngemon"   -> especie.equals("Zudomon")       && nivel == 5 && victorias >= 50 && hp >= 400 && abi >= 20;
+            case "Phoenixmon"      -> especie.equals("Garudamon")     && nivel == 5 && victorias >= 50 && spd >= 90 && abi >= 20;
             // Ultimate → Mega
-            case "WarGreymon"    -> especie.equals("MetalGreymon")  && nivel == 5 && victorias >= 50 && atk >= 80 && lazo >= 90 && abi >= 20;
-            case "MetalGarurumon"-> especie.equals("WereGarurumon")&& nivel == 5 && victorias >= 50 && def >= 80 && abi >= 20;
-            case "Seraphimon"    -> especie.equals("MagnaAngemon")  && nivel == 5 && victorias >= 50 && wis >= 90 && abi >= 20;
-            case "Rosemon"       -> especie.equals("Lillymon")      && nivel == 5 && victorias >= 50 && wis >= 85 && lazo >= 85 && abi >= 20;
-            case "MarineAngemon" -> especie.equals("Zudomon")       && nivel == 5 && victorias >= 50 && hp >= 400 && abi >= 20;
-            case "Phoenixmon"    -> especie.equals("Garudamon")     && nivel == 5 && victorias >= 50 && spd >= 90 && abi >= 20;
+            case "Centaurusmon"    -> especie.equals("WarGreymon")   && nivel == 6 && victorias >= 75 && atk >= 100 && lazo >= 100 && abi >= 30;
+            case "Fujinmon"        -> especie.equals("WereGarurumon")&& nivel == 6 && victorias >= 75 && def >= 100 && abi >= 30;
+            case "OmniAngemon"     -> especie.equals("MagnaAngemon")  && nivel == 6 && victorias >= 75 && wis >= 100 && abi >= 30;
+            case "Rosezmemon"      -> especie.equals("Lillymon")      && nivel == 6 && victorias >= 75 && wis >= 100 && lazo >= 100 && abi >= 30;
+            case "Magnamon"        -> especie.equals("Zudomon")       && nivel == 6 && victorias >= 75 && hp >= 500 && abi >= 30;
+            case "Saturnmon"       -> especie.equals("Garudamon")     && nivel == 6 && victorias >= 75 && spd >= 100 && abi >= 30;
             default -> false;
         };
     }
@@ -175,12 +196,40 @@ public class DatoDigimon {
     public String nombreNivel() {
         return switch (nivel) {
             case 1 -> "Baby";
-            case 2 -> "In-Training";
-            case 3 -> "Rookie";
-            case 4 -> "Champion";
-            case 5 -> "Ultimate";
-            case 6 -> "Mega";
+            case 2 -> "In-Training 1";
+            case 3 -> "In-Training 2";
+            case 4 -> "Rookie";
+            case 5 -> "Champion";
+            case 6 -> "Ultimate";
+            case 7 -> "Mega";
             default -> "??";
         };
     }
+
+    public int critico() {
+        return (int) Math.min(50, 5 + (wis * 0.4));
+    }
+
+    public int evasion() {
+        return (int) Math.min(50, 5 + (spd * 0.5));
+    }
+
+    public String[] nombresHabilidades() {
+        return switch (nivel) {
+            case 1, 2 -> new String[]{"Bola Debil", "Llama Bebe", "Toque Curativo"};
+            case 3, 4 -> new String[]{"Llama Media", "Corte Aereo", "Veneno"};
+            default   -> new String[]{"Mega Llamarada", "Tormenta", "Rayo Sagrado"};
+        };
+    }
+
+    public int danoHabilidad(int slot) {
+        return switch (slot) {
+            case 1 -> max(2, atk * 1);
+            case 2 -> max(3, atk * 3 / 2);
+            case 3 -> max(5, atk * 2);
+            default -> 0;
+        };
+    }
+
+    private int max(int a, int b) { return Math.max(a, b); }
 }

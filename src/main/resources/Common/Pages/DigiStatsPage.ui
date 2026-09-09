@@ -1,0 +1,101 @@
+$C = "Common.ui";
+$P = "Digi.ui";
+$Overview = "DigiStats/OverviewContent.ui";
+$Stats = "DigiStats/StatsContent.ui";
+$Moves = "DigiStats/MovesContent.ui";
+
+
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 600, Width: 600);
+
+
+    $C.@DecoratedContainer {
+        #Title {
+            Group {
+                LayoutMode: Left;
+                Padding: (Horizontal: 32, Vertical:4);
+
+                TabNavigation #Tabs {
+                    Style: $C.@HeaderTabsStyle;
+                    SelectedTab: "info";
+                    Anchor: (Height: 66, Left: 2, Right: 0);
+
+                    TabButton #Info {
+                        Icon: "Digi/Digi_Tab_Info.png";
+                        TooltipText: "Info";
+                        Id: "info";
+                    }
+
+                    TabButton #Stats {
+                        Icon: "Digi/Digi_Tab_Stats.png";
+                        TooltipText: "Stats";
+                        Id: "stats";
+                    }
+
+                    TabButton #Tecnicas {
+                        Icon: "Digi/Digi_Tab_Tecnicas.png";
+                        TooltipText: "Tecnicas";
+                        Id: "tecnicas";
+                    }
+
+                    TabButton #Evolucion {
+                        Icon: "Digi/Digi_Tab_Evolucion.png";
+                        TooltipText: "Evolucion";
+                        Id: "evolucion";
+                    }
+                }
+
+                Group { FlexWeight: 1; }
+
+                Label #Level {
+                    Anchor: (Left:8);
+                    Text: "Nv-";
+                    Style: (TextColor: #e0e8f0, FontSize: 16);
+                }
+                Label  #Species {
+                    Anchor: (Left:8);
+                    Text: "-";
+                    Style: (TextColor: #e0e8f0, FontSize: 16);
+                }
+                Label  #Sex {
+                    Anchor: (Left:8);
+                    Text: "-";
+                    Style: (TextColor: #e0e8f0, FontSize: 16);
+                }
+
+                Group { FlexWeight: 3; }
+
+                CompactTextField #RenameInput {
+                    CollapsedWidth: 24;
+                    ExpandedWidth: 200;
+                    PlaceholderText: "Renombrar...";
+                    Padding: (Left: 24);
+                    Decoration: (
+                        Default: (
+                            Icon: (Texture: "Digi/Digi_Digitama_Grey.png", Width: 20, Height: 20)
+                        ),
+                        Focused: (
+                            Icon: (Texture: "Digi/Digi_Digitama.png", Width: 20, Height: 20)
+                        )
+                    );
+                }
+            }
+        }
+
+        #Content {
+
+            $Overview.@OverviewContent #OverviewContent {
+            }
+
+            $Stats.@StatsContent #StatsContent {
+            }
+
+            $Moves.@MovesContent #MovesContent {
+            }
+
+        }
+    }
+}
+
+$C.@BackButton {}

@@ -1,0 +1,86 @@
+// Common.ui — Estilos compartidos para DigiTale (estilo Digimon Story Cyber Sleuth)
+
+// ==================== COLORES ====================
+@ColorDefault = #00d4ff;
+@ColorAccent = #ff00ff;
+@ColorTextPrimary = #e0e8f0;
+@ColorTextSecondary = #8899aa;
+@ColorBackground = #1a1a2e;
+@ColorBackgroundDark = #0f0f1a;
+@ColorSeparator = #00d4ff;
+@ColorDisabled = #555566;
+
+// ==================== MASCARAS ====================
+@TextHighlightGradientMask = "Common/SelectedIconGradient.png";
+
+// ==================== CONTENEDORES ====================
+@SimpleContainer = Group {
+    Background: (TexturePath: "Digi/Digi_Container.png", Border: 20);
+};
+
+@DecoratedContainer = Group {
+    LayoutMode: Top;
+    Background: (TexturePath: "Digi/Digi_ContainerDark.png", Border: 20);
+    Padding: (Full: 8);
+};
+
+@ContentSeparator = Group {
+    Anchor: (Height: 2);
+    Background: (Color: @ColorSeparator);
+    Padding: (Horizontal: 8);
+};
+
+// ==================== BOTONES ====================
+@BackButton = TextButton {
+    Anchor: (Left: 16, Bottom: 16, Width: 120, Height: 40);
+    Text: "Volver";
+    Style: (TextColor: @ColorDefault, FontSize: 16);
+    Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
+};
+
+@SecondaryButton = Group {
+    Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
+};
+
+@TertiaryButton = Group {
+    Background: (Color: @ColorBackgroundDark);
+    Anchor: (Width: 32, Height: 32);
+};
+
+// ==================== TABS ====================
+@HeaderTabsStyle = TabNavigationStyle(
+    TabStyle: (
+        Default: (
+            Anchor: (Height: 66, Left: 2, Right: 0),
+            IconOpacity: 0.4
+        ),
+        Hovered: (
+            IconOpacity: 0.6
+        ),
+        Pressed: (
+            IconOpacity: 0.8
+        )
+    ),
+    SelectedTabStyle: (
+        Default: (
+            IconOpacity: 1,
+            Background: (TexturePath: "Common/HeaderTabSelectedBackground.png", Border: 7),
+            ContentMaskTexturePath: "Common/SelectedIconGradient.png"
+        )
+    )
+);
+
+// ==================== INPUT ====================
+@DefaultInputFieldStyle = TextFieldStyle(
+    Background: @InputBoxBackground,
+    Padding: (Full: 8)
+);
+
+@InputBoxBackground = (TexturePath: "Digi/Digi_Container.png", Border: 8);
+
+// ==================== TOOLTIP ====================
+@DefaultTextTooltipStyle = TooltipStyle(
+    Background: (TexturePath: "Digi/Digi_ContainerDark.png", Border: 4),
+    Padding: (Full: 8),
+    Style: (TextColor: @ColorTextPrimary, FontSize: 14)
+);

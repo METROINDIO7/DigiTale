@@ -9,8 +9,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.npc.NPCPlugin;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Location;
+import org.joml.Vector3d;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -91,7 +92,7 @@ public class SistemaPaseo {
                 return null;
             }
 
-            Vector3f rotation = new Vector3f(0, 0, 0);
+            Rotation3f rotation = new Rotation3f();
             var result = npcPlugin.spawnNPC(store, roleId, null, posicion, rotation);
             if (result == null) {
                 LOGGER.log(Level.WARNING, "[SistemaPaseo] spawnNPC retorno null");

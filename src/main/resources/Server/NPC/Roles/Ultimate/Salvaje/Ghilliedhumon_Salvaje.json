@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Ghilliedhumon_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 64,
-    "MaxSpeed": 7,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

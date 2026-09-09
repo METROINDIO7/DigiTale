@@ -46,18 +46,19 @@ public class DigiTale extends JavaPlugin {
         mountSupportFilter = PacketAdapters.registerInbound(new DigiMountInputFilter());
         MountMovementSupport.initializeRoleProfiles();
         registrarEventosJugador();
+        // ===== Comandos de navegación por UI =====
         this.getCommandRegistry().registerCommand(new DigiMenuComando("digi_menu", "Abre el menu principal de DigiTale"));
-        this.getCommandRegistry().registerCommand(new DigiStartComando("digi_start", "Elige companeros"));
-        this.getCommandRegistry().registerCommand(new DigiStatusComando("digi_status", "Ver estado del equipo"));
-        this.getCommandRegistry().registerCommand(new DigiEntrenarComando("digi_entrenar", "Entrenar"));
-        this.getCommandRegistry().registerCommand(new DigiBatallaComando("digi_batalla", "Combate legacy"));
-        this.getCommandRegistry().registerCommand(new DigiCuidarComando("digi_cuidar", "Cuidar"));
-        this.getCommandRegistry().registerCommand(new DigiEvolucionarComando("digi_evolucionar", "Evolucionar"));
-        this.getCommandRegistry().registerCommand(new DigiPasearComando("digi_pasear", "Alternar paseo"));
+        this.getCommandRegistry().registerCommand(new DigiSapotamaTabComando("digi_tab", "Abre el menu de tabs de Sapotama"));
+        this.getCommandRegistry().registerCommand(new DigiStartComando("digi_start", "Elige companeros (comando rapido)"));
+        this.getCommandRegistry().registerCommand(new DigiStatusComando("digi_status", "Ver estado del equipo (comando rapido)"));
         this.getCommandRegistry().registerCommand(new DigiMountModeComando("digi_mountmode", "Control de montura: default/auto/fly/swim"));
-        this.getCommandRegistry().registerCommand(new DigiProgressComando("digi_progress", "Ver progreso"));
-        this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiResetProgressComando("digi_resetprogress", "Reset progreso"));
-        this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiSetProgressComando("digi_setprogress", "Set progreso"));
+
+        // ===== Comando de reinicio =====
+        this.getCommandRegistry().registerCommand(new DigiResetComando("digi_reset", "Reinicia tu equipo borrando todos los digimons"));
+
+        // ===== Comandos admin =====
+        this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiResetProgressComando("digi_resetprogress", "Reset progreso (admin)"));
+        this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiSetProgressComando("digi_setprogress", "Set progreso (admin)"));
         getLogger().at(Level.INFO).log("DigiTale cargado correctamente!");
     }
 

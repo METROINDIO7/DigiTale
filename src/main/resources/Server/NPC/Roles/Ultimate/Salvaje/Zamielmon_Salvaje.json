@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Zamielmon_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 58,
-    "MaxSpeed": 7,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

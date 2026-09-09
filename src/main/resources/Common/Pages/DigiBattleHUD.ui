@@ -1,0 +1,151 @@
+$Common = "Common.ui";
+$P = "Digi.ui";
+
+// ==================== ESTILO DEL PANEL DE DIGIMON (para battle HUD) ====================
+@BattleDigimonPanel = Group {
+    LayoutMode: Top;
+    Background: (Color: #0d1117);
+    Border: (Size: 2, Color: #333344);
+    Anchor: (Width: 170, Height: 120);
+    Padding: 8;
+
+    // Imagen del digimon
+    AssetImage #DigimonImg {
+        Anchor: (Width: 56, Height: 56);
+        AssetPath: "Common/UI/Custom/png_Digis/DigiPlaceholder.png";
+    }
+
+    Group { Anchor: (Height: 2); }
+
+    // Nombre y nivel
+    Group {
+        LayoutMode: Left;
+        Label #DigimonName {
+            Text: "-";
+            Style: (TextColor: #e0e8f0, FontSize: 13, RenderBold: true);
+            Anchor: (Width: 100);
+        }
+    }
+
+    Group { Anchor: (Height: 1); }
+
+    Group {
+        LayoutMode: Left;
+        Label #DigimonLevel {
+            Text: "-";
+            Style: (TextColor: #8899aa, FontSize: 11);
+            Anchor: (Width: 100);
+        }
+    }
+
+    Group { Anchor: (Height: 6); }
+
+    // Barra de vida
+    Group {
+        LayoutMode: Top;
+        Anchor: (Height: 16);
+
+        Label #HpText {
+            Text: "HP: --/--";
+            Style: (TextColor: #00ff88, FontSize: 11);
+            Anchor: (Left: 2);
+        }
+
+        Group {
+            LayoutMode: Left;
+            Anchor: (Left: 60, Height: 8);
+            Background: (Color: #222233);
+            Border: (Size: 1, Color: #444455);
+
+            Group #HpBar {
+                LayoutMode: Left;
+                Anchor: (Width: 100);
+                Background: (Color: #00ff88);
+            }
+        }
+    }
+
+    Group { Anchor: (Height: 3); }
+
+    // Elemento
+    Label #DigimonElement {
+        Text: "-";
+        Style: (TextColor: #8899aa, FontSize: 10);
+        Anchor: (Width: 100);
+    }
+}
+
+// ==================== HUD DE BATALLA (rotativo) ====================
+// Muestra los digimones del jugador y del enemigo con sus barras de vida
+// Paneles rotativos que cambian según el turno
+
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 300, Width: 500);
+    Background: (Color: #0d1117);
+    Border: (Size: 2, Color: #333344);
+    Padding: 12;
+
+    Label {
+        Text: "COMBATE";
+        Style: (TextColor: #ff00ff, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
+        Anchor: (Height: 24);
+    }
+
+    Group { Anchor: (Height: 8); }
+
+    // Fila de jugadores (3 combatientes)
+    Group {
+        LayoutMode: Left;
+        Padding: (Vertical: 6);
+
+        $P.@BattleDigimonPanel #PlayerPanel1 {
+            Anchor: (Width: 150, Height: 110);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@BattleDigimonPanel #PlayerPanel2 {
+            Anchor: (Width: 150, Height: 110);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@BattleDigimonPanel #PlayerPanel3 {
+            Anchor: (Width: 150, Height: 110);
+        }
+    }
+
+    Group { Anchor: (Height: 8); }
+
+    // Indicador de turno
+    Label #TurnIndicator {
+        Text: "Turno: --";
+        Style: (TextColor: #ffcc00, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+        Anchor: (Height: 22);
+    }
+
+    Group { Anchor: (Height: 8); }
+
+    // Fila de enemigos
+    Group {
+        LayoutMode: Left;
+        Padding: (Vertical: 6);
+
+        $P.@BattleDigimonPanel #EnemyPanel1 {
+            Anchor: (Width: 150, Height: 110);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@BattleDigimonPanel #EnemyPanel2 {
+            Anchor: (Width: 150, Height: 110);
+        }
+
+        Group { Anchor: (Width: 6); }
+
+        $P.@BattleDigimonPanel #EnemyPanel3 {
+            Anchor: (Width: 150, Height: 110);
+        }
+    }
+}

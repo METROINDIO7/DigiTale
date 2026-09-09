@@ -1,0 +1,101 @@
+$C = "Common.ui";
+$P = "Digi.ui";
+$Overview = "DigiStats/OverviewContent.ui";
+$Stats = "DigiStats/StatsContent.ui";
+$Moves = "DigiStats/MovesContent.ui";
+
+
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 600, Width: 600);
+
+    TabNavigation {
+        Style: $C.@HeaderTabsStyle;
+        SelectedTab: "TabFirst";
+        Anchor: (Height: 66, Left: 2, Right: 0);
+
+        TabButton {
+            Icon: "Digi/Digi_Digitama.png";
+            TooltipText: "Info";
+            Id: "TabFirst";
+        }
+
+        TabButton {
+            Icon: "Digi/Digi_Digitama_Grey.png";
+            TooltipText: "Stats";
+            Id: "TabSecond";
+        }
+
+        TabButton {
+            Icon: "Digi/Digi_Digitama_Dead.png";
+            TooltipText: "Tecnicas";
+            Id: "TabThird";
+        }
+
+        TabButton {
+            Icon: "Digi/Digi_Digitama_None.png";
+            TooltipText: "Evolucion";
+            Id: "TabFourth";
+        }
+    }
+
+    $C.@DecoratedContainer {
+        #Title {
+            Group {
+                LayoutMode: Left;
+                Padding: (Horizontal: 32, Vertical:4);
+
+                Label  {
+                    Anchor: (Left:8);
+                    Text: "Nv5";
+                    Style: (TextColor: #e0e8f0, FontSize: 16);
+                }
+                Label  {
+                    Anchor: (Left:8);
+                    Text: "";
+                    Style: (TextColor: #e0e8f0, FontSize: 16);
+                }
+                Label  {
+                    Anchor: (Left:8);
+                    Text: "";
+                    Style: (TextColor: #e0e8f0, FontSize: 16);
+                }
+
+                Group { FlexWeight: 1; }
+
+                CompactTextField #RenameInput {
+                    CollapsedWidth: 24;
+                    ExpandedWidth: 200;
+                    PlaceholderText: "Renombrar...";
+                    Padding: (Left: 24);
+                    Decoration: (
+                        Default: (
+                            Icon: (Texture: "Digi/Digi_Digitama_Grey.png", Width: 20, Height: 20)
+                        ),
+                        Focused: (
+                            Icon: (Texture: "Digi/Digi_Digitama.png", Width: 20, Height: 20)
+                        )
+                    );
+                }
+            }
+        }
+
+        #Content {
+
+            $Overview.@OverviewContent #OverviewContent {
+                Visible: false;
+            }
+
+            $Stats.@StatsContent #StatsContent {
+                Visible: false;
+            }
+
+            $Moves.@MovesContent #MovesContent {
+                Visible: true;
+            }
+
+        }
+    }
+}
+
+$C.@BackButton {}

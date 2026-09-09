@@ -1,0 +1,476 @@
+$C = "Common.ui";
+$P = "Digi.ui";
+
+DynamicPaneContainer {
+LayoutMode: Top;
+Anchor: (Left:16, Width: 288, Height: 340);
+
+    Group {
+        LayoutMode: Top;
+        Background: (TexturePath: "Digi/Digi_ContainerDark.png", Border: 20);
+        Anchor: (Top: 0, Left: 0, Width:288);
+        Padding: (Full: 8);
+
+        Group #Digits {
+            LayoutMode: Left;
+            Anchor: (Top: 0, Left: 0, Height: 24, Width: 24);
+            AssetImage {
+                Anchor: (Top:0, Left: 0, Width: 24, Height:24);
+                AssetPath: "UI/Custom/Pages/Digi/Digi_Digitama_None.png";
+            }
+            AssetImage {
+                Anchor: (Top:0, Left: 0, Width: 24, Height:24);
+                AssetPath: "UI/Custom/Pages/Digi/Digi_Digitama_None.png";
+            }
+            AssetImage {
+                Anchor: (Top:0, Left: 0, Width: 24, Height:24);
+                AssetPath: "UI/Custom/Pages/Digi/Digi_Digitama_None.png";
+            }
+            AssetImage {
+                Anchor: (Top:0, Left: 0, Width: 24, Height:24);
+                AssetPath: "UI/Custom/Pages/Digi/Digi_Digitama_None.png";
+            }
+            AssetImage {
+                Anchor: (Top:0, Left: 0, Width: 24, Height:24);
+                AssetPath: "UI/Custom/Pages/Digi/Digi_Digitama_None.png";
+            }
+            AssetImage {
+                Anchor: (Top:0, Left: 0, Width: 24, Height:24);
+                AssetPath: "UI/Custom/Pages/Digi/Digi_Digitama_None.png";
+            }
+        }
+
+        $C.@ContentSeparator #Sep0 {}
+
+        Group #Digi1 {
+            LayoutMode: Left;
+            Anchor: (Width: 256, Height: 48);
+
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 48, Height:48);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+
+            Group #Details {
+                LayoutMode: Top;
+                Anchor: (Left:0, Top:0, Width: 208, Height: 48);
+
+                Group #Name {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 24);
+
+                    Label #DigiName {
+                        Anchor: (Width: 144, Left: 0, Top: 0);
+                        Text: "";
+                        Style: (FontSize: 16, TextColor: #00d4ff, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Label #DigiLevel {
+                        Anchor: (Width: 64, Right: 0);
+                        Text: "Nv --";
+                        Style: (TextColor: #8899aa, FontSize: 16);
+                    }
+                }
+
+                Group #Health {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 20);
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 2);
+
+                    Label {
+                        Anchor: (Width: 24, Left: 0, Bottom: 0);
+                        Text: "HP";
+                        Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Group {
+                        Anchor: (Left: 0, Width: 128, Height: 14);
+                        Padding: (Full: 2);
+                        OutlineColor: #e0e8f0;
+                        OutlineSize: 2;
+
+                        ProgressBar #HealthBar {
+                            Anchor: (Left: 0, Width: 124, Height: 10);
+                            Alignment: Horizontal;
+                            Direction: End;
+                            Value: 0.75;
+                            Background: (TexturePath: "Digi/Digi_Hp_Bg.png");
+                            BarTexturePath: "Digi/Digi_Hp.png";
+                        }
+                    }
+
+                    Label #HealthText {
+                        Anchor: (Width: 50, Left: 4, Bottom: 2);
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 12);
+                    }
+                }
+            }
+        }
+
+        $C.@ContentSeparator #Sep1 {}
+
+        Group #Digi2 {
+            LayoutMode: Left;
+            Anchor: (Width: 256, Height: 48);
+
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 48, Height:48);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+
+            Group #Details {
+                LayoutMode: Top;
+                Anchor: (Left:0, Top:0, Width: 208, Height: 48);
+
+                Group #Name {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 24);
+
+                    Label  #DigiName {
+                        Anchor: (Width: 144, Left: 0, Top: 0);
+                        Text: "";
+                        Style: (FontSize: 16, TextColor: #00d4ff, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Label #DigiLevel {
+                        Anchor: (Width: 64, Right: 0);
+                        Text: "Nv --";
+                        Style: (TextColor: #8899aa, FontSize: 16);
+                    }
+                }
+
+                Group #Health {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 20);
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 2);
+
+                    Label {
+                        Anchor: (Width: 24, Left: 0, Bottom: 0);
+                        Text: "HP";
+                        Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Group {
+                        Anchor: (Left: 0, Width: 128, Height: 14);
+                        Padding: (Full: 2);
+                        OutlineColor: #e0e8f0;
+                        OutlineSize: 2;
+
+                        ProgressBar #HealthBar {
+                            Anchor: (Left: 0, Width: 124, Height: 10);
+                            Alignment: Horizontal;
+                            Direction: End;
+                            Value: 0.75;
+                            Background: (TexturePath: "Digi/Digi_Hp_Bg.png");
+                            BarTexturePath: "Digi/Digi_Hp.png";
+                        }
+                    }
+
+                    Label #HealthText {
+                        Anchor: (Width: 50, Left: 4, Bottom: 2);
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 12);
+                    }
+                }
+            }
+        }
+
+        $C.@ContentSeparator #Sep2 {}
+
+        Group #Digi3 {
+            LayoutMode: Left;
+            Anchor: (Width: 256, Height: 48);
+
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 48, Height:48);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+
+            Group #Details {
+                LayoutMode: Top;
+                Anchor: (Left:0, Top:0, Width: 208, Height: 48);
+
+                Group #Name {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 24);
+
+                    Label  #DigiName {
+                        Anchor: (Width: 144, Left: 0, Top: 0);
+                        Text: "";
+                        Style: (FontSize: 16, TextColor: #00d4ff, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Label #DigiLevel {
+                        Anchor: (Width: 64, Right: 0);
+                        Text: "Nv --";
+                        Style: (TextColor: #8899aa, FontSize: 16);
+                    }
+                }
+
+                Group #Health {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 20);
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 2);
+
+                    Label {
+                        Anchor: (Width: 24, Left: 0, Bottom: 0);
+                        Text: "HP";
+                        Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Group {
+                        Anchor: (Left: 0, Width: 128, Height: 14);
+                        Padding: (Full: 2);
+                        OutlineColor: #e0e8f0;
+                        OutlineSize: 2;
+
+                        ProgressBar #HealthBar {
+                            Anchor: (Left: 0, Width: 124, Height: 10);
+                            Alignment: Horizontal;
+                            Direction: End;
+                            Value: 0.75;
+                            Background: (TexturePath: "Digi/Digi_Hp_Bg.png");
+                            BarTexturePath: "Digi/Digi_Hp.png";
+                        }
+                    }
+
+                    Label #HealthText {
+                        Anchor: (Width: 50, Left: 4, Bottom: 2);
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 12);
+                    }
+                }
+            }
+        }
+
+        $C.@ContentSeparator #Sep3 {}
+
+        Group #Digi4 {
+            LayoutMode: Left;
+            Anchor: (Width: 256, Height: 48);
+
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 48, Height:48);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+
+            Group #Details {
+                LayoutMode: Top;
+                Anchor: (Left:0, Top:0, Width: 208, Height: 48);
+
+                Group #Name {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 24);
+
+                    Label  #DigiName {
+                        Anchor: (Width: 144, Left: 0, Top: 0);
+                        Text: "";
+                        Style: (FontSize: 16, TextColor: #00d4ff, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Label #DigiLevel {
+                        Anchor: (Width: 64, Right: 0);
+                        Text: "Nv --";
+                        Style: (TextColor: #8899aa, FontSize: 16);
+                    }
+                }
+
+                Group #Health {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 20);
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 2);
+
+                    Label {
+                        Anchor: (Width: 24, Left: 0, Bottom: 0);
+                        Text: "HP";
+                        Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Group {
+                        Anchor: (Left: 0, Width: 128, Height: 14);
+                        Padding: (Full: 2);
+                        OutlineColor: #e0e8f0;
+                        OutlineSize: 2;
+
+                        ProgressBar #HealthBar {
+                            Anchor: (Left: 0, Width: 124, Height: 10);
+                            Alignment: Horizontal;
+                            Direction: End;
+                            Value: 0.75;
+                            Background: (TexturePath: "Digi/Digi_Hp_Bg.png");
+                            BarTexturePath: "Digi/Digi_Hp.png";
+                        }
+                    }
+
+                    Label #HealthText {
+                        Anchor: (Width: 50, Left: 4, Bottom: 2);
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 12);
+                    }
+                }
+            }
+        }
+
+        $C.@ContentSeparator #Sep4 {}
+
+        Group #Digi5 {
+            LayoutMode: Left;
+            Anchor: (Width: 256, Height: 48);
+
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 48, Height:48);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+
+            Group #Details {
+                LayoutMode: Top;
+                Anchor: (Left:0, Top:0, Width: 208, Height: 48);
+
+                Group #Name {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 24);
+
+                    Label  #DigiName {
+                        Anchor: (Width: 144, Left: 0, Top: 0);
+                        Text: "";
+                        Style: (FontSize: 16, TextColor: #00d4ff, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Label #DigiLevel {
+                        Anchor: (Width: 64, Right: 0);
+                        Text: "Nv --";
+                        Style: (TextColor: #8899aa, FontSize: 16);
+                    }
+                }
+
+                Group #Health {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 20);
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 2);
+
+                    Label {
+                        Anchor: (Width: 24, Left: 0, Bottom: 0);
+                        Text: "HP";
+                        Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Group {
+                        Anchor: (Left: 0, Width: 128, Height: 14);
+                        Padding: (Full: 2);
+                        OutlineColor: #e0e8f0;
+                        OutlineSize: 2;
+
+                        ProgressBar #HealthBar {
+                            Anchor: (Left: 0, Width: 124, Height: 10);
+                            Alignment: Horizontal;
+                            Direction: End;
+                            Value: 0.75;
+                            Background: (TexturePath: "Digi/Digi_Hp_Bg.png");
+                            BarTexturePath: "Digi/Digi_Hp.png";
+                        }
+                    }
+
+                    Label #HealthText {
+                        Anchor: (Width: 50, Left: 4, Bottom: 2);
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 12);
+                    }
+                }
+            }
+        }
+
+        $C.@ContentSeparator #Sep5 {}
+
+        Group #Digi6 {
+            LayoutMode: Left;
+            Anchor: (Width: 256, Height: 48);
+
+            AssetImage #DigiIcon{
+                Anchor: (Top:0, Left: 0, Width: 48, Height:48);
+                AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
+            }
+
+            Group #Details {
+                LayoutMode: Top;
+                Anchor: (Left:0, Top:0, Width: 208, Height: 48);
+
+                Group #Name {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 24);
+
+                    Label  #DigiName {
+                        Anchor: (Width: 144, Left: 0, Top: 0);
+                        Text: "";
+                        Style: (FontSize: 16, TextColor: #00d4ff, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Label #DigiLevel {
+                        Anchor: (Width: 64, Right: 0);
+                        Text: "Nv --";
+                        Style: (TextColor: #8899aa, FontSize: 16);
+                    }
+                }
+
+                Group #Health {
+                    LayoutMode: Left;
+                    Anchor: (Left:0, Top: 0, Width: 208, Height: 20);
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 2);
+
+                    Label {
+                        Anchor: (Width: 24, Left: 0, Bottom: 0);
+                        Text: "HP";
+                        Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
+                        MaskTexturePath: $C.@TextHighlightGradientMask;
+                    }
+
+                    Group {
+                        Anchor: (Left: 0, Width: 128, Height: 14);
+                        Padding: (Full: 2);
+                        OutlineColor: #e0e8f0;
+                        OutlineSize: 2;
+
+                        ProgressBar #HealthBar {
+                            Anchor: (Left: 0, Width: 124, Height: 10);
+                            Alignment: Horizontal;
+                            Direction: End;
+                            Value: 0.75;
+                            Background: (TexturePath: "Digi/Digi_Hp_Bg.png");
+                            BarTexturePath: "Digi/Digi_Hp.png";
+                        }
+                    }
+
+                    Label #HealthText {
+                        Anchor: (Width: 50, Left: 4, Bottom: 2);
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 12);
+                    }
+                }
+            }
+        }
+
+    }
+    DynamicPane #Container {
+        LayoutMode: Full;
+        ResizeAt: End;
+        ResizerSize: 340;
+    }
+
+}

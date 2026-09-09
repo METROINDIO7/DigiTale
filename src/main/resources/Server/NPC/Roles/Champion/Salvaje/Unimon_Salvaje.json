@@ -2,9 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Volador_Salvaje",
   "Modify": {
-    "Appearance": "Unimon_Model",
+    "Appearance": "Botamon_Model",
     "MaxHealth": 50,
-    "MaxSpeed": 8,
     "IsMountable": true,
     "MountAnchorY": 1.5,
     "NameTranslationKey": {

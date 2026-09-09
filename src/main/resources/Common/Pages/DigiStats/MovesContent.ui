@@ -1,0 +1,156 @@
+$C = "../Common.ui";
+$P = "../Digi.ui";
+
+@MovesContent = Group {
+    Visible: false;
+    LayoutMode: Left;
+    Padding: (Horizontal: 4, Vertical:2);
+
+    Group #MoveDetails {
+        LayoutMode: Top;
+        Anchor: (Top: 0, Left: 0, Width: 224, Height: 224);
+
+        Group {
+            Anchor: (Top: 4);
+            LayoutMode: Left;
+            $P.@FieldLabel  { Text: "Poder"; }
+            $P.@FieldContainer {
+                FlexWeight: 1;
+                $P.@FieldValue #Power { Text: "40"; }
+                Group { FlexWeight: 1; }
+                AssetImage {
+                    Anchor: (Width: 24, Height:24);
+                    AssetPath: "UI/Textures/Icons/DamagePhysical.png";
+                }
+            }
+        }
+        $C.@ContentSeparator {}
+        Group {
+            Anchor: (Top: 4);
+            LayoutMode: Left;
+            $P.@FieldLabel  { Text: "Golpes"; }
+            $P.@FieldContainer { $P.@FieldValue #Hits { Text: "1"; } }
+        }
+        $C.@ContentSeparator {}
+        Group {
+            Anchor: (Top: 4);
+            LayoutMode: Left;
+            $P.@FieldLabel  { Text: "Critico"; }
+            $P.@FieldContainer { $P.@FieldValue #Crit{ Text: "10%"; } }
+        }
+        $C.@ContentSeparator {}
+        Group {
+            Anchor: (Top: 4);
+            LayoutMode: Left;
+            $P.@FieldLabel  { Text: "Alcance"; }
+            $P.@FieldContainer { $P.@FieldValue #Range{ Text: "5m"; } }
+        }
+        $C.@ContentSeparator {}
+        Group {
+            Anchor: (Top: 4);
+            LayoutMode: Top;
+            $P.@FieldLabel  {
+                Anchor: (Left: 0, Right:0);
+                Text: "Descripcion";
+            }
+            $P.@FieldContainer {
+                Anchor: (Full: 0);
+                $P.@FieldValueWrap #Description{
+                    Text: "";
+                }
+            }
+        }
+
+    }
+
+
+    Group #MoveList {
+        LayoutMode: Top;
+        Padding: (Horizontal: 8, Vertical:4);
+
+        $C.@SecondaryButton #Move1{
+            LayoutMode: Left;
+            Padding: (Horizontal: 8, Vertical:8);
+            Anchor: (Top: 4, Left: 12, Width: 320, Height: 48);
+            AssetImage #MoveType {
+                Anchor: (Left: 0, Width: 64, Height:24);
+                AssetPath: "UI/Textures/Icons/Types/FireType.png";
+            }
+            Label #MoveName {
+                Text: "";
+                Anchor: (Left: 8);
+                Style: (TextColor: #e0e8f0, FontSize: 16, VerticalAlignment: Center);
+            }
+            Group { FlexWeight: 1; }
+            Label #MovePower {
+                Text: "";
+                Anchor: (Left: 0);
+                Style: (TextColor: #00d4ff, FontSize: 16, VerticalAlignment: Center, RenderBold: true);
+            }
+        }
+
+        $C.@SecondaryButton #Move2 {
+            LayoutMode: Left;
+            Padding: (Horizontal: 8, Vertical:8);
+            Anchor: (Top: 8, Left: 12, Width: 320, Height: 48);
+            AssetImage {
+                Anchor: (Left: 0, Width: 64, Height:24);
+                AssetPath: "UI/Textures/Icons/Types/WaterType.png";
+            }
+            Label {
+                Text: "";
+                Anchor: (Left: 8);
+                Style: (TextColor: #e0e8f0, FontSize: 16, VerticalAlignment: Center);
+            }
+            Group { FlexWeight: 1; }
+            Label #MovePower {
+                Text: "";
+                Anchor: (Left: 0);
+                Style: (TextColor: #00d4ff, FontSize: 16, VerticalAlignment: Center, RenderBold: true);
+            }
+        }
+
+        $C.@SecondaryButton #Move3 {
+            LayoutMode: Left;
+            Padding: (Horizontal: 8, Vertical:8);
+            Anchor: (Top: 8, Left: 12, Width: 320, Height: 48);
+            AssetImage {
+                Anchor: (Left: 0, Width: 64, Height:24);
+                AssetPath: "UI/Textures/Icons/Types/PlantType.png";
+            }
+            Label {
+                Text: "";
+                Anchor: (Left: 8);
+                Style: (TextColor: #e0e8f0, FontSize: 16, VerticalAlignment: Center);
+            }
+            Group { FlexWeight: 1; }
+            Label #MovePower {
+                Text: "";
+                Anchor: (Left: 0);
+                Style: (TextColor: #00d4ff, FontSize: 16, VerticalAlignment: Center, RenderBold: true);
+            }
+        }
+
+        $C.@SecondaryButton  #Move4 {
+            LayoutMode: Left;
+            Padding: (Horizontal: 8, Vertical:8);
+            Anchor: (Top: 8, Left: 12, Width: 320, Height: 48);
+            AssetImage {
+                Anchor: (Left: 0, Width: 64, Height:24);
+                AssetPath: "UI/Textures/Icons/Types/ElectricType.png";
+            }
+            Label {
+                Text: "";
+                Anchor: (Left: 8);
+                Style: (TextColor: #e0e8f0, FontSize: 16, VerticalAlignment: Center);
+            }
+            Group { FlexWeight: 1; }
+            Label #MovePower {
+                Text: "";
+                Anchor: (Left: 0);
+                Style: (TextColor: #00d4ff, FontSize: 16, VerticalAlignment: Center, RenderBold: true);
+            }
+        }
+
+    }
+};
