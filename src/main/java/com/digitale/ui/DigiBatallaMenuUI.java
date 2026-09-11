@@ -58,62 +58,193 @@ public class DigiBatallaMenuUI extends CustomUIPage {
             Group {
                 LayoutMode: Top;
                 Anchor: (Height: 550, Width: 600);
-                Style: (BackgroundColor: #0d1117);
-                Padding: 12;
-
-                Label {
-                    Text: "BATALLA DIGIMON";
-                    Style: (FontSize: 18, TextColor: #ff00ff, Alignment: Center, Padding: (Bottom: 6));
-                }
-                Label #LblTurno {
-                    Text: "Ronda 1";
-                    Style: (FontSize: 14, TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 4));
-                }
-                Label #LblResultado {
-                    Text: "";
-                    Style: (FontSize: 13, TextColor: #ffcc00, Alignment: Center, Padding: (Bottom: 6));
-                }
-
-                Label { Text: "=== ENEMIGO ==="; Style: (FontSize: 13, TextColor: #ff4444, Alignment: Center, Padding: (Bottom: 2)); }
-                Label #LblEnemigo { Text: "---"; Style: (FontSize: 13, TextColor: #e0e8f0, Alignment: Center); }
-                Label #LblEnemHp { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #ff4444, Alignment: Center); }
-                Label #LblBarraEnem { Text: ""; Style: (FontSize: 12, TextColor: #ff4444, Alignment: Center, FontFamily: Monospace); }
-                Label #LblEnemGauge { Text: "GAUGE: "; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 6)); }
-                Label #LblAlerta { Text: ""; Style: (FontSize: 13, TextColor: #ffcc00, Alignment: Center, Padding: (Bottom: 4)); }
-
-                Label { Text: "________________________"; Style: (TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 4)); }
-
-                Label { Text: "--- COMPANERO A ---"; Style: (FontSize: 13, TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 2)); }
-                Label #LblNombreA { Text: "---"; Style: (FontSize: 13, TextColor: #00d4ff, Alignment: Center); }
-                Label #LblHpA { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center); }
-                Label #LblBarraA { Text: ""; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center, FontFamily: Monospace); }
-                Label #LblOpA { Text: "OP: "; Style: (FontSize: 11, TextColor: #ffcc00, Alignment: Center); }
-                Label #LblGaugeA { Text: "GAUGE: "; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 4)); }
-
-                Label { Text: "--- COMPANERO B ---"; Style: (FontSize: 13, TextColor: #ff00ff, Alignment: Center, Padding: (Bottom: 2)); }
-                Label #LblNombreB { Text: "---"; Style: (FontSize: 13, TextColor: #ff00ff, Alignment: Center); }
-                Label #LblHpB { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center); }
-                Label #LblBarraB { Text: ""; Style: (FontSize: 12, TextColor: #00ff88, Alignment: Center, FontFamily: Monospace); }
-                Label #LblOpB { Text: "OP: "; Style: (FontSize: 11, TextColor: #ffcc00, Alignment: Center); }
-                Label #LblGaugeB { Text: "GAUGE: "; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 6)); }
-
-                Label { Text: "________________________"; Style: (TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 4)); }
-
-                Label #LblCombo { Text: ""; Style: (FontSize: 14, TextColor: #ffcc00, Alignment: Center, Padding: (Bottom: 4)); }
-                Label #LblLog { Text: ""; Style: (FontSize: 11, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 8)); }
 
                 Group {
-                    LayoutMode: Left;
-                    Padding: (Bottom: 4);
-                    Label #BtnSupport { Text: "Support"; Anchor: (Width: 90, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
-                    Label #BtnOrderRing { Text: "Order Ring"; Anchor: (Width: 90, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
-                    Label #BtnHuir { Text: "Huir"; Anchor: (Width: 90, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #3d1a1a); };
-                }
-                Group {
-                    LayoutMode: Left;
-                    Label #BtnTacticaA { Text: "Tactica A"; Anchor: (Width: 120, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
-                    Label { Style: (FlexWeight: 1); };
-                    Label #BtnTacticaB { Text: "Tactica B"; Anchor: (Width: 120, Height: 36); Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); };
+                    LayoutMode: Top;
+                    Background: (Color: #0d1117);
+                    Padding: (Full: 12);
+
+                    Label {
+                        Text: "BATALLA DIGIMON";
+                        Style: (TextColor: #ff00ff, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 24);
+                    }
+                    Label #LblTurno {
+                        Text: "Ronda 1";
+                        Style: (TextColor: #00d4ff, FontSize: 14, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Label #LblResultado {
+                        Text: "";
+                        Style: (TextColor: #ffcc00, FontSize: 13, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Group { Anchor: (Height: 4); }
+
+                    Label {
+                        Text: "=== ENEMIGO ===";
+                        Style: (TextColor: #ff4444, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblEnemigo {
+                        Text: "---";
+                        Style: (TextColor: #e0e8f0, FontSize: 13, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblEnemHp {
+                        Text: "HP: ---";
+                        Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblBarraEnem {
+                        Text: "";
+                        Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblEnemGauge {
+                        Text: "GAUGE: ";
+                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                        Anchor: (Height: 14);
+                    }
+                    Label #LblAlerta {
+                        Text: "";
+                        Style: (TextColor: #ffcc00, FontSize: 13, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+
+                    Label {
+                        Text: "________________________";
+                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                        Anchor: (Height: 14);
+                    }
+                    Group { Anchor: (Height: 4); }
+
+                    Label {
+                        Text: "--- COMPANERO A ---";
+                        Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblNombreA {
+                        Text: "---";
+                        Style: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblHpA {
+                        Text: "HP: ---";
+                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblBarraA {
+                        Text: "";
+                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblOpA {
+                        Text: "OP: ";
+                        Style: (TextColor: #ffcc00, FontSize: 11, HorizontalAlignment: Center);
+                        Anchor: (Height: 14);
+                    }
+                    Label #LblGaugeA {
+                        Text: "GAUGE: ";
+                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                        Anchor: (Height: 14);
+                    }
+
+                    Group { Anchor: (Height: 4); }
+
+                    Label {
+                        Text: "--- COMPANERO B ---";
+                        Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblNombreB {
+                        Text: "---";
+                        Style: (TextColor: #ff00ff, FontSize: 13, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblHpB {
+                        Text: "HP: ---";
+                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblBarraB {
+                        Text: "";
+                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LblOpB {
+                        Text: "OP: ";
+                        Style: (TextColor: #ffcc00, FontSize: 11, HorizontalAlignment: Center);
+                        Anchor: (Height: 14);
+                    }
+                    Label #LblGaugeB {
+                        Text: "GAUGE: ";
+                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                        Anchor: (Height: 14);
+                    }
+
+                    Label {
+                        Text: "________________________";
+                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                        Anchor: (Height: 14);
+                    }
+                    Group { Anchor: (Height: 4); }
+
+                    Label #LblCombo {
+                        Text: "";
+                        Style: (TextColor: #ffcc00, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Label #LblLog {
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center, Wrap: true);
+                        Anchor: (Height: 40);
+                    }
+                    Group { Anchor: (Height: 4); }
+
+                    Group {
+                        LayoutMode: Left;
+
+                        TextButton #BtnSupport {
+                            Text: "Support";
+                            Anchor: (Width: 90, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        }
+
+                        Group { Anchor: (Width: 6); }
+
+                        TextButton #BtnOrderRing {
+                            Text: "Order Ring";
+                            Anchor: (Width: 90, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        }
+
+                        Group { Anchor: (Width: 6); }
+
+                        TextButton #BtnHuir {
+                            Text: "Huir";
+                            Anchor: (Width: 90, Height: 36);
+                            Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        }
+                    }
+                    Group { Anchor: (Height: 4); }
+                    Group {
+                        LayoutMode: Left;
+
+                        TextButton #BtnTacticaA {
+                            Text: "Tactica A";
+                            Anchor: (Width: 120, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        }
+
+                        Group { FlexWeight: 1; }
+
+                        TextButton #BtnTacticaB {
+                            Text: "Tactica B";
+                            Anchor: (Width: 120, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        }
+                    }
                 }
             }
             """;

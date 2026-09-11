@@ -114,828 +114,470 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
 
     private String buildPanel() {
         return """
-            $C = "Common.ui";
-            $P = "Digi.ui";
-
             Group {
                 LayoutMode: Top;
                 Anchor: (Height: 580, Width: 520);
 
-                $C.@DecoratedContainer {
-                    #Title {
+                Group {
+                    LayoutMode: Top;
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 15);
+
+                    Label {
+                        Text: "PERFIL DEL DIGIMON";
+                        Style: (TextColor: #ff00ff, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 24);
+                    }
+                    Group {
+                        LayoutMode: Left;
+
+                        Group { FlexWeight: 1; }
+
+                        TextButton #BtnVolver {
+                            Text: "Volver";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        }
+                    }
+                    Group { Anchor: (Height: 6); }
+
+                    Group {
+                        LayoutMode: Left;
+
+                        TextButton #TabStats {
+                            Text: "[Stats]";
+                            Anchor: (Width: 80, Height: 30);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabMovimientos {
+                            Text: "[Movimientos]";
+                            Anchor: (Width: 100, Height: 30);
+                            Style: (Default: (Background: (Color: #12121e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabEvolucion {
+                            Text: "[Evolucion]";
+                            Anchor: (Width: 90, Height: 30);
+                            Style: (Default: (Background: (Color: #12121e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabDeEvolucion {
+                            Text: "[DeEvolucion]";
+                            Anchor: (Width: 100, Height: 30);
+                            Style: (Default: (Background: (Color: #12121e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabEquipamiento {
+                            Text: "[Equipamiento]";
+                            Anchor: (Width: 100, Height: 30);
+                            Style: (Default: (Background: (Color: #12121e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                    }
+                    Group { Anchor: (Height: 6); }
+
+                    Group #TabStatsPanel {
+                        Visible: true;
+                        Anchor: (Height: 400, Width: 490);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 12);
+
+                        Label {
+                            Text: "ESTADISTICAS";
+                            Style: (TextColor: #00d4ff, FontSize: 15, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Group { Anchor: (Height: 6); }
+
                         Group {
                             LayoutMode: Left;
-                            Padding: (Horizontal: 16, Vertical: 4);
 
-                            Label {
-                                Text: "PERFIL DEL DIGIMON";
-                                Style: (TextColor: #ff00ff, FontSize: 18, RenderBold: true);
-                                Anchor: (Left: 8);
+                            Group #Portrait {
+                                Anchor: (Width: 70, Height: 70);
+                                Background: (Color: #16213e);
+                                Padding: (Full: 5);
                             }
 
-                            Group { FlexWeight: 1; }
-
-                            TextButton #BtnVolver {
-                                Anchor: (Width: 100, Height: 40);
-                                Text: "Volver";
-                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)));
-                            }
-                        }
-                    }
-
-                    $C.@HeaderTabsStyle #TabStats {
-                        Anchor: (Left: 2, Right: 2, Bottom: 0);
-                        SelectedTab: "stats";
-
-                        TabButton #TabStats {
-                            Icon: "Digi/Digi_Tab_Stats.png";
-                            TooltipText: "Stats";
-                            Id: "stats";
-                        }
-                        TabButton #TabMovimientos {
-                            Icon: "Digi/Digi_Tab_Movimientos.png";
-                            TooltipText: "Movimientos";
-                            Id: "movimientos";
-                        }
-                        TabButton #TabEvolucion {
-                            Icon: "Digi/Digi_Tab_Evolucion.png";
-                            TooltipText: "Evolución";
-                            Id: "evolucion";
-                        }
-                        TabButton #TabDeEvolucion {
-                            Icon: "Digi/Digi_Tab_DeEvolucion.png";
-                            TooltipText: "De-Evolución";
-                            Id: "de_evolucion";
-                        }
-                        TabButton #TabEquipamiento {
-                            Icon: "Digi/Digi_Tab_Equipamiento.png";
-                            TooltipText: "Equipamiento";
-                            Id: "equipamiento";
-                        }
-                    }
-
-                    #ContentTabs {
-                        LayoutMode: Top;
-                        Padding: (Full: 6);
-                        Anchor: (Top: 6, Bottom: 8, Left: 8, Right: 8);
-
-                        $P.@Panel #TabStatsPanel {
-                            Visible: true;
-                            Anchor: (Height: 350, Width: 460);
-                            Background: (Color: #12121e);
+                            Group { Anchor: (Width: 8); }
 
                             Group {
                                 LayoutMode: Top;
-                                Padding: (Full: 12);
+                                Anchor: (Height: 70);
 
-                                Label {
-                                    Text: "ESTADISTICAS";
-                                    Style: (TextColor: #00d4ff, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
-                                    Anchor: (Height: 22);
+                                Label #DigiIcon {
+                                    Text: "[Icono]";
+                                    Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                                    Anchor: (Height: 14);
                                 }
-
-                                Group { Anchor: (Height: 8); }
-
-                                $C.@SimpleContainer #Portrait {
-                                    Anchor: (Width: 120, Height: 120);
-                                    Padding: (Horizontal: 10, Vertical: 5);
-                                    AssetImage #DigiIcon {
-                                        Anchor: (Top: 0, Left: 0, Width: 100, Height: 100);
-                                        AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
-                                    }
-                                }
-
                                 Group { FlexWeight: 1; }
-
-                                Group {
-                                    LayoutMode: Top;
-                                    Padding: (Vertical: 4);
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "NOMBRE";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblNombre {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "ESPECIE";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblEspecie {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "NIVEL";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblNivel {
-                                            Text: "-";
-                                            Style: (TextColor: #00ff88, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "ELEMENTO";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblElemento {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 8); }
-
-                                    $C.@ContentSeparator {}
-
-                                    Group { Anchor: (Height: 8); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "HP";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblHp {
-                                            Text: "- / -";
-                                            Style: (TextColor: #00ff88, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "ATK";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblAtk {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "DEF";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblDef {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "SPD";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblSpd {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "WIS";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblWis {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 8); }
-
-                                    $C.@ContentSeparator {}
-
-                                    Group { Anchor: (Height: 8); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "LAZO";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblLazo {
-                                            Text: "- / 100";
-                                            Style: (TextColor: #ff00ff, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "DISCIPLINA";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblDisciplina {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "VICTORIAS";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblVictorias {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "DERROTAS";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblDerrotas {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "ENERGIA";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblEnergia {
-                                            Text: "- / 100";
-                                            Style: (TextColor: #ffcc00, FontSize: 14);
-                                        }
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Label {
-                                            Text: "HAMBRE";
-                                            Style: (TextColor: #00d4ff, FontSize: 12);
-                                            Anchor: (Width: 80);
-                                        }
-                                        Label #LblHambre {
-                                            Text: "- / 100";
-                                            Style: (TextColor: #ff6600, FontSize: 14);
-                                        }
-                                    }
+                                Label #LblNombre {
+                                    Text: "-";
+                                    Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                                    Anchor: (Height: 18);
+                                }
+                                Label #LblEspecie {
+                                    Text: "-";
+                                    Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                                    Anchor: (Height: 16);
                                 }
                             }
                         }
+                        Group { Anchor: (Height: 6); }
 
-                        $P.@Panel #TabMovimientosPanel {
-                            Visible: false;
-                            Anchor: (Height: 350, Width: 460);
-                            Background: (Color: #12121e);
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "NIVEL"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblNivel { Text: "-"; Style: (TextColor: #00ff88, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "ELEMENTO"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblElemento { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "HP"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblHp { Text: "- / -"; Style: (TextColor: #00ff88, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "ATK"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblAtk { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "DEF"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblDef { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "SPD"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblSpd { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "WIS"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblWis { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group { Anchor: (Height: 6); }
+                        Label {
+                            Text: "________________________";
+                            Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 4); }
 
-                            Group {
-                                LayoutMode: Top;
-                                Padding: (Full: 12);
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "LAZO"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblLazo { Text: "- / 100"; Style: (TextColor: #ff00ff, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "DISCIPLINA"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblDisciplina { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "VICTORIAS"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblVictorias { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "DERROTAS"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblDerrotas { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "ENERGIA"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblEnergia { Text: "- / 100"; Style: (TextColor: #ffcc00, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 16);
+                            Label { Text: "HAMBRE"; Style: (TextColor: #00d4ff, FontSize: 12, VerticalAlignment: Center); Anchor: (Width: 90); }
+                            Label #LblHambre { Text: "- / 100"; Style: (TextColor: #ff6600, FontSize: 13, VerticalAlignment: Center); }
+                        }
+                    }
 
-                                Label {
-                                    Text: "MOVIMIENTOS / TECNICAS";
-                                    Style: (TextColor: #00d4ff, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
-                                    Anchor: (Height: 22);
-                                }
+                    Group #TabMovimientosPanel {
+                        Visible: false;
+                        Anchor: (Height: 400, Width: 490);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 12);
 
-                                Group { Anchor: (Height: 8); }
+                        Label {
+                            Text: "MOVIMIENTOS / TECNICAS";
+                            Style: (TextColor: #00d4ff, FontSize: 15, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Label #LblInfoMovimiento {
+                            Text: "Selecciona un movimiento";
+                            Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 4); }
 
-                                Label #LblInfoMovimiento {
-                                    Text: "Selecciona un movimiento";
-                                    Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
-                                    Anchor: (Height: 18);
-                                }
+                        Group {
+                            LayoutMode: Left;
 
-                                Group { Anchor: (Height: 8); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    $C.@SecondaryButton #Move1 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        LayoutMode: Top;
-
-                                        Group {
-                                            LayoutMode: Left;
-                                            AssetImage #MoveIcon1 {
-                                                Anchor: (Width: 48, Height: 48);
-                                                AssetPath: "UI/Textures/Icons/Types/FireType.png";
-                                            }
-
-                                            Group { FlexWeight: 1; }
-
-                                            Label #MoveName1 {
-                                                Text: "Movimiento 1";
-                                                Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center);
-                                                Anchor: (Left: 8);
-                                            }
-                                        }
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #Move2 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        LayoutMode: Top;
-
-                                        Group {
-                                            LayoutMode: Left;
-                                            AssetImage #MoveIcon2 {
-                                                Anchor: (Width: 48, Height: 48);
-                                                AssetPath: "UI/Textures/Icons/Types/WaterType.png";
-                                            }
-
-                                            Group { FlexWeight: 1; }
-
-                                            Label #MoveName2 {
-                                                Text: "Movimiento 2";
-                                                Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center);
-                                                Anchor: (Left: 8);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    $C.@SecondaryButton #Move3 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        LayoutMode: Top;
-
-                                        Group {
-                                            LayoutMode: Left;
-                                            AssetImage #MoveIcon3 {
-                                                Anchor: (Width: 48, Height: 48);
-                                                AssetPath: "UI/Textures/Icons/Types/PlantType.png";
-                                            }
-
-                                            Group { FlexWeight: 1; }
-
-                                            Label #MoveName3 {
-                                                Text: "Movimiento 3";
-                                                Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center);
-                                                Anchor: (Left: 8);
-                                            }
-                                        }
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #Move4 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        LayoutMode: Top;
-
-                                        Group {
-                                            LayoutMode: Left;
-                                            AssetImage #MoveIcon4 {
-                                                Anchor: (Width: 48, Height: 48);
-                                                AssetPath: "UI/Textures/Icons/Types/ElectricType.png";
-                                            }
-
-                                            Group { FlexWeight: 1; }
-
-                                            Label #MoveName4 {
-                                                Text: "Movimiento 4";
-                                                Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center);
-                                                Anchor: (Left: 8);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                Group {
-                                    LayoutMode: Top;
-                                    Anchor: (Height: 120);
-
-                                    Label {
-                                        Text: "INFO MOVIMIENTO";
-                                        Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true);
-                                        Anchor: (Height: 18);
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Label #LblMovePower {
-                                        Text: "Poder: -";
-                                        Style: (TextColor: #e0e8f0, FontSize: 12);
-                                        Anchor: (Height: 16);
-                                    }
-
-                                    Label #LblMoveHits {
-                                        Text: "Golpes: -";
-                                        Style: (TextColor: #e0e8f0, FontSize: 12);
-                                        Anchor: (Height: 16);
-                                    }
-
-                                    Label #LblMoveCrit {
-                                        Text: "Critico: -";
-                                        Style: (TextColor: #e0e8f0, FontSize: 12);
-                                        Anchor: (Height: 16);
-                                    }
-
-                                    Label #LblMoveRange {
-                                        Text: "Alcance: -";
-                                        Style: (TextColor: #e0e8f0, FontSize: 12);
-                                        Anchor: (Height: 16);
-                                    }
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    $C.@ContentSeparator {}
-
-                                    Group { Anchor: (Height: 4); }
-
-                                    Label #LblMoveDesc {
-                                        Text: "-";
-                                        Style: (TextColor: #8899aa, FontSize: 12, Wrap: true);
-                                        Anchor: (Height: 60);
-                                    }
-                                }
+                            TextButton #Move1 {
+                                Text: "Movimiento 1";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                            Group { FlexWeight: 1; }
+                            TextButton #Move2 {
+                                Text: "Movimiento 2";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
                             }
                         }
+                        Group { Anchor: (Height: 4); }
+                        Group {
+                            LayoutMode: Left;
 
-                        $P.@Panel #TabEvolucionPanel {
-                            Visible: false;
-                            Anchor: (Height: 350, Width: 460);
-                            Background: (Color: #12121e);
-
-                            Group {
-                                LayoutMode: Top;
-                                Padding: (Full: 12);
-
-                                Label {
-                                    Text: "EVOLUCION";
-                                    Style: (TextColor: #ff00ff, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
-                                    Anchor: (Height: 22);
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                Label #LblEvolucionInfo {
-                                    Text: "Digimon actual: -";
-                                    Style: (TextColor: #e0e8f0, FontSize: 13, HorizontalAlignment: Center);
-                                    Anchor: (Height: 18);
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                Label {
-                                    Text: "EVOLUCIONES DISPONIBLES";
-                                    Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true);
-                                    Anchor: (Height: 18);
-                                }
-
-                                Group { Anchor: (Height: 6); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    $C.@SecondaryButton #Evo1 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #Evo2 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 6); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    $C.@SecondaryButton #Evo3 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "-";
-                                            Style: (TextColor: #8899aa, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #Evo4 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "-";
-                                            Style: (TextColor: #8899aa, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                Group {
-                                    LayoutMode: Top;
-
-                                    Label {
-                                        Text: "CONDICIONES DE EVOLUCION";
-                                        Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true);
-                                        Anchor: (Height: 18);
-                                    }
-
-                                    Label #LblEvolCondiciones {
-                                        Text: "-";
-                                        Style: (TextColor: #8899aa, FontSize: 12, Wrap: true);
-                                        Anchor: (Height: 100);
-                                    }
-                                }
+                            TextButton #Move3 {
+                                Text: "Movimiento 3";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                            Group { FlexWeight: 1; }
+                            TextButton #Move4 {
+                                Text: "Movimiento 4";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
                             }
                         }
+                        Group { Anchor: (Height: 6); }
 
-                        $P.@Panel #TabDeEvolucionPanel {
-                            Visible: false;
-                            Anchor: (Height: 350, Width: 460);
-                            Background: (Color: #12121e);
+                        Label { Text: "TUS MOVIMIENTOS"; Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true); Anchor: (Height: 16); }
+                        Label #MoveName1 { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Label #MoveName2 { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Label #MoveName3 { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Label #MoveName4 { Text: "-"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Group { Anchor: (Height: 6); }
 
-                            Group {
-                                LayoutMode: Top;
-                                Padding: (Full: 12);
+                        Label { Text: "INFO MOVIMIENTO"; Style: (TextColor: #ff00ff, FontSize: 12, RenderBold: true); Anchor: (Height: 16); }
+                        Label #LblMovePower { Text: "Poder: -"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Label #LblMoveHits { Text: "Golpes: -"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Label #LblMoveCrit { Text: "Critico: -"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Label #LblMoveRange { Text: "Alcance: -"; Style: (TextColor: #e0e8f0, FontSize: 11); Anchor: (Height: 14); }
+                        Label #LblMoveDesc { Text: "-"; Style: (TextColor: #8899aa, FontSize: 11, Wrap: true); Anchor: (Height: 32); }
+                    }
 
-                                Label {
-                                    Text: "DE-EVOLUCION";
-                                    Style: (TextColor: #ff6600, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
-                                    Anchor: (Height: 22);
-                                }
+                    Group #TabEvolucionPanel {
+                        Visible: false;
+                        Anchor: (Height: 400, Width: 490);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 12);
 
-                                Group { Anchor: (Height: 8); }
+                        Label {
+                            Text: "EVOLUCION";
+                            Style: (TextColor: #ff00ff, FontSize: 15, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Label #LblEvolucionInfo {
+                            Text: "Digimon actual: -";
+                            Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 16);
+                        }
+                        Group { Anchor: (Height: 6); }
+                        Label {
+                            Text: "________________________";
+                            Style: (TextColor: #ff00ff, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 4); }
 
-                                Label {
-                                    Text: "La de-evolucion devuelve a tu Digimon a una forma anterior.";
-                                    Style: (TextColor: #8899aa, FontSize: 12, Wrap: true);
-                                    Anchor: (Height: 40);
-                                }
+                        Label { Text: "EVOLUCIONES DISPONIBLES"; Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center); Anchor: (Height: 16); }
+                        Group { Anchor: (Height: 4); }
+                        Group {
+                            LayoutMode: Left;
 
-                                Group { Anchor: (Height: 8); }
-
-                                $C.@ContentSeparator {}
-
-                                Group { Anchor: (Height: 8); }
-
-                                Label #LblDeEvolucionInfo {
-                                    Text: "Digimon actual: -";
-                                    Style: (TextColor: #e0e8f0, FontSize: 13, HorizontalAlignment: Center);
-                                    Anchor: (Height: 18);
-                                }
-
-                                Group { Anchor: (Height: 6); }
-
-                                Label {
-                                    Text: "DE-EVOLUCIONES DISPONIBLES";
-                                    Style: (TextColor: #ff6600, FontSize: 13, RenderBold: true);
-                                    Anchor: (Height: 18);
-                                }
-
-                                Group { Anchor: (Height: 6); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    $C.@SecondaryButton #DeEvo1 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #DeEvo2 {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "-";
-                                            Style: (TextColor: #e0e8f0, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-                                }
+                            TextButton #Evo1 {
+                                Text: "-";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                            Group { FlexWeight: 1; }
+                            TextButton #Evo2 {
+                                Text: "-";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
                             }
                         }
+                        Group { Anchor: (Height: 4); }
+                        Group {
+                            LayoutMode: Left;
 
-                        $P.@Panel #TabEquipamientoPanel {
-                            Visible: false;
-                            Anchor: (Height: 350, Width: 460);
-                            Background: (Color: #12121e);
+                            TextButton #Evo3 {
+                                Text: "-";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                            Group { FlexWeight: 1; }
+                            TextButton #Evo4 {
+                                Text: "-";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                        }
+                        Group { Anchor: (Height: 6); }
+                        Label {
+                            Text: "________________________";
+                            Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 4); }
 
-                            Group {
-                                LayoutMode: Top;
-                                Padding: (Full: 12);
+                        Label { Text: "CONDICIONES DE EVOLUCION"; Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center); Anchor: (Height: 16); }
+                        Label #LblEvolCondiciones {
+                            Text: "-";
+                            Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center, Wrap: true);
+                            Anchor: (Height: 40);
+                        }
+                    }
 
-                                Label {
-                                    Text: "EQUIPAMIENTO";
-                                    Style: (TextColor: #00d4ff, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
-                                    Anchor: (Height: 22);
-                                }
+                    Group #TabDeEvolucionPanel {
+                        Visible: false;
+                        Anchor: (Height: 400, Width: 490);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 12);
 
-                                Group { Anchor: (Height: 8); }
+                        Label {
+                            Text: "DE-EVOLUCION";
+                            Style: (TextColor: #ff6600, FontSize: 15, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 24);
+                        }
+                        Label {
+                            Text: "La de-evolucion devuelve a tu Digimon a una forma anterior.";
+                            Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center, Wrap: true);
+                            Anchor: (Height: 24);
+                        }
+                        Group { Anchor: (Height: 4); }
+                        Label {
+                            Text: "________________________";
+                            Style: (TextColor: #ff6600, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 4); }
 
-                                Label {
-                                    Text: "Equipamiento del Digimon";
-                                    Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
-                                    Anchor: (Height: 18);
-                                }
+                        Label #LblDeEvolucionInfo {
+                            Text: "Digimon actual: -";
+                            Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 16);
+                        }
+                        Group { Anchor: (Height: 4); }
+                        Label { Text: "DE-EVOLUCIONES DISPONIBLES"; Style: (TextColor: #ff6600, FontSize: 12, RenderBold: true, HorizontalAlignment: Center); Anchor: (Height: 16); }
+                        Group { Anchor: (Height: 4); }
+                        Group {
+                            LayoutMode: Left;
 
-                                Group { Anchor: (Height: 8); }
+                            TextButton #DeEvo1 {
+                                Text: "-";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                            Group { FlexWeight: 1; }
+                            TextButton #DeEvo2 {
+                                Text: "-";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                        }
+                    }
 
-                                $C.@ContentSeparator {}
+                    Group #TabEquipamientoPanel {
+                        Visible: false;
+                        Anchor: (Height: 400, Width: 490);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 12);
 
-                                Group { Anchor: (Height: 8); }
+                        Label {
+                            Text: "EQUIPAMIENTO";
+                            Style: (TextColor: #00d4ff, FontSize: 15, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Label {
+                            Text: "Equipamiento del Digimon";
+                            Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 6); }
+                        Label {
+                            Text: "________________________";
+                            Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 4); }
 
-                                Group {
-                                    LayoutMode: Left;
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 40);
+                            Label { Text: "EQUIPO ACTUAL"; Style: (TextColor: #ff00ff, FontSize: 12, RenderBold: true, VerticalAlignment: Center); Anchor: (Width: 200); }
+                            Group { FlexWeight: 1; }
+                            TextButton #ItemEquipo {
+                                Text: "Sin equipo";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                        }
+                        Group { Anchor: (Height: 4); }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 40);
+                            Label { Text: "ARMA"; Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true, VerticalAlignment: Center); Anchor: (Width: 200); }
+                            Group { FlexWeight: 1; }
+                            TextButton #ItemArma {
+                                Text: "Sin arma";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                        }
+                        Group { Anchor: (Height: 4); }
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 40);
+                            Label { Text: "ARMADURA"; Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true, VerticalAlignment: Center); Anchor: (Width: 200); }
+                            Group { FlexWeight: 1; }
+                            TextButton #ItemArmadura {
+                                Text: "Sin armadura";
+                                Anchor: (Width: 200, Height: 40);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                        }
+                        Group { Anchor: (Height: 6); }
+                        Label {
+                            Text: "________________________";
+                            Style: (TextColor: #ff00ff, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Group { Anchor: (Height: 4); }
 
-                                    Label {
-                                        Text: "EQUIPO ACTUAL";
-                                        Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true);
-                                        Anchor: (Width: 200);
-                                    }
+                        Label { Text: "COSMETICOS"; Style: (TextColor: #ff00ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center); Anchor: (Height: 16); }
+                        Group { Anchor: (Height: 4); }
+                        Group {
+                            LayoutMode: Left;
 
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #ItemEquipo {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "Sin equipo";
-                                            Style: (TextColor: #8899aa, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                $C.@ContentSeparator {}
-
-                                Group { Anchor: (Height: 8); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    Label {
-                                        Text: "ARMA";
-                                        Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true);
-                                        Anchor: (Width: 200);
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #ItemArma {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "Sin arma";
-                                            Style: (TextColor: #8899aa, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                $C.@ContentSeparator {}
-
-                                Group { Anchor: (Height: 8); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    Label {
-                                        Text: "ARMADURA";
-                                        Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true);
-                                        Anchor: (Width: 200);
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    $C.@SecondaryButton #ItemArmadura {
-                                        Anchor: (Width: 200, Height: 50);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label {
-                                            Text: "Sin armadura";
-                                            Style: (TextColor: #8899aa, FontSize: 13, VerticalAlignment: Center);
-                                        }
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                $C.@ContentSeparator {}
-
-                                Group { Anchor: (Height: 8); }
-
-                                Label {
-                                    Text: "COSMETICOS";
-                                    Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true);
-                                    Anchor: (Height: 18);
-                                }
-
-                                Group { Anchor: (Height: 4); }
-
-                                $C.@SecondaryButton #Cosmetico1 {
-                                    Anchor: (Width: 200, Height: 40);
-                                    Padding: (Horizontal: 8, Vertical: 4);
-                                    Label {
-                                        Text: "Aspecto Normal";
-                                        Style: (TextColor: #e0e8f0, FontSize: 12, VerticalAlignment: Center);
-                                    }
-                                }
-
-                                Group { Anchor: (Height: 4); }
-
-                                $C.@SecondaryButton #Cosmetico2 {
-                                    Anchor: (Width: 200, Height: 40);
-                                    Padding: (Horizontal: 8, Vertical: 4);
-                                    Label {
-                                        Text: "Aspecto Especial";
-                                        Style: (TextColor: #8899aa, FontSize: 12, VerticalAlignment: Center);
-                                    }
-                                }
+                            TextButton #Cosmetico1 {
+                                Text: "Aspecto Normal";
+                                Anchor: (Width: 200, Height: 36);
+                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                            Group { FlexWeight: 1; }
+                            TextButton #Cosmetico2 {
+                                Text: "Aspecto Especial";
+                                Anchor: (Width: 200, Height: 36);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 11, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                             }
                         }
                     }
@@ -944,7 +586,6 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
             """;
     }
 
-    @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref,
                                 @Nonnull Store<EntityStore> store,
                                 @Nonnull String jsonData) {
@@ -1011,7 +652,6 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
             cmd.set("#LblDerrotas.Text", "-");
             cmd.set("#LblEnergia.Text", "- / 100");
             cmd.set("#LblHambre.Text", "- / 100");
-            cmd.set("#DigiIcon.AssetPath", "Icons/ModelsGenerated/DigiPlaceholder.png");
             return;
         }
 
@@ -1030,7 +670,7 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
         cmd.set("#LblDerrotas.Text", digimon.derrotas);
         cmd.set("#LblEnergia.Text", digimon.energia + " / 100");
         cmd.set("#LblHambre.Text", digimon.hambre + " / 100");
-        cmd.set("#DigiIcon.AssetPath", "Icons/ModelsGenerated/" + digimon.especie + ".png");
+        cmd.set("#DigiIcon.Text", "[" + digimon.especie + "]");
     }
 
     private void actualizarMovimientos(UICommandBuilder cmd, Store<EntityStore> store) {
@@ -1062,8 +702,8 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
         if (digimon == null) return;
 
         cmd.set("#LblEvolucionInfo.Text", "Digimon actual: " + digimon.nombre + " (" + digimon.especie + ")");
-        cmd.set("#Evo1.Label.Text", "Siguiente evolución (si aplica)");
-        cmd.set("#Evo2.Label.Text", "Siguiente evolución (si aplica)");
+        cmd.set("#Evo1.Text", "Siguiente evolución (si aplica)");
+        cmd.set("#Evo2.Text", "Siguiente evolución (si aplica)");
 
         // Verificar evoluciones disponibles
         boolean tieneProxima = false;
@@ -1072,115 +712,115 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
         switch (digimon.especie) {
             case "Botamon" -> {
                 if (digimon.puedeEvolucionar("Koromon")) {
-                    cmd.set("#Evo1.Label.Text", "Koromon (Baby → In-Training)");
+                    cmd.set("#Evo1.Text", "Koromon (Baby → In-Training)");
                     tieneProxima = true;
                     condiciones = "Lazo >= 30 o Victorias >= 1";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Koromon (Necesitas: Lazo 30 o 1 victoria)");
+                    cmd.set("#Evo1.Text", "Koromon (Necesitas: Lazo 30 o 1 victoria)");
                 }
             }
             case "Punimon" -> {
                 if (digimon.puedeEvolucionar("Tsunomon")) {
-                    cmd.set("#Evo1.Label.Text", "Tsunomon (Baby → In-Training)");
+                    cmd.set("#Evo1.Text", "Tsunomon (Baby → In-Training)");
                     tieneProxima = true;
                     condiciones = "Lazo >= 30 o Victorias >= 1";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Tsunomon (Necesitas: Lazo 30 o 1 victoria)");
+                    cmd.set("#Evo1.Text", "Tsunomon (Necesitas: Lazo 30 o 1 victoria)");
                 }
             }
             case "Poyomon" -> {
                 if (digimon.puedeEvolucionar("Tokomon")) {
-                    cmd.set("#Evo1.Label.Text", "Tokomon (Baby → In-Training)");
+                    cmd.set("#Evo1.Text", "Tokomon (Baby → In-Training)");
                     tieneProxima = true;
                     condiciones = "Lazo >= 30 o Victorias >= 1";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Tokomon (Necesitas: Lazo 30 o 1 victoria)");
+                    cmd.set("#Evo1.Text", "Tokomon (Necesitas: Lazo 30 o 1 victoria)");
                 }
             }
             case "Yuramon" -> {
                 if (digimon.puedeEvolucionar("Tanemon")) {
-                    cmd.set("#Evo1.Label.Text", "Tanemon (Baby → In-Training)");
+                    cmd.set("#Evo1.Text", "Tanemon (Baby → In-Training)");
                     tieneProxima = true;
                     condiciones = "Lazo >= 30 o Victorias >= 1";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Tanemon (Necesitas: Lazo 30 o 1 victoria)");
+                    cmd.set("#Evo1.Text", "Tanemon (Necesitas: Lazo 30 o 1 victoria)");
                 }
             }
             case "Pichimon" -> {
                 if (digimon.puedeEvolucionar("Bukamon")) {
-                    cmd.set("#Evo1.Label.Text", "Bukamon (Baby → In-Training)");
+                    cmd.set("#Evo1.Text", "Bukamon (Baby → In-Training)");
                     tieneProxima = true;
                     condiciones = "Lazo >= 30 o Victorias >= 1";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Bukamon (Necesitas: Lazo 30 o 1 victoria)");
+                    cmd.set("#Evo1.Text", "Bukamon (Necesitas: Lazo 30 o 1 victoria)");
                 }
             }
             case "Nyokimon" -> {
                 if (digimon.puedeEvolucionar("Yokomon")) {
-                    cmd.set("#Evo1.Label.Text", "Yokomon (Baby → In-Training)");
+                    cmd.set("#Evo1.Text", "Yokomon (Baby → In-Training)");
                     tieneProxima = true;
                     condiciones = "Lazo >= 30 o Victorias >= 1";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Yokomon (Necesitas: Lazo 30 o 1 victoria)");
+                    cmd.set("#Evo1.Text", "Yokomon (Necesitas: Lazo 30 o 1 victoria)");
                 }
             }
             case "Koromon" -> {
                 if (digimon.puedeEvolucionar("Agumon")) {
-                    cmd.set("#Evo1.Label.Text", "Agumon (In-Training → Rookie)");
+                    cmd.set("#Evo1.Text", "Agumon (In-Training → Rookie)");
                     tieneProxima = true;
                     condiciones = "Victorias >= 3, Lazo >= 40";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Agumon (Necesitas: 3 victorias, Lazo 40)");
+                    cmd.set("#Evo1.Text", "Agumon (Necesitas: 3 victorias, Lazo 40)");
                 }
             }
             case "Tsunomon" -> {
                 if (digimon.puedeEvolucionar("Gabumon")) {
-                    cmd.set("#Evo1.Label.Text", "Gabumon (In-Training → Rookie)");
+                    cmd.set("#Evo1.Text", "Gabumon (In-Training → Rookie)");
                     tieneProxima = true;
                     condiciones = "Victorias >= 3, Def >= 12";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Gabumon (Necesitas: 3 victorias, Def 12)");
+                    cmd.set("#Evo1.Text", "Gabumon (Necesitas: 3 victorias, Def 12)");
                 }
             }
             case "Tokomon" -> {
                 if (digimon.puedeEvolucionar("Patamon")) {
-                    cmd.set("#Evo1.Label.Text", "Patamon (In-Training → Rookie)");
+                    cmd.set("#Evo1.Text", "Patamon (In-Training → Rookie)");
                     tieneProxima = true;
                     condiciones = "Victorias >= 3, Wis >= 12";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Patamon (Necesitas: 3 victorias, Wis 12)");
+                    cmd.set("#Evo1.Text", "Patamon (Necesitas: 3 victorias, Wis 12)");
                 }
             }
             case "Tanemon" -> {
                 if (digimon.puedeEvolucionar("Palmon")) {
-                    cmd.set("#Evo1.Label.Text", "Palmon (In-Training → Rookie)");
+                    cmd.set("#Evo1.Text", "Palmon (In-Training → Rookie)");
                     tieneProxima = true;
                     condiciones = "Victorias >= 3, Wis >= 11";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Palmon (Necesitas: 3 victorias, Wis 11)");
+                    cmd.set("#Evo1.Text", "Palmon (Necesitas: 3 victorias, Wis 11)");
                 }
             }
             case "Bukamon" -> {
                 if (digimon.puedeEvolucionar("Gomamon")) {
-                    cmd.set("#Evo1.Label.Text", "Gomamon (In-Training → Rookie)");
+                    cmd.set("#Evo1.Text", "Gomamon (In-Training → Rookie)");
                     tieneProxima = true;
                     condiciones = "Victorias >= 3, Spd >= 14";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Gomamon (Necesitas: 3 victorias, Spd 14)");
+                    cmd.set("#Evo1.Text", "Gomamon (Necesitas: 3 victorias, Spd 14)");
                 }
             }
             case "Yokomon" -> {
                 if (digimon.puedeEvolucionar("Biyomon")) {
-                    cmd.set("#Evo1.Label.Text", "Biyomon (In-Training → Rookie)");
+                    cmd.set("#Evo1.Text", "Biyomon (In-Training → Rookie)");
                     tieneProxima = true;
                     condiciones = "Victorias >= 3, Spd >= 15";
                 } else {
-                    cmd.set("#Evo1.Label.Text", "Biyomon (Necesitas: 3 victorias, Spd 15)");
+                    cmd.set("#Evo1.Text", "Biyomon (Necesitas: 3 victorias, Spd 15)");
                 }
             }
             default -> {
-                cmd.set("#Evo1.Label.Text", "Evolución no disponible");
-                cmd.set("#Evo2.Label.Text", "No hay más evoluciones");
+                cmd.set("#Evo1.Text", "Evolución no disponible");
+                cmd.set("#Evo2.Text", "No hay más evoluciones");
             }
         }
 
@@ -1189,8 +829,8 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
             : "Tu Digimon no puede evolucionar aún. Sigue entrenando y ganando batallas!");
 
         // Configurar visibilidad de evoluciones
-        cmd.set("#Evo3.Label.Text", "");
-        cmd.set("#Evo4.Label.Text", "");
+        cmd.set("#Evo3.Text", "");
+        cmd.set("#Evo4.Text", "");
     }
 
     private void actualizarDeEvolucion(UICommandBuilder cmd, Store<EntityStore> store) {
@@ -1204,11 +844,11 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
 
         // Verificar si puede de-evolucionar
         if (digimon.nivel > 1) {
-            cmd.set("#DeEvo1.Label.Text", "De-evolución disponible");
-            cmd.set("#DeEvo2.Label.Text", "De-evolución disponible");
+            cmd.set("#DeEvo1.Text", "De-evolución disponible");
+            cmd.set("#DeEvo2.Text", "De-evolución disponible");
         } else {
-            cmd.set("#DeEvo1.Label.Text", "No se puede de-evolucionar más");
-            cmd.set("#DeEvo2.Label.Text", "Forma inicial");
+            cmd.set("#DeEvo1.Text", "No se puede de-evolucionar más");
+            cmd.set("#DeEvo2.Text", "Forma inicial");
         }
     }
 
@@ -1219,11 +859,11 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
         DatoDigimon digimon = "A".equals(slotActivo) ? d.companeroA : d.companeroB;
         if (digimon == null) return;
 
-        cmd.set("#ItemEquipo.Label.Text", "Sin equipo");
-        cmd.set("#ItemArma.Label.Text", "Sin arma");
-        cmd.set("#ItemArmadura.Label.Text", "Sin armadura");
-        cmd.set("#Cosmetico1.Label.Text", "Aspecto Normal");
-        cmd.set("#Cosmetico2.Label.Text", "Aspecto Especial");
+        cmd.set("#ItemEquipo.Text", "Sin equipo");
+        cmd.set("#ItemArma.Text", "Sin arma");
+        cmd.set("#ItemArmadura.Text", "Sin armadura");
+        cmd.set("#Cosmetico1.Text", "Aspecto Normal");
+        cmd.set("#Cosmetico2.Text", "Aspecto Especial");
     }
 
     private void onVolver(Ref<EntityStore> ref, Store<EntityStore> store, Player player) {

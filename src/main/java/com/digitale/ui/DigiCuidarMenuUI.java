@@ -77,183 +77,181 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
     private String buildPanel() {
         return """
-            $C = "Common.ui";
-            $P = "Digi.ui";
-
             Group {
                 LayoutMode: Top;
                 Anchor: (Height: 520, Width: 500);
 
-                $C.@DecoratedContainer {
-                    #Title {
-                        Group {
-                            LayoutMode: Left;
-                            Padding: (Horizontal: 16, Vertical: 4);
+                Group {
+                    LayoutMode: Top;
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 15);
 
-                            Label {
-                                Text: "CRIANZA DE DIGIMON";
-                                Style: (TextColor: #ffcc00, FontSize: 18, RenderBold: true);
-                                Anchor: (Left: 8);
-                            }
+                    Label {
+                        Text: "CRIANZA DE DIGIMON";
+                        Style: (TextColor: #ffcc00, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 24);
+                    }
+                    Group {
+                        LayoutMode: Left;
 
-                            Group { FlexWeight: 1; }
+                        Group { FlexWeight: 1; }
 
-                            TextButton #BtnVolver {
-                                Anchor: (Width: 100, Height: 40);
-                                Text: "Volver";
-                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)), Pressed: (Background: (Color: #0f3460), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)));
-                            }
+                        TextButton #BtnVolver {
+                            Text: "Volver";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
                         }
                     }
+                    Group { Anchor: (Height: 6); }
+                    Label {
+                        Text: "________________________";
+                        Style: (TextColor: #ffcc00, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Group { Anchor: (Height: 4); }
 
-                    #ContentTabs {
-                        LayoutMode: Top;
-                        Padding: (Full: 16);
-                        Anchor: (Top: 6, Bottom: 8, Left: 8, Right: 8);
+                    Label {
+                        Text: "SELECCIONA UN DIGIMON";
+                        Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Group { Anchor: (Height: 6); }
 
-                        Label {
-                            Text: "SELECCIONA UN DIGIMON";
-                            Style: (TextColor: #00d4ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
-                            Anchor: (Height: 20);
-                        }
-
-                        Group { Anchor: (Height: 12); }
-
-                        Group {
-                            LayoutMode: Left;
-
-                            $P.@Panel #SlotA {
-                                Anchor: (Width: 200, Height: 130);
-                                Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
-                                Padding: (Full: 8);
-
-                                AssetImage #IconA {
-                                    Anchor: (Top: 0, Left: 0, Width: 80, Height: 80);
-                                    AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
-                                }
-
-                                Label #NombreA {
-                                    Anchor: (Top: 4, Left: 0, Width: 200);
-                                    Text: "-";
-                                    Style: (TextColor: #00d4ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
-                                }
-
-                                Label #NivelA {
-                                    Anchor: (Top: 22, Left: 0, Width: 200);
-                                    Text: "-";
-                                    Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
-                                }
-
-                                $C.@ProgressBar #BarA {
-                                    Anchor: (Bottom: 4, Left: 0, Width: 200);
-                                    Value: 1.0;
-                                }
-
-                                Group {
-                                    LayoutMode: Left;
-                                    Anchor: (Top: 50, Left: 8);
-
-                                    $C.@SecondaryButton #BtnAlimentarA {
-                                        Anchor: (Width: 80, Height: 32);
-                                        Padding: (Horizontal: 4, Vertical: 4);
-                                        Label { Text: "🍖 Alimentar"; Style: (TextColor: #e0e8f0, FontSize: 11, VerticalAlignment: Center); }
-                                    }
-
-                                    Group { Anchor: (Width: 4); }
-
-                                    $C.@SecondaryButton #BtnDormirA {
-                                        Anchor: (Width: 80, Height: 32);
-                                        Padding: (Horizontal: 4, Vertical: 4);
-                                        Label { Text: "💤 Dormir"; Style: (TextColor: #e0e8f0, FontSize: 11, VerticalAlignment: Center); }
-                                    }
-
-                                    Group { Anchor: (Width: 4); }
-
-                                    $C.@SecondaryButton #BtnJugarA {
-                                        Anchor: (Width: 80, Height: 32);
-                                        Padding: (Horizontal: 4, Vertical: 4);
-                                        Label { Text: "🎮 Jugar"; Style: (TextColor: #e0e8f0, FontSize: 11, VerticalAlignment: Center); }
-                                    }
-                                }
-                            }
-
-                            Group { FlexWeight: 1; }
-
-                            $P.@Panel #SlotB {
-                                Anchor: (Width: 200, Height: 130);
-                                Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
-                                Padding: (Full: 8);
-
-                                AssetImage #IconB {
-                                    Anchor: (Top: 0, Left: 0, Width: 80, Height: 80);
-                                    AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
-                                }
-
-                                Label #NombreB {
-                                    Anchor: (Top: 4, Left: 0, Width: 200);
-                                    Text: "-";
-                                    Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
-                                }
-
-                                Label #NivelB {
-                                    Anchor: (Top: 22, Left: 0, Width: 200);
-                                    Text: "-";
-                                    Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
-                                }
-
-                                $C.@ProgressBar #BarB {
-                                    Anchor: (Bottom: 4, Left: 0, Width: 200);
-                                    Value: 1.0;
-                                }
-
-                                Group {
-                                    LayoutMode: Left;
-                                    Anchor: (Top: 50, Left: 8);
-
-                                    $C.@SecondaryButton #BtnAlimentarB {
-                                        Anchor: (Width: 80, Height: 32);
-                                        Padding: (Horizontal: 4, Vertical: 4);
-                                        Label { Text: "🍖 Alimentar"; Style: (TextColor: #e0e8f0, FontSize: 11, VerticalAlignment: Center); }
-                                    }
-
-                                    Group { Anchor: (Width: 4); }
-
-                                    $C.@SecondaryButton #BtnDormirB {
-                                        Anchor: (Width: 80, Height: 32);
-                                        Padding: (Horizontal: 4, Vertical: 4);
-                                        Label { Text: "💤 Dormir"; Style: (TextColor: #e0e8f0, FontSize: 11, VerticalAlignment: Center); }
-                                    }
-
-                                    Group { Anchor: (Width: 4); }
-
-                                    $C.@SecondaryButton #BtnJugarB {
-                                        Anchor: (Width: 80, Height: 32);
-                                        Padding: (Horizontal: 4, Vertical: 4);
-                                        Label { Text: "🎮 Jugar"; Style: (TextColor: #e0e8f0, FontSize: 11, VerticalAlignment: Center); }
-                                    }
-                                }
-                            }
-                        }
-
-                        Group { Anchor: (Height: 16); }
+                    Group {
+                        LayoutMode: Left;
 
                         Group {
+                            Anchor: (Width: 210, Height: 180);
+                            Background: (Color: #16213e);
+                            Padding: (Full: 8);
                             LayoutMode: Top;
 
                             Label {
-                                Text: "INFORMACION DE CRIANZA";
-                                Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true);
+                                Text: "COMPANERO A";
+                                Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Label #NombreA {
+                                Text: "-";
+                                Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
                                 Anchor: (Height: 18);
+                            }
+                            Label #NivelA {
+                                Text: "-";
+                                Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Label #BarA {
+                                Text: "";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
                             }
 
                             Group { Anchor: (Height: 8); }
 
-                            Label #LblInfo {
-                                Text: "-";
-                                Style: (TextColor: #e0e8f0, FontSize: 13, Wrap: true);
-                                Anchor: (Height: 100);
+                            Group {
+                                LayoutMode: Left;
+
+                                TextButton #BtnAlimentarA {
+                                    Text: "Alimentar";
+                                    Anchor: (Width: 60, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 4); }
+
+                                TextButton #BtnDormirA {
+                                    Text: "Dormir";
+                                    Anchor: (Width: 60, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 4); }
+
+                                TextButton #BtnJugarA {
+                                    Text: "Jugar";
+                                    Anchor: (Width: 60, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
                             }
                         }
+
+                        Group { FlexWeight: 1; }
+
+                        Group {
+                            Anchor: (Width: 210, Height: 180);
+                            Background: (Color: #16213e);
+                            Padding: (Full: 8);
+                            LayoutMode: Top;
+
+                            Label {
+                                Text: "COMPANERO B";
+                                Style: (TextColor: #ff00ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Label #NombreB {
+                                Text: "-";
+                                Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 18);
+                            }
+                            Label #NivelB {
+                                Text: "-";
+                                Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Label #BarB {
+                                Text: "";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
+                            }
+
+                            Group { Anchor: (Height: 8); }
+
+                            Group {
+                                LayoutMode: Left;
+
+                                TextButton #BtnAlimentarB {
+                                    Text: "Alimentar";
+                                    Anchor: (Width: 60, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 4); }
+
+                                TextButton #BtnDormirB {
+                                    Text: "Dormir";
+                                    Anchor: (Width: 60, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 4); }
+
+                                TextButton #BtnJugarB {
+                                    Text: "Jugar";
+                                    Anchor: (Width: 60, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+                            }
+                        }
+                    }
+
+                    Group { Anchor: (Height: 8); }
+                    Label {
+                        Text: "________________________";
+                        Style: (TextColor: #ff00ff, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Group { Anchor: (Height: 4); }
+
+                    Label {
+                        Text: "INFORMACION DE CRIANZA";
+                        Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Label #LblInfo {
+                        Text: "-";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
+                        Anchor: (Height: 60);
                     }
                 }
             }
@@ -316,33 +314,29 @@ public class DigiCuidarMenuUI extends CustomUIPage {
         if (d.companeroA != null) {
             cmd.set("#NombreA.Text", d.companeroA.nombre);
             cmd.set("#NivelA.Text", d.companeroA.especie + " - Nivel " + d.companeroA.nivel);
-            double vidaRatio = d.companeroA.maxHp > 0 ? (double) d.companeroA.hp / d.companeroA.maxHp : 0;
-            cmd.set("#BarA.Value", vidaRatio);
-            cmd.set("#IconA.AssetPath", "Icons/ModelsGenerated/" + d.companeroA.especie + ".png");
+            int filled = d.companeroA.maxHp > 0 ? (d.companeroA.hp * 20 / d.companeroA.maxHp) : 0;
+            cmd.set("#BarA.Text", "=".repeat(Math.max(0, filled)) + " ".repeat(Math.max(0, 20 - filled)));
 
             String estadoA = String.format(
-                "🍖 Hambre: %d/100 | ❤️ Energia: %d/100 | 💖 Lazo: %d/100\n❤️ HP: %d/%d",
+                "Hambre:%d/100 Energia:%d/100 Lazo:%d/100 HP:%d/%d",
                 d.companeroA.hambre, d.companeroA.energia, d.companeroA.lazo, d.companeroA.hp, d.companeroA.maxHp);
             cmd.set("#LblInfo.Text", estadoA);
         } else {
             cmd.set("#NombreA.Text", "-");
             cmd.set("#NivelA.Text", "-");
-            cmd.set("#BarA.Value", 0);
-            cmd.set("#IconA.AssetPath", "Icons/ModelsGenerated/DigiPlaceholder.png");
+            cmd.set("#BarA.Text", "");
         }
 
         // Slot B
         if (d.companeroB != null) {
             cmd.set("#NombreB.Text", d.companeroB.nombre);
             cmd.set("#NivelB.Text", d.companeroB.especie + " - Nivel " + d.companeroB.nivel);
-            double vidaRatio = d.companeroB.maxHp > 0 ? (double) d.companeroB.hp / d.companeroB.maxHp : 0;
-            cmd.set("#BarB.Value", vidaRatio);
-            cmd.set("#IconB.AssetPath", "Icons/ModelsGenerated/" + d.companeroB.especie + ".png");
+            int filled = d.companeroB.maxHp > 0 ? (d.companeroB.hp * 20 / d.companeroB.maxHp) : 0;
+            cmd.set("#BarB.Text", "=".repeat(Math.max(0, filled)) + " ".repeat(Math.max(0, 20 - filled)));
         } else {
             cmd.set("#NombreB.Text", "-");
             cmd.set("#NivelB.Text", "-");
-            cmd.set("#BarB.Value", 0);
-            cmd.set("#IconB.AssetPath", "Icons/ModelsGenerated/DigiPlaceholder.png");
+            cmd.set("#BarB.Text", "");
         }
     }
 }

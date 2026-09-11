@@ -91,264 +91,212 @@ public class SapotamaTabUI extends CustomUIPage {
 
                 Group {
                     LayoutMode: Top;
-                    Background: (TexturePath: "Digi/Digi_ContainerDark.png", Border: 20);
-                    Padding: (Full: 8);
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 15);
 
-                    #Title {
+                    Label {
+                        Text: "DIGIMON COMPANEROS";
+                        Style: (TextColor: #00d4ff, FontSize: 20, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 28);
+                    }
+
+                    Group {
+                        LayoutMode: Left;
+
+                        TextButton #TabEquipo {
+                            Text: "Equipo";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 13, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabCrianza {
+                            Text: "Crianza";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabBatalla {
+                            Text: "Batalla";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                    }
+
+                    Group { Anchor: (Height: 6); }
+
+                    Label {
+                        Text: "________________________";
+                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+
+                    Group { Anchor: (Height: 4); }
+
+                    Group #TabEquipoPanel {
+                        Visible: true;
+                        Anchor: (Width: 470, Height: 320);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 10);
+
+                        Label {
+                            Text: "--- COMPANERO A ---";
+                            Style: (TextColor: #00d4ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Label #NombreA {
+                            Text: "---";
+                            Style: (TextColor: #e0e8f0, FontSize: 14, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Label #NivelA {
+                            Text: "---";
+                            Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 16);
+                        }
+                        Label #BarA {
+                            Text: "";
+                            Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 16);
+                        }
+
+                        Group { Anchor: (Height: 6); }
+
                         Group {
                             LayoutMode: Left;
-                            Padding: (Horizontal: 16, Vertical: 4);
 
-                            Label {
-                                Text: "DIGIMON COMPANEROS";
-                                Style: (TextColor: #00d4ff, FontSize: 18, RenderBold: true);
-                                Anchor: (Left: 8);
+                            TextButton #BtnIntercambiarA {
+                                Text: "Intercambiar";
+                                Anchor: (Width: 100, Height: 32);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
                             }
 
                             Group { FlexWeight: 1; }
 
-                            TextButton #BtnCerrar {
-                                Anchor: (Width: 80, Height: 40);
-                                Text: "Cerrar";
-                                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)), Pressed: (Background: (Color: #0f3460), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)));
+                            TextButton #BtnPerfilA {
+                                Text: "Perfil";
+                                Anchor: (Width: 80, Height: 32);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+                        }
+
+                        Group { Anchor: (Height: 10); }
+
+                        Label {
+                            Text: "--- COMPANERO B ---";
+                            Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Label #NombreB {
+                            Text: "---";
+                            Style: (TextColor: #e0e8f0, FontSize: 14, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
+                        }
+                        Label #NivelB {
+                            Text: "---";
+                            Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 16);
+                        }
+                        Label #BarB {
+                            Text: "";
+                            Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 16);
+                        }
+
+                        Group { Anchor: (Height: 6); }
+
+                        Group {
+                            LayoutMode: Left;
+
+                            TextButton #BtnIntercambiarB {
+                                Text: "Intercambiar";
+                                Anchor: (Width: 100, Height: 32);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
+
+                            Group { FlexWeight: 1; }
+
+                            TextButton #BtnPerfilB {
+                                Text: "Perfil";
+                                Anchor: (Width: 80, Height: 32);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
                             }
                         }
                     }
 
-                    TabNavigation #TabNavigation {
-                        Style: TabNavigationStyle(
-                            TabStyle: TabStyle(
-                                Default: (
-                                    Anchor: (Height: 66, Left: 2, Right: 0),
-                                    IconOpacity: 0.4
-                                ),
-                                Hovered: (
-                                    IconOpacity: 0.6
-                                ),
-                                Pressed: (
-                                    IconOpacity: 0.8
-                                )
-                            ),
-                            SelectedTabStyle: TabStyle(
-                                Default: (
-                                    IconOpacity: 1,
-                                    Background: (TexturePath: "Common/HeaderTabSelectedBackground.png", Border: 7),
-                                    ContentMaskTexturePath: "Common/SelectedIconGradient.png"
-                                )
-                            )
-                        );
-                        Anchor: (Left: 2, Right: 2, Bottom: 0);
-                        SelectedTab: "equipo";
+                    Group #TabCrianzaPanel {
+                        Visible: false;
+                        Anchor: (Width: 470, Height: 320);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 10);
 
-                        TabButton #TabEquipo {
-                            Icon: "Digi/Digi_Tab_Equipo.png";
-                            TooltipText: "Equipo";
-                            Id: "equipo";
+                        Label {
+                            Text: "CRIANZA";
+                            Style: (TextColor: #ffcc00, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
                         }
-                        TabButton #TabCrianza {
-                            Icon: "Digi/Digi_Tab_Crianza.png";
-                            TooltipText: "Crianza";
-                            Id: "crianza";
+
+                        Group { Anchor: (Height: 8); }
+
+                        Label #LblCrianza {
+                            Text: "A: - | B: -";
+                            Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
+                            Anchor: (Height: 80);
                         }
-                        TabButton #TabBatalla {
-                            Icon: "Digi/Digi_Tab_Batalla.png";
-                            TooltipText: "Batalla";
-                            Id: "batalla";
+
+                        Group { Anchor: (Height: 12); }
+
+                        TextButton #BtnCrianza {
+                            Text: "Cuidar Digimon";
+                            Anchor: (Width: 160, Height: 40);
+                            Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 14, TextColor: #ffcc00, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)));
                         }
                     }
 
-                    #ContentTabs {
-                        LayoutMode: Top;
-                        Padding: (Full: 6);
-                        Anchor: (Top: 6, Bottom: 8, Left: 8, Right: 8);
+                    Group #TabBatallaPanel {
+                        Visible: false;
+                        Anchor: (Width: 470, Height: 320);
+                        Background: (Color: #12121e);
+                        Padding: (Full: 10);
 
-                        Group #TabEquipoPanel {
-                            Visible: true;
-                            Anchor: (Height: 320, Width: 440);
-                            Background: (Color: #12121e);
-
-                            Group {
-                                LayoutMode: Left;
-                                Padding: (Full: 10);
-
-                                Group #SlotA {
-                                    Anchor: (Width: 200, Height: 130);
-                                    Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
-                                    Padding: (Full: 8);
-
-                                    AssetImage #IconA {
-                                        Anchor: (Top: 0, Left: 0, Width: 80, Height: 80);
-                                        AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
-                                    }
-
-                                    Label #NombreA {
-                                        Anchor: (Top: 4, Left: 0, Width: 200);
-                                        Text: "-";
-                                        Style: (TextColor: #00d4ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
-                                    }
-
-                                    Label #NivelA {
-                                        Anchor: (Top: 22, Left: 0, Width: 200);
-                                        Text: "-";
-                                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
-                                    }
-
-                                    ProgressBar #BarA {
-                                        Anchor: (Bottom: 4, Left: 0, Width: 200);
-                                        Value: 1.0;
-                                    }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Anchor: (Top: 50, Left: 8);
-
-                                        TextButton #BtnIntercambiarA {
-                                            Text: "⇄";
-                                            Anchor: (Width: 50, Height: 30);
-                                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
-                                        }
-
-                                        Group { FlexWeight: 1; }
-
-                                        TextButton #BtnPerfilA {
-                                            Text: "Perfil";
-                                            Anchor: (Width: 70, Height: 30);
-                                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
-                                        }
-                                    }
-                                }
-
-                                Group { FlexWeight: 1; }
-
-                                Group #SlotB {
-                                    Anchor: (Width: 200, Height: 130);
-                                    Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
-                                    Padding: (Full: 8);
-
-                                    AssetImage #IconB {
-                                        Anchor: (Top: 0, Left: 0, Width: 80, Height: 80);
-                                        AssetPath: "Icons/ModelsGenerated/DigiPlaceholder.png";
-                                    }
-
-                                    Label #NombreB {
-                                        Anchor: (Top: 4, Left: 0, Width: 200);
-                                        Text: "-";
-                                        Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
-                                    }
-
-                                    Label #NivelB {
-                                        Anchor: (Top: 22, Left: 0, Width: 200);
-                                        Text: "-";
-                                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
-                                    }
-
-                                    ProgressBar #BarB {
-                                        Anchor: (Bottom: 4, Left: 0, Width: 200);
-                                        Value: 1.0;
-                                    }
-
-                                    Group {
-                                        LayoutMode: Left;
-                                        Anchor: (Top: 50, Left: 8);
-
-                                        TextButton #BtnIntercambiarB {
-                                            Text: "⇄";
-                                            Anchor: (Width: 50, Height: 30);
-                                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
-                                        }
-
-                                        Group { FlexWeight: 1; }
-
-                                        TextButton #BtnPerfilB {
-                                            Text: "Perfil";
-                                            Anchor: (Width: 70, Height: 30);
-                                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
-                                        }
-                                    }
-                                }
-                            }
+                        Label {
+                            Text: "BATALLA";
+                            Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                            Anchor: (Height: 20);
                         }
 
-                        Group #TabCrianzaPanel {
-                            Visible: false;
-                            Anchor: (Height: 320, Width: 440);
-                            Background: (Color: #12121e);
+                        Group { Anchor: (Height: 8); }
 
-                            Group {
-                                LayoutMode: Top;
-                                Padding: (Full: 16);
-
-                                Label {
-                                    Text: "CRIANZA";
-                                    Style: (TextColor: #ffcc00, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
-                                    Anchor: (Height: 24);
-                                }
-
-                                Group { Anchor: (Height: 8); }
-
-                                Label #LblCrianza {
-                                    Text: "A: - | B: -";
-                                    Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
-                                    Anchor: (Height: 18);
-                                }
-
-                                Group { Anchor: (Height: 12); }
-
-                                Group #BtnCrianza {
-                                    Anchor: (Width: 200, Height: 44);
-                                    Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
-                                    Padding: (Horizontal: 8, Vertical: 8);
-                                    Label { Text: "◆ Cuidar Digimon"; Style: (TextColor: #ffcc00, FontSize: 14, VerticalAlignment: Center, RenderBold: true); }
-                                }
-                            }
+                        Label #LblBatallaInfo {
+                            Text: "A: - | B: -";
+                            Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
+                            Anchor: (Height: 60);
                         }
 
-                        Group #TabBatallaPanel {
-                            Visible: false;
-                            Anchor: (Height: 320, Width: 440);
-                            Background: (Color: #12121e);
+                        Group { Anchor: (Height: 12); }
 
-                            Group {
-                                LayoutMode: Top;
-                                Padding: (Full: 16);
+                        Group {
+                            LayoutMode: Left;
 
-                                Label {
-                                    Text: "BATALLA";
-                                    Style: (TextColor: #ff00ff, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
-                                    Anchor: (Height: 24);
-                                }
+                            TextButton #BtnBatallarA {
+                                Text: "Combate A";
+                                Anchor: (Width: 120, Height: 40);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            }
 
-                                Group { Anchor: (Height: 8); }
+                            Group { FlexWeight: 1; }
 
-                                Label #LblBatallaInfo {
-                                    Text: "A: - | B: -";
-                                    Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
-                                    Anchor: (Height: 18);
-                                }
-
-                                Group { Anchor: (Height: 12); }
-
-                                Group {
-                                    LayoutMode: Left;
-
-                                    Group #BtnBatallarA {
-                                        Anchor: (Width: 140, Height: 44);
-                                        Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label { Text: "Combate A"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
-                                    }
-
-                                    Group { FlexWeight: 1; }
-
-                                    Group #BtnBatallarB {
-                                        Anchor: (Width: 140, Height: 44);
-                                        Background: (TexturePath: "Digi/Digi_Container.png", Border: 8);
-                                        Padding: (Horizontal: 8, Vertical: 8);
-                                        Label { Text: "Combate B"; Style: (TextColor: #e0e8f0, FontSize: 14, VerticalAlignment: Center); }
-                                    }
-                                }
+                            TextButton #BtnBatallarB {
+                                Text: "Combate B";
+                                Anchor: (Width: 120, Height: 40);
+                                Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)));
                             }
                         }
+                    }
+
+                    Group { Anchor: (Height: 8); }
+
+                    TextButton #BtnCerrar {
+                        Text: "Cerrar";
+                        Anchor: (Width: 160, Height: 40);
+                        Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)));
                     }
                 }
             }
@@ -407,27 +355,23 @@ public class SapotamaTabUI extends CustomUIPage {
         if (d.companeroA != null) {
             cmd.set("#NombreA.Text", d.companeroA.nombre);
             cmd.set("#NivelA.Text", d.companeroA.especie + " - Nivel " + d.companeroA.nivel + " (" + d.companeroA.nombreNivel() + ")");
-            double vidaRatio = d.companeroA.maxHp > 0 ? (double) d.companeroA.hp / d.companeroA.maxHp : 0;
-            cmd.set("#BarA.Value", vidaRatio);
-            cmd.set("#IconA.AssetPath", "Icons/ModelsGenerated/" + d.companeroA.especie + ".png");
+            int filled = d.companeroA.maxHp > 0 ? (d.companeroA.hp * 20 / d.companeroA.maxHp) : 0;
+            cmd.set("#BarA.Text", "=".repeat(Math.max(0, filled)) + " ".repeat(Math.max(0, 20 - filled)));
         } else {
             cmd.set("#NombreA.Text", "-");
             cmd.set("#NivelA.Text", "-");
-            cmd.set("#BarA.Value", 0);
-            cmd.set("#IconA.AssetPath", "Icons/ModelsGenerated/DigiPlaceholder.png");
+            cmd.set("#BarA.Text", "====================");
         }
 
         if (d.companeroB != null) {
             cmd.set("#NombreB.Text", d.companeroB.nombre);
             cmd.set("#NivelB.Text", d.companeroB.especie + " - Nivel " + d.companeroB.nivel + " (" + d.companeroB.nombreNivel() + ")");
-            double vidaRatio = d.companeroB.maxHp > 0 ? (double) d.companeroB.hp / d.companeroB.maxHp : 0;
-            cmd.set("#BarB.Value", vidaRatio);
-            cmd.set("#IconB.AssetPath", "Icons/ModelsGenerated/" + d.companeroB.especie + ".png");
+            int filled = d.companeroB.maxHp > 0 ? (d.companeroB.hp * 20 / d.companeroB.maxHp) : 0;
+            cmd.set("#BarB.Text", "=".repeat(Math.max(0, filled)) + " ".repeat(Math.max(0, 20 - filled)));
         } else {
             cmd.set("#NombreB.Text", "-");
             cmd.set("#NivelB.Text", "-");
-            cmd.set("#BarB.Value", 0);
-            cmd.set("#IconB.AssetPath", "Icons/ModelsGenerated/DigiPlaceholder.png");
+            cmd.set("#BarB.Text", "====================");
         }
     }
 

@@ -48,57 +48,198 @@ public class DigiMainMenuUI extends CustomUIPage {
             Group {
                 LayoutMode: Top;
                 Anchor: (Height: 500, Width: 600);
-                Style: (BackgroundColor: #1a1a2e);
-                Padding: 15;
 
-                Label {
-                    Text: "DIGIMON - ESTADO";
-                    Style: (FontSize: 20, TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 10));
-                }
                 Group {
-                    LayoutMode: Left;
-                    Padding: (Bottom: 6);
-                    Label #TabInfo { Text: "Info"; Style: (FontSize: 13, TextColor: #00d4ff, Alignment: Center, BackgroundColor: #0f3460); Anchor: (Width: 80, Height: 32); };
-                    Label #TabStats { Text: "Stats"; Style: (FontSize: 13, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); Anchor: (Width: 80, Height: 32); };
-                    Label #TabTecnicas { Text: "Tecnicas"; Style: (FontSize: 13, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); Anchor: (Width: 80, Height: 32); };
-                    Label #TabEvolucion { Text: "Evolucion"; Style: (FontSize: 13, TextColor: #e0e8f0, Alignment: Center, BackgroundColor: #16213e); Anchor: (Width: 80, Height: 32); };
-                }
-                Label { Text: "________________________"; Style: (TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 8)); }
+                    LayoutMode: Top;
+                    Background: (Color: #1a1a2e);
+                    Padding: (Full: 15);
 
-                Label { Text: "--- COMPANERO A ---"; Style: (FontSize: 14, TextColor: #ff00ff, Alignment: Center, Padding: (Bottom: 4)); }
-                Label #NombreA { Text: "---"; Style: (FontSize: 14, TextColor: #e0e8f0, Alignment: Center); }
-                Label #EspecieA { Text: "---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #ElementoA { Text: "---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 4)); }
-                Label #HpA { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #00d4ff, Alignment: Center); }
-                Label #AtkA { Text: "ATK: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #DefA { Text: "DEF: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #SpdA { Text: "SPD: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #WisA { Text: "WIS: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #LazoA { Text: "Lazo: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #AbiA { Text: "ABI: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #VicA { Text: "Victorias: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #EnergiaA { Text: "Energia: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 8)); }
+                    Label {
+                        Text: "DIGIMON - ESTADO";
+                        Style: (TextColor: #00d4ff, FontSize: 20, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 26);
+                    }
+                    Group { Anchor: (Height: 6); }
 
-                Label { Text: "________________________"; Style: (TextColor: #00d4ff, Alignment: Center, Padding: (Bottom: 8)); }
+                    Group {
+                        LayoutMode: Left;
 
-                Label { Text: "--- COMPANERO B ---"; Style: (FontSize: 14, TextColor: #ff00ff, Alignment: Center, Padding: (Bottom: 4)); }
-                Label #NombreB { Text: "---"; Style: (FontSize: 14, TextColor: #e0e8f0, Alignment: Center); }
-                Label #EspecieB { Text: "---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #ElementoB { Text: "---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 4)); }
-                Label #HpB { Text: "HP: ---"; Style: (FontSize: 12, TextColor: #00d4ff, Alignment: Center); }
-                Label #AtkB { Text: "ATK: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #DefB { Text: "DEF: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #SpdB { Text: "SPD: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #WisB { Text: "WIS: ---"; Style: (FontSize: 12, TextColor: #e0e8f0, Alignment: Center); }
-                Label #LazoB { Text: "Lazo: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #AbiB { Text: "ABI: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #VicB { Text: "Victorias: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center); }
-                Label #EnergiaB { Text: "Energia: ---"; Style: (FontSize: 12, TextColor: #8899aa, Alignment: Center, Padding: (Bottom: 8)); }
+                        TextButton #TabInfo {
+                            Text: "Info";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 13, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabStats {
+                            Text: "Stats";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabTecnicas {
+                            Text: "Tecnicas";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                        TextButton #TabEvolucion {
+                            Text: "Evolucion";
+                            Anchor: (Width: 80, Height: 32);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        };
+                    }
+                    Group { Anchor: (Height: 4); }
+                    Label {
+                        Text: "________________________";
+                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Group { Anchor: (Height: 4); }
 
-                Label #BtnBack {
-                    Text: "Cerrar";
-                    Anchor: (Width: 160, Height: 40);
-                    Style: (FontSize: 14, TextColor: #e0e8f0, Alignment: Center, Padding: 8, BackgroundColor: #0f3460);
+                    Label {
+                        Text: "--- COMPANERO A ---";
+                        Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Label #NombreA {
+                        Text: "---";
+                        Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Label #EspecieA {
+                        Text: "---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #ElementoA {
+                        Text: "---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #HpA {
+                        Text: "HP: ---";
+                        Style: (TextColor: #00d4ff, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #AtkA {
+                        Text: "ATK: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #DefA {
+                        Text: "DEF: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #SpdA {
+                        Text: "SPD: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #WisA {
+                        Text: "WIS: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LazoA {
+                        Text: "Lazo: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #AbiA {
+                        Text: "ABI: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #VicA {
+                        Text: "Victorias: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #EnergiaA {
+                        Text: "Energia: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+
+                    Group { Anchor: (Height: 8); }
+                    Label {
+                        Text: "________________________";
+                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Group { Anchor: (Height: 4); }
+
+                    Label {
+                        Text: "--- COMPANERO B ---";
+                        Style: (TextColor: #ff00ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Label #NombreB {
+                        Text: "---";
+                        Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                    Label #EspecieB {
+                        Text: "---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #ElementoB {
+                        Text: "---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #HpB {
+                        Text: "HP: ---";
+                        Style: (TextColor: #00d4ff, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #AtkB {
+                        Text: "ATK: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #DefB {
+                        Text: "DEF: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #SpdB {
+                        Text: "SPD: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #WisB {
+                        Text: "WIS: ---";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #LazoB {
+                        Text: "Lazo: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #AbiB {
+                        Text: "ABI: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #VicB {
+                        Text: "Victorias: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Label #EnergiaB {
+                        Text: "Energia: ---";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+
+                    Group { Anchor: (Height: 8); }
+
+                    TextButton #BtnBack {
+                        Text: "Cerrar";
+                        Anchor: (Width: 160, Height: 40);
+                        Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 14, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    }
                 }
             }
             """;
