@@ -1,5 +1,6 @@
 package com.digitale.ui;
 
+import com.digitale.componentes.ComponentRegistry;
 import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
 import com.google.gson.JsonObject;
@@ -21,6 +22,8 @@ import java.util.logging.Logger;
 
 public class DigiStartMenuUI extends CustomUIPage {
     private static final Logger LOGGER = Logger.getLogger(DigiStartMenuUI.class.getName());
+
+    private String seleccionada = "";
 
     public DigiStartMenuUI(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss);
@@ -49,21 +52,81 @@ public class DigiStartMenuUI extends CustomUIPage {
 
                 Group {
                     LayoutMode: Top;
-                    Background: (Color: #1a1a2e);
+                    Background: (Color: #0b1220);
                     Padding: (Full: 15);
 
                     Label { Text: "DIGIMON DigiRise - Elige tu companero"; Style: (TextColor: #00d4ff, FontSize: 20, HorizontalAlignment: Center); Anchor: (Height: 30); }
-                    TextButton #BtnBotamon { Text: "Botamon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    TextButton #BtnKuramon { Text: "Kuramon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    TextButton #BtnPunimon { Text: "Punimon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    TextButton #BtnChibimon { Text: "Chibimon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    TextButton #BtnPoyomon { Text: "Poyomon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    TextButton #BtnYuramon { Text: "Yuramon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    TextButton #BtnPichimon { Text: "Pichimon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    TextButton #BtnNyokimon { Text: "Nyokimon"; Anchor: (Width: 120, Height: 32); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
-                    Label #MsgInfo { Text: ""; Style: (TextColor: #ff00ff, FontSize: 14, HorizontalAlignment: Center); Anchor: (Height: 18); }
-                    TextButton #BtnConfirmar { Text: "Confirmar"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #e0e8f0, FontSize: 14, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 14, HorizontalAlignment: Center))); }
-                    TextButton #BtnVolver { Text: "Cancelar"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #16213e), LabelStyle: (TextColor: #8899aa, FontSize: 14, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #e0e8f0, FontSize: 14, HorizontalAlignment: Center))); }
+                    Label { Text: "Selecciona tu inicial"; Style: (TextColor: #8899aa, FontSize: 13, HorizontalAlignment: Center); Anchor: (Height: 18); }
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 44);
+                        AssetImage #ImgStartBotamon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/botamon.png";
+                        }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnBotamon { Text: "Botamon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                        Group { Anchor: (Width: 8); }
+                        AssetImage #ImgStartKuramon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/Kuramon.png";
+                        }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnKuramon { Text: "Kuramon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                    }
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 44);
+                        AssetImage #ImgStartPunimon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/Punimon.png";
+                        }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnPunimon { Text: "Punimon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                        Group { Anchor: (Width: 8); }
+                        AssetImage #ImgStartChibimon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/Chibimon.png";
+                        }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnChibimon { Text: "Chibimon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                    }
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 44);
+                        Group { Anchor: (Width: 42); }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnPoyomon { Text: "Poyomon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                        Group { Anchor: (Width: 8); }
+                        Group { Anchor: (Width: 42); }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnYuramon { Text: "Yuramon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                    }
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 44);
+                        AssetImage #ImgStartPichimon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/Pichimon.png";
+                        }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnPichimon { Text: "Pichimon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                        Group { Anchor: (Width: 8); }
+                        AssetImage #ImgStartNyokimon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/Nyokimon.png";
+                        }
+                        Group { Anchor: (Width: 6); }
+                        TextButton #BtnNyokimon { Text: "Nyokimon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                    }
+                    Label #MsgInfo { Text: ""; Style: (TextColor: #ff00ff, FontSize: 14, HorizontalAlignment: Center); Anchor: (Height: 20); }
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 44);
+                        TextButton #BtnConfirmar { Text: "Confirmar"; Anchor: (Width: 200, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #e0e8f0, FontSize: 14, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 14, HorizontalAlignment: Center))); }
+                        Group { Anchor: (Width: 8); }
+                        TextButton #BtnVolver { Text: "Cancelar"; Anchor: (Width: 200, Height: 40); Style: (Default: (Background: (Color: #16213e), LabelStyle: (TextColor: #8899aa, FontSize: 14, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #e0e8f0, FontSize: 14, HorizontalAlignment: Center))); }
+                    }
                 }
             }
             """;
@@ -94,6 +157,7 @@ public class DigiStartMenuUI extends CustomUIPage {
         if ("seleccion".equals(action)) {
             String nombre = json.has("value") ? json.get("value").getAsString() : "";
             LOGGER.info("Seleccionado: " + nombre);
+            if (!nombre.isEmpty()) seleccionada = nombre;
 
             UICommandBuilder cmd = new UICommandBuilder();
             cmd.set("#MsgInfo.Text", nombre + " seleccionado!");
@@ -101,22 +165,32 @@ public class DigiStartMenuUI extends CustomUIPage {
         } else if ("confirmar".equals(action)) {
             @SuppressWarnings("removal")
             AlmacenJugadores.DatosJugador datos = AlmacenJugadores.obtener(player.getUuid());
-            String seleccionA = datos.companeroA != null ? datos.companeroA.especie : "Botamon";
-            String seleccionB = datos.companeroB != null ? datos.companeroB.especie : "Punimon";
-            if (datos.companeroA == null) {
-                datos.companeroA = DatoDigimon.crearInicial(seleccionA);
-                datos.companeroA.vivo = true;
+            // Solo el primer Digimon (slot 0). El resto llega por incubación de DigiEggs.
+            String seleccionA = !seleccionada.isEmpty() ? seleccionada : "Botamon";
+            if (datos.getSlot(0) == null) {
+                DatoDigimon ini = DatoDigimon.crearInicial(seleccionA);
+                ini.vivo = true;
+                datos.setSlot(0, ini);
             }
-            if (datos.companeroB == null) {
-                datos.companeroB = DatoDigimon.crearInicial(seleccionB);
-                datos.companeroB.vivo = true;
-            }
+            datos.activoA = 0;
+            datos.activoB = 1;
             datos.tieneEquipo = true;
+            // Persistir de inmediato para que no se pierda al salir.
+            try {
+                com.digitale.componentes.PetProgressComponent progress =
+                    ComponentRegistry.ensureAndGetProgress(store, ref);
+                if (progress != null) progress.guardarDesde(datos);
+            } catch (Exception e) {
+                LOGGER.info("No se pudo guardar inicial: " + e.getMessage());
+            }
             player.getPageManager().setPage(ref, store,
                 com.hypixel.hytale.protocol.packets.interface_.Page.None);
         } else if ("cancelar".equals(action)) {
             player.getPageManager().setPage(ref, store,
                 com.hypixel.hytale.protocol.packets.interface_.Page.None);
+        } else {
+            UICommandBuilder cmd = new UICommandBuilder();
+            sendUpdate(cmd);
         }
     }
 }

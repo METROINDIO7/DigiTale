@@ -1,62 +1,32 @@
 {
+  "Id": "DigiTale_Bebes_Zona1_Volcanica",
   "Environments": [
     "Env_Zone1_Caves_Volcanic_T1"
   ],
   "NPCs": [
     {
-      "Weight": 22,
-      "SpawnBlockSet": "Rock",
-      "Id": "Bommon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Weight": 30,
+      "Id": "Punimon_Salvaje"
     },
     {
-      "Weight": 22,
-      "SpawnBlockSet": "Rock",
-      "Id": "Bubbmon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Weight": 26,
+      "Id": "Kuramon_Salvaje"
     },
     {
-      "Weight": 20,
-      "SpawnBlockSet": "Rock",
-      "Id": "Punimon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Weight": 24,
+      "Id": "Botamon_Salvaje"
     },
     {
-      "Weight": 16,
-      "SpawnBlockSet": "Rock",
-      "Id": "Algomon_Salvaje",
-      "Flock": { "Size": [1, 1] }
+      "Weight": 8,
+      "Id": "Veemon_Salvaje"
     },
     {
-      "Weight": 16,
-      "SpawnBlockSet": "Rock",
-      "Id": "Dokimon_Salvaje",
-      "Flock": { "Size": [1, 1] }
-    },
-    {
-      "Weight": 16,
-      "SpawnBlockSet": "Rock",
-      "Id": "Ketomon_Salvaje",
-      "Flock": { "Size": [1, 1] }
-    },
-    {
-      "Weight": 14,
-      "SpawnBlockSet": "Rock",
-      "Id": "Kuramon_Salvaje",
-      "Flock": { "Size": [1, 1] }
-    },
-    {
-      "Weight": 14,
-      "SpawnBlockSet": "Rock",
-      "Id": "Puyomon_Salvaje",
-      "Flock": { "Size": [1, 1] }
-    },
-    {
-      "Weight": 10,
-      "SpawnBlockSet": "Rock",
-      "Id": "Arkadimon_Salvaje",
-      "Flock": { "Size": [1, 1] }
+      "Weight": 4,
+      "Id": "Digitama_NPC_Dragon"
     }
   ],
-  "DayTimeRange": [0, 24]
+  "DayTimeRange": [
+    0,
+    24
+  ]
 }

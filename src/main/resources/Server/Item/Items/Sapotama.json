@@ -11,7 +11,39 @@
     "Primary": {
       "Interactions": [
         {
-          "Type": "Simple"
+          "Type": "Selector",
+          "RunTime": 0.25,
+          "Selector": {
+            "Id": "Horizontal",
+            "Direction": "ToLeft",
+            "TestLineOfSight": false,
+            "StartDistance": 0.5,
+            "EndDistance": 3.0,
+            "Length": 90,
+            "ExtendTop": 0.5,
+            "ExtendBottom": 1.0
+          },
+          "HitEntity": {
+            "Interactions": [
+              {
+                "Type": "DigiTale_Sapotama_Hit"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "DigiTale_Sapotama_Menu"
+        }
+      ]
+    },
+    "Use": {
+      "Interactions": [
+        {
+          "Type": "DigiTale_Sapotama_Menu"
         }
       ]
     }

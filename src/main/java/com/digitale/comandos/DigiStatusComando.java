@@ -3,6 +3,7 @@ package com.digitale.comandos;
 import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.AlmacenJugadores.DatosJugador;
 import com.digitale.datos.DatoDigimon;
+import com.digitale.util.DigiMsg;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -32,26 +33,31 @@ public class DigiStatusComando extends AbstractPlayerCommand {
         DatosJugador datos = AlmacenJugadores.obtener(playerRef.getUuid());
 
         if (!datos.tieneEquipo) {
-            ctx.sendMessage(Message.raw("§cNo tienes compañeros. Usa §e/digi start§c para comenzar."));
+            ctx.sendMessage(DigiMsg.parse("§cNo tienes companeros. Usa §e/digi start§c para comenzar."));
             return;
         }
 
-        ctx.sendMessage(Message.raw("§b══════ Estado de tu equipo ══════"));
-        mostrarDigimon(ctx, datos.companeroA, "A", datos.tacticaA);
-        ctx.sendMessage(Message.raw("§8───────────────────────────"));
-        mostrarDigimon(ctx, datos.companeroB, "B", datos.tacticaB);
-        ctx.sendMessage(Message.raw("§b═════════════════════════════"));
+        ctx.sendMessage(DigiMsg.parse("§b====== Estado de tu equipo (" + datos.contarEquipo() + "/6) ======"));
+        for (int i = 0; i < AlmacenJugadores.DatosJugador.MAX_EQUIPO; i++) {
+            DatoDigimon d = datos.getSlot(i);
+            String marca = datos.esActivo(i)
+                ? (i == datos.activoA ? "§a[A]" : "§d[B]")
+                : "§8[" + (i + 1) + "]";
+            String tactica = (i == datos.activoA) ? datos.tacticaA : (i == datos.activoB) ? datos.tacticaB : "-";
+            mostrarDigimon(ctx, d, marca, tactica);
+        }
+        ctx.sendMessage(DigiMsg.parse("§b============================="));
 
         if (datos.enCombate) {
-            ctx.sendMessage(Message.raw("§c⚔ EN COMBATE vs §e" + datos.enemigoNombre +
+            ctx.sendMessage(DigiMsg.parse("§c> EN COMBATE vs §e" + datos.enemigoNombre +
                 " §7[HP: " + datos.enemigoHp + "/" + datos.enemigoHpMax + "]"));
-            ctx.sendMessage(Message.raw("§7Turno §f" + datos.turno + "§7 | Último: §f" + datos.logUltimo));
+            ctx.sendMessage(DigiMsg.parse("§7Turno §f" + datos.turno + "§7 | Ultimo: §f" + datos.logUltimo));
         }
     }
 
     private void mostrarDigimon(CommandContext ctx, DatoDigimon d, String slot, String tactica) {
         if (d == null || !d.vivo) {
-            ctx.sendMessage(Message.raw("§7[" + slot + "] Sin compañero"));
+            ctx.sendMessage(DigiMsg.parse("§7[" + slot + "] Sin companero"));
             return;
         }
 

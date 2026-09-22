@@ -1,6 +1,6 @@
 package com.digitale.item;
 
-import com.digitale.ui.SapotamaTabUI;
+import com.digitale.comandos.DigiMenuComando;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.InteractionType;
@@ -55,9 +55,10 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
             }
 
             // Prioridad 1: El paquete trae el id del ítem en mano
+            // (acepta "Sapotama" o con namespace, ej. "DigiTale:Sapotama")
             if (chain.itemInHandId != null && !chain.itemInHandId.isEmpty()) {
-                if (SAPOTAMA_ID.equals(chain.itemInHandId)) {
-                    LOGGER.log(Level.INFO, "Sapotama detectado vía itemInHandId (tipo=" + tipo + ")");
+                if (esSapotama(chain.itemInHandId)) {
+                    LOGGER.log(Level.INFO, "Sapotama detectado vía itemInHandId=" + chain.itemInHandId + " (tipo=" + tipo + ")");
                     abrirMenu(playerRef);
                 }
                 return false;
@@ -70,6 +71,11 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
         }
 
         return false;
+    }
+
+    /** Acepta "Sapotama" o cualquier namespacing tipo "Grupo:Sapotama". */
+    private static boolean esSapotama(String itemId) {
+        return SAPOTAMA_ID.equals(itemId) || itemId.endsWith(":" + SAPOTAMA_ID);
     }
 
     /** Abre el menú si el paquete ya confirmó que el ítem en mano es el Sapotama. */
@@ -85,8 +91,9 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
                 return;
             }
             try {
-                SapotamaTabUI.open(playerRef, entityRef, store);
-                LOGGER.log(Level.INFO, "SapotamaTabUI abierto");
+                // Misma lógica que /digi_menu (con equipo → tabs, sin equipo → inicial).
+                DigiMenuComando.abrir(playerRef, entityRef, store);
+                LOGGER.log(Level.INFO, "Menú Sapotama abierto (vía digi_menu)");
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Error abriendo SapotamaTabUI: " + e.getMessage());
                 e.printStackTrace();
@@ -110,8 +117,8 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
                 return;
             }
             try {
-                SapotamaTabUI.open(playerRef, entityRef, store);
-                LOGGER.log(Level.INFO, "SapotamaTabUI abierto");
+                DigiMenuComando.abrir(playerRef, entityRef, store);
+                LOGGER.log(Level.INFO, "Menú Sapotama abierto (vía digi_menu)");
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Error abriendo SapotamaTabUI: " + e.getMessage());
                 e.printStackTrace();
@@ -143,7 +150,7 @@ public class SapotamaInputFilter implements PlayerPacketFilter {
             String itemId = mano.getItemId();
             LOGGER.log(Level.INFO, "Item en mano: {" + itemId + "}");
 
-            boolean tieneItem = SAPOTAMA_ID.equals(itemId);
+            boolean tieneItem = esSapotama(itemId);
             LOGGER.log(Level.INFO, "¿Es Sapotama?: {" + tieneItem + "}");
             return tieneItem;
         } catch (Exception e) {

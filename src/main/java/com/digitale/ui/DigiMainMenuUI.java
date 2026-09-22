@@ -51,7 +51,7 @@ public class DigiMainMenuUI extends CustomUIPage {
 
                 Group {
                     LayoutMode: Top;
-                    Background: (Color: #1a1a2e);
+                    Background: (Color: #0b1220);
                     Padding: (Full: 15);
 
                     Label {
@@ -68,29 +68,25 @@ public class DigiMainMenuUI extends CustomUIPage {
                             Text: "Info";
                             Anchor: (Width: 80, Height: 32);
                             Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 13, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
-                        };
+                        }
                         TextButton #TabStats {
                             Text: "Stats";
                             Anchor: (Width: 80, Height: 32);
                             Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
-                        };
+                        }
                         TextButton #TabTecnicas {
                             Text: "Tecnicas";
                             Anchor: (Width: 80, Height: 32);
                             Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
-                        };
+                        }
                         TextButton #TabEvolucion {
                             Text: "Evolucion";
                             Anchor: (Width: 80, Height: 32);
                             Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
-                        };
+                        }
                     }
                     Group { Anchor: (Height: 4); }
-                    Label {
-                        Text: "________________________";
-                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
+                    Group { Anchor: (Height: 2); Background: (Color: #00d4ff); }
                     Group { Anchor: (Height: 4); }
 
                     Label {
@@ -160,11 +156,7 @@ public class DigiMainMenuUI extends CustomUIPage {
                     }
 
                     Group { Anchor: (Height: 8); }
-                    Label {
-                        Text: "________________________";
-                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
+                    Group { Anchor: (Height: 2); Background: (Color: #00d4ff); }
                     Group { Anchor: (Height: 4); }
 
                     Label {
@@ -258,8 +250,8 @@ public class DigiMainMenuUI extends CustomUIPage {
 
         DatosJugador datos = AlmacenJugadores.obtener(playerRef.getUuid());
         if (datos != null) {
-            setDigimon(cmd, datos.companeroA, "A");
-            setDigimon(cmd, datos.companeroB, "B");
+            setDigimon(cmd, datos.getA(), "A");
+            setDigimon(cmd, datos.getB(), "B");
         }
     }
 
@@ -281,8 +273,8 @@ public class DigiMainMenuUI extends CustomUIPage {
                 if (datos != null) {
                     switch (pestanaActiva) {
                         case "info", "estado" -> {
-                            setDigimon(cmd, datos.companeroA, "A");
-                            setDigimon(cmd, datos.companeroB, "B");
+                            setDigimon(cmd, datos.getA(), "A");
+                            setDigimon(cmd, datos.getB(), "B");
                         }
                         case "evolucionar", "evolucion" -> actualizarEvolucion(cmd, datos);
                         case "entrenar", "stats" -> actualizarEnergias(cmd, datos);
@@ -293,6 +285,10 @@ public class DigiMainMenuUI extends CustomUIPage {
             }
             case "cerrar" -> player.getPageManager().setPage(ref, store,
                 com.hypixel.hytale.protocol.packets.interface_.Page.None);
+            default -> {
+                UICommandBuilder cmd = new UICommandBuilder();
+                sendUpdate(cmd);
+            }
         }
     }
 

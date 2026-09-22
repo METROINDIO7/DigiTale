@@ -1,7 +1,7 @@
 {
   "Type": "Abstract",
   "StartState": "Idle",
-  "$Comment": "AGRESIVO: Detecta al jugador, lo observa brevemente y ataca. Basado en el patron Fox/Predator del juego base. Bebe Digimon debil pero territorial — bajo dano, poca salud, pero combativo.",
+  "$Comment": "AGRESIVO: Detecta al jugador, lo observa brevemente y ataca. Basado en el patron Fox/Predator del juego base. Bebe Digimon debil pero territorial \u2014 bajo dano, poca salud, pero combativo.",
   "Parameters": {
     "Appearance": {
       "Value": "Pagumon",
@@ -36,7 +36,7 @@
         2,
         4
       ],
-      "Description": "Tiempo de amenaza antes de atacar — mas corto que el Fox para bebes impulsivos"
+      "Description": "Tiempo de amenaza antes de atacar \u2014 mas corto que el Fox para bebes impulsivos"
     },
     "AttackDistance": {
       "Value": 2,
@@ -51,7 +51,7 @@
         1.5,
         2.5
       ],
-      "Description": "Pausa minima entre ataques — bebe es lento para recuperarse"
+      "Description": "Pausa minima entre ataques \u2014 bebe es lento para recuperarse"
     },
     "CombatAttackPreDelay": {
       "Value": [
@@ -73,11 +73,11 @@
     },
     "CombatStrafeWeight": {
       "Value": 5,
-      "Description": "Peso del comportamiento de strafe — bebes hacen poco strafe"
+      "Description": "Peso del comportamiento de strafe \u2014 bebes hacen poco strafe"
     },
     "CombatDirectWeight": {
       "Value": 15,
-      "Description": "Peso del ataque directo — bebes son directos"
+      "Description": "Peso del ataque directo \u2014 bebes son directos"
     },
     "CombatAlwaysMovingWeight": {
       "Value": 10,
@@ -103,7 +103,7 @@
     },
     "CombatMovingRelativeSpeed": {
       "Value": 0.5,
-      "Description": "Velocidad de movimiento en combate — bebes lentos"
+      "Description": "Velocidad de movimiento en combate \u2014 bebes lentos"
     },
     "CombatRelativeTurnSpeed": {
       "Value": 1.2,
@@ -123,7 +123,7 @@
     },
     "FleeIfNotThreatened": {
       "Value": false,
-      "Description": "No huye si el jugador se queda quieto — permanece agresivo"
+      "Description": "No huye si el jugador se queda quieto \u2014 permanece agresivo"
     },
     "TargetSwitchTimer": {
       "Value": [
@@ -138,7 +138,7 @@
     },
     "LeashDistance": {
       "Value": 18,
-      "Description": "Radio del leash suave — bebes defienden territorio pequeno"
+      "Description": "Radio del leash suave \u2014 bebes defienden territorio pequeno"
     },
     "LeashMinPlayerDistance": {
       "Value": 3,
@@ -182,7 +182,7 @@
     },
     "DayTimeNapWeight": {
       "Value": 1,
-      "Description": "Peso de siesta — los agresivos casi no duermen de dia"
+      "Description": "Peso de siesta \u2014 los agresivos casi no duermen de dia"
     },
     "DayTimeNapTimeRange": {
       "Value": [
@@ -197,7 +197,7 @@
     },
     "MaxSpeed": {
       "Value": 6,
-      "Description": "Velocidad maxima — mas rapido que Neutro pero lento para un predador"
+      "Description": "Velocidad maxima \u2014 mas rapido que Neutro pero lento para un predador"
     },
     "RunThreshold": {
       "Value": 0.4,
@@ -209,12 +209,12 @@
     },
     "MaxHealth": {
       "Value": 40,
-      "Description": "Salud maxima — mas que Timido por ser territorial"
+      "Description": "Salud maxima \u2014 mas que Timido por ser territorial"
     },
     "FlockArray": {
       "Value": [],
       "TypeHint": "String",
-      "Description": "NPCs de la misma bandada — los agresivos si se agrupan bien"
+      "Description": "NPCs de la misma bandada \u2014 los agresivos si se agrupan bien"
     },
     "BlockAbility": {
       "Value": "",
@@ -222,7 +222,7 @@
     },
     "CombatFleeIfTooCloseDistance": {
       "Value": 0,
-      "Description": "No huye si el jugador se acerca mucho — es agresivo"
+      "Description": "No huye si el jugador se acerca mucho \u2014 es agresivo"
     },
     "DropList": {
       "Value": "Empty",
@@ -308,7 +308,7 @@
     "Melee_Damage": {
       "Interactions": [
         {
-          "$Comment": "Bebe agresivo — poco dano fisico, solo molesta",
+          "$Comment": "Bebe agresivo \u2014 poco dano fisico, solo molesta",
           "Parent": "NPC_Attack_Melee_Damage",
           "DamageCalculator": {
             "Type": "Absolute",
@@ -317,6 +317,22 @@
             },
             "RandomPercentageModifier": 0.15
           }
+        }
+      ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
         }
       ]
     }
@@ -909,7 +925,7 @@
               ]
             },
             {
-              "$Comment": "Si el objetivo se mueve (no esta en Idle), atacar rapidamente — los agresivos odian el movimiento",
+              "$Comment": "Si el objetivo se mueve (no esta en Idle), atacar rapidamente \u2014 los agresivos odian el movimiento",
               "Sensor": {
                 "Type": "And",
                 "Sensors": [
@@ -1095,9 +1111,6 @@
                 },
                 "TargetRange": {
                   "Compute": "TargetRange"
-                },
-                "NextTargetRange": {
-                  "Compute": "max(ViewRange, HearingRange)"
                 }
               }
             },

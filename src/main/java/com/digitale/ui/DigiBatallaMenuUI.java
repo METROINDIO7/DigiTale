@@ -6,6 +6,7 @@ import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.datos.EstadoCombate;
 import com.digitale.sistema.SistemaBatalla;
+import com.digitale.sistema.SistemaPaseo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hypixel.hytale.component.Ref;
@@ -42,6 +43,9 @@ public class DigiBatallaMenuUI extends CustomUIPage {
             return;
         }
 
+        // Puesta en escena: party en formación + salvaje enfrente.
+        SistemaPaseo.prepararBatalla(playerRef, ref, store);
+
         DigiBatallaMenuUI page = new DigiBatallaMenuUI(playerRef);
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player != null) {
@@ -56,12 +60,12 @@ public class DigiBatallaMenuUI extends CustomUIPage {
                       @Nonnull Store<EntityStore> store) {
         String ui = """
             Group {
-                LayoutMode: Top;
-                Anchor: (Height: 550, Width: 600);
+                LayoutMode: Middle;
 
                 Group {
                     LayoutMode: Top;
-                    Background: (Color: #0d1117);
+                    Anchor: (Height: 580, Width: 560);
+                    Background: (Color: #0b1220);
                     Padding: (Full: 12);
 
                     Label {
@@ -79,170 +83,255 @@ public class DigiBatallaMenuUI extends CustomUIPage {
                         Style: (TextColor: #ffcc00, FontSize: 13, HorizontalAlignment: Center);
                         Anchor: (Height: 18);
                     }
-                    Group { Anchor: (Height: 4); }
-
-                    Label {
-                        Text: "=== ENEMIGO ===";
-                        Style: (TextColor: #ff4444, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblEnemigo {
-                        Text: "---";
-                        Style: (TextColor: #e0e8f0, FontSize: 13, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblEnemHp {
-                        Text: "HP: ---";
-                        Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblBarraEnem {
-                        Text: "";
-                        Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblEnemGauge {
-                        Text: "GAUGE: ";
-                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-                    Label #LblAlerta {
-                        Text: "";
-                        Style: (TextColor: #ffcc00, FontSize: 13, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-
-                    Label {
-                        Text: "________________________";
-                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-                    Group { Anchor: (Height: 4); }
-
-                    Label {
-                        Text: "--- COMPANERO A ---";
-                        Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblNombreA {
-                        Text: "---";
-                        Style: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblHpA {
-                        Text: "HP: ---";
-                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblBarraA {
-                        Text: "";
-                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblOpA {
-                        Text: "OP: ";
-                        Style: (TextColor: #ffcc00, FontSize: 11, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-                    Label #LblGaugeA {
-                        Text: "GAUGE: ";
-                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-
-                    Group { Anchor: (Height: 4); }
-
-                    Label {
-                        Text: "--- COMPANERO B ---";
-                        Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblNombreB {
-                        Text: "---";
-                        Style: (TextColor: #ff00ff, FontSize: 13, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblHpB {
-                        Text: "HP: ---";
-                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblBarraB {
-                        Text: "";
-                        Style: (TextColor: #00ff88, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                    Label #LblOpB {
-                        Text: "OP: ";
-                        Style: (TextColor: #ffcc00, FontSize: 11, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-                    Label #LblGaugeB {
-                        Text: "GAUGE: ";
-                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-
-                    Label {
-                        Text: "________________________";
-                        Style: (TextColor: #00d4ff, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-                    Group { Anchor: (Height: 4); }
-
                     Label #LblCombo {
                         Text: "";
                         Style: (TextColor: #ffcc00, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
                         Anchor: (Height: 18);
                     }
+                    Group { Anchor: (Height: 4); }
+                    Group {
+                        LayoutMode: Top;
+                        Anchor: (Height: 110);
+                        Background: (Color: #1a0f1a);
+                        Padding: (Full: 8);
+                        Group {
+                            LayoutMode: Left;
+                            Anchor: (Height: 40);
+                            AssetImage #ImgEnem {
+                                Anchor: (Width: 40, Height: 40);
+                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                            }
+                            Group { Anchor: (Width: 8); }
+                            Group {
+                                LayoutMode: Top;
+                                Anchor: (Width: 300);
+                                Label #LblEnemigo {
+                                    Text: "---";
+                                    Style: (TextColor: #e0e8f0, FontSize: 13, HorizontalAlignment: Center);
+                                    Anchor: (Height: 18);
+                                }
+                                Label #LblEnemHp {
+                                    Text: "HP: ---";
+                                    Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
+                                    Anchor: (Height: 16);
+                                }
+                            }
+                        }
+                        Label #LblBarraEnem {
+                            Text: "";
+                            Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 16);
+                        }
+                        Label #LblEnemGauge {
+                            Text: "GAUGE: ";
+                            Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                        Label #LblAlerta {
+                            Text: "";
+                            Style: (TextColor: #ffcc00, FontSize: 12, HorizontalAlignment: Center);
+                            Anchor: (Height: 14);
+                        }
+                    }
+                    Group { Anchor: (Height: 4); }
+                    Group {
+                        LayoutMode: Left;
+                        Group {
+                            LayoutMode: Top;
+                            Anchor: (Width: 165);
+                            Background: (Color: #141d33);
+                            Padding: (Full: 8);
+                            Label {
+                                Text: "--- A ---";
+                                Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Group {
+                                LayoutMode: Left;
+                                Anchor: (Height: 32);
+                                AssetImage #ImgA {
+                                    Anchor: (Width: 30, Height: 30);
+                                    AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                }
+                                Group { Anchor: (Width: 6); }
+                                Label #LblNombreA {
+                                    Text: "---";
+                                    Style: (TextColor: #00d4ff, FontSize: 12, HorizontalAlignment: Center);
+                                    Anchor: (Width: 110, Height: 32);
+                                }
+                            }
+                            Label #LblHpA {
+                                Text: "HP: ---";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
+                            }
+                            Label #LblBarraA {
+                                Text: "";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
+                            }
+                            Label #LblOpA {
+                                Text: "OP: ";
+                                Style: (TextColor: #ffcc00, FontSize: 10, HorizontalAlignment: Center);
+                                Anchor: (Height: 12);
+                            }
+                            Label #LblGaugeA {
+                                Text: "GAUGE: ";
+                                Style: (TextColor: #8899aa, FontSize: 10, HorizontalAlignment: Center);
+                                Anchor: (Height: 12);
+                            }
+                        }
+                        Group { Anchor: (Width: 8); }
+                        Group {
+                            LayoutMode: Top;
+                            Anchor: (Width: 165);
+                            Background: (Color: #1a1533);
+                            Padding: (Full: 8);
+                            Label {
+                                Text: "--- B ---";
+                                Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Group {
+                                LayoutMode: Left;
+                                Anchor: (Height: 32);
+                                AssetImage #ImgB {
+                                    Anchor: (Width: 30, Height: 30);
+                                    AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                }
+                                Group { Anchor: (Width: 6); }
+                                Label #LblNombreB {
+                                    Text: "---";
+                                    Style: (TextColor: #ff00ff, FontSize: 12, HorizontalAlignment: Center);
+                                    Anchor: (Width: 110, Height: 32);
+                                }
+                            }
+                            Label #LblHpB {
+                                Text: "HP: ---";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
+                            }
+                            Label #LblBarraB {
+                                Text: "";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
+                            }
+                            Label #LblOpB {
+                                Text: "OP: ";
+                                Style: (TextColor: #ffcc00, FontSize: 10, HorizontalAlignment: Center);
+                                Anchor: (Height: 12);
+                            }
+                            Label #LblGaugeB {
+                                Text: "GAUGE: ";
+                                Style: (TextColor: #8899aa, FontSize: 10, HorizontalAlignment: Center);
+                                Anchor: (Height: 12);
+                            }
+                        }
+                        Group { Anchor: (Width: 8); }
+                        Group {
+                            LayoutMode: Top;
+                            Anchor: (Width: 165);
+                            Background: (Color: #1a1a0f);
+                            Padding: (Full: 8);
+                            Label {
+                                Text: "--- C ---";
+                                Style: (TextColor: #ffcc00, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Group {
+                                LayoutMode: Left;
+                                Anchor: (Height: 32);
+                                AssetImage #ImgC {
+                                    Anchor: (Width: 30, Height: 30);
+                                    AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                }
+                                Group { Anchor: (Width: 6); }
+                                Label #LblNombreC {
+                                    Text: "---";
+                                    Style: (TextColor: #ffcc00, FontSize: 12, HorizontalAlignment: Center);
+                                    Anchor: (Width: 110, Height: 32);
+                                }
+                            }
+                            Label #LblHpC {
+                                Text: "HP: ---";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
+                            }
+                            Label #LblBarraC {
+                                Text: "";
+                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 14);
+                            }
+                            Label #LblOpC {
+                                Text: "OP: ";
+                                Style: (TextColor: #ffcc00, FontSize: 10, HorizontalAlignment: Center);
+                                Anchor: (Height: 12);
+                            }
+                            Label #LblGaugeC {
+                                Text: "GAUGE: ";
+                                Style: (TextColor: #8899aa, FontSize: 10, HorizontalAlignment: Center);
+                                Anchor: (Height: 12);
+                            }
+                        }
+                    }
+                    Group { Anchor: (Height: 4); }
                     Label #LblLog {
                         Text: "";
                         Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center, Wrap: true);
                         Anchor: (Height: 40);
                     }
                     Group { Anchor: (Height: 4); }
-
                     Group {
                         LayoutMode: Left;
+                        Anchor: (Height: 38);
 
                         TextButton #BtnSupport {
                             Text: "Support";
-                            Anchor: (Width: 90, Height: 36);
-                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            Anchor: (Width: 150, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
                         }
 
-                        Group { Anchor: (Width: 6); }
+                        Group { Anchor: (Width: 8); }
 
                         TextButton #BtnOrderRing {
                             Text: "Order Ring";
-                            Anchor: (Width: 90, Height: 36);
-                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            Anchor: (Width: 150, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
                         }
 
-                        Group { Anchor: (Width: 6); }
+                        Group { Anchor: (Width: 8); }
 
                         TextButton #BtnHuir {
                             Text: "Huir";
-                            Anchor: (Width: 90, Height: 36);
-                            Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            Anchor: (Width: 150, Height: 36);
+                            Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
                         }
                     }
                     Group { Anchor: (Height: 4); }
                     Group {
                         LayoutMode: Left;
+                        Anchor: (Height: 38);
 
                         TextButton #BtnTacticaA {
                             Text: "Tactica A";
-                            Anchor: (Width: 120, Height: 36);
-                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            Anchor: (Width: 150, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
                         }
 
-                        Group { FlexWeight: 1; }
+                        Group { Anchor: (Width: 8); }
 
                         TextButton #BtnTacticaB {
                             Text: "Tactica B";
-                            Anchor: (Width: 120, Height: 36);
-                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 12, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                            Anchor: (Width: 150, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
+                        }
+
+                        Group { Anchor: (Width: 8); }
+
+                        TextButton #BtnTacticaC {
+                            Text: "Tactica C";
+                            Anchor: (Width: 150, Height: 36);
+                            Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
                         }
                     }
                 }
@@ -258,13 +347,17 @@ public class DigiBatallaMenuUI extends CustomUIPage {
             EventData.of("action", "tactica_a"), false);
         event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnTacticaB",
             EventData.of("action", "tactica_b"), false);
+        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnTacticaC",
+            EventData.of("action", "tactica_c"), false);
         event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnHuir",
             EventData.of("action", "huir"), false);
 
         AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
         if (d != null && d.combate != null) {
-            aplicarEstado(cmd, d.combate, d.companeroA, d.companeroB);
+            aplicarEstado(cmd, d.combate, partyDe(d.combate, d));
         }
+        // Reafirmar formación + HUD en cada construcción.
+        SistemaPaseo.prepararBatalla(playerRef, ref, store);
     }
 
     @Override
@@ -279,34 +372,67 @@ public class DigiBatallaMenuUI extends CustomUIPage {
         if (player == null) return;
 
         AlmacenJugadores.DatosJugador datos = AlmacenJugadores.getDatos(playerRef.getUuid());
-        if (datos == null) return;
-
-        EstadoCombate c = datos.combate;
-        DatoDigimon a = datos.companeroA;
-        DatoDigimon b = datos.companeroB;
-
-        if (c == null || !c.activa) {
-            if (c == null) {
-                datos.combate = null;
-                guardarYCerrar(ref, store, player, datos);
-            }
+        if (datos == null) {
+            UICommandBuilder empty = new UICommandBuilder();
+            sendUpdate(empty);
             return;
         }
 
-        switch (action) {
-            case "support" -> SistemaBatalla.support(c, a, b);
-            case "order_ring" -> { c.fase = EstadoCombate.Fase.ORDER_RING; c.logear("Order Ring abierto"); }
-            case "huir" -> SistemaBatalla.huir(c, a, b);
-            case "tactica_a" -> { c.tacticaA = ciclarTactica(c.tacticaA); c.logear("Tactica A -> " + c.tacticaA); }
-            case "tactica_b" -> { c.tacticaB = ciclarTactica(c.tacticaB); c.logear("Tactica B -> " + c.tacticaB); }
+        EstadoCombate c = datos.combate;
+        java.util.List<DatoDigimon> party = partyDe(c, datos);
+
+        if (c == null) {
+            datos.combate = null;
+            guardarYCerrar(ref, store, player, datos);
+            return;
+        }
+        if (!c.activa && c.fase != EstadoCombate.Fase.FIN_COMBATE) {
+            UICommandBuilder cmd = new UICommandBuilder();
+            aplicarEstado(cmd, c, party);
+            sendUpdate(cmd);
+                return;
         }
 
-        player.getPageManager().setPage(ref, store,
-            com.hypixel.hytale.protocol.packets.interface_.Page.None);
-        open(playerRef, ref, store);
+        switch (action) {
+            case "support" -> SistemaBatalla.support(c);
+            case "order_ring" -> { c.fase = EstadoCombate.Fase.ORDER_RING; c.logear("Order Ring abierto"); }
+            case "huir" -> SistemaBatalla.huir(c);
+            case "tactica_a" -> { c.tacticaA = ciclarTactica(c.tacticaA); c.logear("Tactica A -> " + c.tacticaA); }
+            case "tactica_b" -> { c.tacticaB = ciclarTactica(c.tacticaB); c.logear("Tactica B -> " + c.tacticaB); }
+            case "tactica_c" -> { c.tacticaC = ciclarTactica(c.tacticaC); c.logear("Tactica C -> " + c.tacticaC); }
+            default -> c.logear("Accion desconocida: " + action);
+        }
+
+        // Reafirmar formación (el salvaje deambula) y refrescar todo.
+        SistemaPaseo.prepararBatalla(playerRef, ref, store);
+        UICommandBuilder cmd = new UICommandBuilder();
+        aplicarEstado(cmd, c, party);
+        sendUpdate(cmd);
+
+        if (c.fase == EstadoCombate.Fase.FIN_COMBATE) {
+            try {
+                PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, ref);
+                if (progress != null) progress.guardarDesde(datos);
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "No se pudo guardar fin de combate: " + e.getMessage());
+            }
+        }
     }
 
-    private void aplicarEstado(UICommandBuilder cmd, EstadoCombate c, DatoDigimon a, DatoDigimon b) {
+    @Override
+    public void onDismiss(@Nonnull Ref<EntityStore> ref,
+                          @Nonnull Store<EntityStore> store) {
+        // Cerrar la Page recoge la formación y oculta el HUD.
+        SistemaPaseo.recogerBatalla(playerRef, ref, store);
+    }
+
+    /** Lados del combate: los fijados al iniciar, o el equipo actual si faltan. */
+    private static java.util.List<DatoDigimon> partyDe(EstadoCombate c, AlmacenJugadores.DatosJugador d) {
+        if (c != null && c.party != null && !c.party.isEmpty()) return c.party;
+        return d.equipoCombate();
+    }
+
+    private void aplicarEstado(UICommandBuilder cmd, EstadoCombate c, java.util.List<DatoDigimon> party) {
         if (c.fase == EstadoCombate.Fase.FIN_COMBATE) {
             cmd.set("#LblTurno.Text", c.victoria ? "VICTORIA!" : "DERROTA...");
             cmd.set("#LblResultado.Text", c.victoria
@@ -322,9 +448,14 @@ public class DigiBatallaMenuUI extends CustomUIPage {
             cmd.set("#LblTurno.Text", "Ronda " + c.ronda + "  [" + faseLabel + "]");
             cmd.set("#LblResultado.Text", "");
         }
+        cmd.set("#LblCombo.Text", c.comboCount > 1 ? "Combo x" + c.comboCount : "");
 
         cmd.set("#LblEnemigo.Text", c.enemigoNombre + " [" + c.enemigoElemento + "]"
-            + (c.enemigoCargando ? "  !!CARGANDO!!" : ""));
+            + (c.enemigoCargando ? "  !!CARGANDO!!" : "")
+            + (c.totalOleada > 1 ? "  [" + c.oleadaActual + "/" + c.totalOleada + "]" : ""));
+        String rutaE = DigiImagenes.rutaPara(c.enemigoNombre);
+        cmd.set("#ImgEnem.Visible", rutaE != null);
+        if (rutaE != null) cmd.set("#ImgEnem.AssetPath", rutaE);
         cmd.set("#LblEnemHp.Text", "HP: " + c.enemigoHp + "/" + c.enemigoMaxHp);
         cmd.set("#LblBarraEnem.Text", EstadoCombate.barraHp(c.enemigoHp, c.enemigoMaxHp));
         cmd.set("#LblEnemGauge.Text", "GAUGE: " + EstadoCombate.barraGauge(c.gaugeEnemigo));
@@ -335,8 +466,15 @@ public class DigiBatallaMenuUI extends CustomUIPage {
             cmd.set("#LblAlerta.Text", "");
         }
 
+        DatoDigimon a = party.size() > 0 ? party.get(0) : null;
+        DatoDigimon b = party.size() > 1 ? party.get(1) : null;
+        DatoDigimon cc = party.size() > 2 ? party.get(2) : null;
+
         String nomA = a != null ? a.nombre + " [" + a.elemento + "]" : "---";
         cmd.set("#LblNombreA.Text", nomA);
+        String rutaA = a != null ? DigiImagenes.rutaPara(a.especie) : null;
+        cmd.set("#ImgA.Visible", rutaA != null);
+        if (rutaA != null) cmd.set("#ImgA.AssetPath", rutaA);
         cmd.set("#LblHpA.Text", "HP: " + c.hpCombateA + (a != null ? "/" + a.maxHp : ""));
         cmd.set("#LblBarraA.Text", EstadoCombate.barraHp(c.hpCombateA, a != null ? a.maxHp : 1));
         cmd.set("#LblOpA.Text", "OP: " + c.opA + "  " + EstadoCombate.barraOp(c.opA));
@@ -344,13 +482,25 @@ public class DigiBatallaMenuUI extends CustomUIPage {
 
         String nomB = b != null ? b.nombre + " [" + b.elemento + "]" : "---";
         cmd.set("#LblNombreB.Text", nomB);
+        String rutaB = b != null ? DigiImagenes.rutaPara(b.especie) : null;
+        cmd.set("#ImgB.Visible", rutaB != null);
+        if (rutaB != null) cmd.set("#ImgB.AssetPath", rutaB);
         cmd.set("#LblHpB.Text", "HP: " + c.hpCombateB + (b != null ? "/" + b.maxHp : ""));
         cmd.set("#LblBarraB.Text", EstadoCombate.barraHp(c.hpCombateB, b != null ? b.maxHp : 1));
         cmd.set("#LblOpB.Text", "OP: " + c.opB + "  " + EstadoCombate.barraOp(c.opB));
         cmd.set("#LblGaugeB.Text", "GAUGE: " + EstadoCombate.barraGauge(c.gaugeB));
 
+        String nomC = cc != null ? cc.nombre + " [" + cc.elemento + "]" : "---";
+        cmd.set("#LblNombreC.Text", nomC);
+        String rutaC = cc != null ? DigiImagenes.rutaPara(cc.especie) : null;
+        cmd.set("#ImgC.Visible", rutaC != null);
+        if (rutaC != null) cmd.set("#ImgC.AssetPath", rutaC);
+        cmd.set("#LblHpC.Text", "HP: " + c.hpCombateC + (cc != null ? "/" + cc.maxHp : ""));
+        cmd.set("#LblBarraC.Text", EstadoCombate.barraHp(c.hpCombateC, cc != null ? cc.maxHp : 1));
+        cmd.set("#LblOpC.Text", "OP: " + c.opC + "  " + EstadoCombate.barraOp(c.opC));
+        cmd.set("#LblGaugeC.Text", "GAUGE: " + EstadoCombate.barraGauge(c.gaugeC));
+
         cmd.set("#LblLog.Text", c.getLogFormateado());
-        cmd.set("#LblCombo.Text", c.comboCount > 1 ? "Combo x" + c.comboCount : "");
     }
 
     private EstadoCombate.Tactica ciclarTactica(EstadoCombate.Tactica t) {

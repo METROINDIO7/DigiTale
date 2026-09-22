@@ -1,8 +1,10 @@
 package com.digitale.comandos;
 
+import com.digitale.componentes.ComponentRegistry;
 import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.AlmacenJugadores.DatosJugador;
 import com.digitale.datos.DatoDigimon;
+import com.digitale.util.DigiMsg;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -16,7 +18,10 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import java.util.UUID;
 
 /**
- * /digi_start <especie1> <especie2> <nombre1> [nombre2]
+ * /digi_start <especie> [nombre]
+ *
+ * Otorga el PRIMER Digimon (slot 0). El resto del equipo (hasta 6)
+ * se consigue incubando DigiEggs/Digitama en las mesas de incubación.
  *
  * Starters Baby disponibles:
  *   Botamon  (Fuego)   → Koromon  → Agumon  → Greymon  → ...
@@ -47,7 +52,7 @@ public class DigiStartComando extends AbstractPlayerCommand {
         DatosJugador datos = AlmacenJugadores.obtener(uuid);
 
         if (datos.tieneEquipo) {
-            ctx.sendMessage(Message.raw("§cYa tienes compañeros. Usa §e/digi_status §cpara verlos."));
+            ctx.sendMessage(DigiMsg.parse("§cYa tienes companeros. Usa §e/digi_status §cpara verlos."));
             return;
         }
 
@@ -55,49 +60,53 @@ public class DigiStartComando extends AbstractPlayerCommand {
             ? new String[0]
             : ctx.getInputString().trim().split("\\s+");
 
-        if (args.length < 2) {
-            ctx.sendMessage(Message.raw("§b══════ DigiTale - Elige tus compañeros ══════"));
-            ctx.sendMessage(Message.raw("§eUso: §f/digi_start <especie1> <especie2> <nombre1> [nombre2]"));
-            ctx.sendMessage(Message.raw(""));
-            ctx.sendMessage(Message.raw("§7Líneas de evolución disponibles:"));
-            ctx.sendMessage(Message.raw("  §c🔥 Botamon  §8→ Koromon  → Agumon  → Greymon → MetalGreymon → WarGreymon"));
-            ctx.sendMessage(Message.raw("  §b❄ Punimon  §8→ Tsunomon → Gabumon → GarurumonA → WereGarurumon → MetalGarurumon"));
-            ctx.sendMessage(Message.raw("  §e✨ Poyomon  §8→ Tokomon  → Patamon → Angemon  → MagnaAngemon → Seraphimon"));
-            ctx.sendMessage(Message.raw("  §a🌿 Yuramon  §8→ Tanemon  → Palmon  → Togemon  → Lillymon → Rosemon"));
-            ctx.sendMessage(Message.raw("  §9💧 Pichimon §8→ Bukamon  → Gomamon → Ikkakumon → Zudomon → MarineAngemon"));
-            ctx.sendMessage(Message.raw("  §d🌪 Nyokimon §8→ Yokomon  → Biyomon → Birdramon → Garudamon → Phoenixmon"));
-            ctx.sendMessage(Message.raw(""));
-            ctx.sendMessage(Message.raw("§7Ejemplo: §f/digi_start Botamon Punimon Tai Yamato"));
+        if (args.length < 1) {
+            ctx.sendMessage(DigiMsg.parse("§b====== DigiTale - Elige tu primer companero ======"));
+            ctx.sendMessage(DigiMsg.parse("§eUso: §f/digi_start <especie> [nombre]"));
+            ctx.sendMessage(DigiMsg.parse(""));
+            ctx.sendMessage(DigiMsg.parse("§7Lineas de evolucion disponibles:"));
+            ctx.sendMessage(DigiMsg.parse("  §c Botamon  §8> Koromon  > Agumon  > Greymon > MetalGreymon > WarGreymon"));
+            ctx.sendMessage(DigiMsg.parse("  §b Punimon  §8> Tsunomon > Gabumon > GarurumonA > WereGarurumon > MetalGarurumon"));
+            ctx.sendMessage(DigiMsg.parse("  §e Poyomon  §8> Tokomon  > Patamon > Angemon  > MagnaAngemon > Seraphimon"));
+            ctx.sendMessage(DigiMsg.parse("  §a Yuramon  §8> Tanemon  > Palmon  > Togemon  > Lillymon > Rosemon"));
+            ctx.sendMessage(DigiMsg.parse("  §9 Pichimon §8> Bukamon  > Gomamon > Ikkakumon > Zudomon > MarineAngemon"));
+            ctx.sendMessage(DigiMsg.parse("  §d Nyokimon §8> Yokomon  > Biyomon > Birdramon > Garudamon > Phoenixmon"));
+            ctx.sendMessage(DigiMsg.parse(""));
+            ctx.sendMessage(DigiMsg.parse("§7Ejemplo: §f/digi_start Botamon Tai"));
+            ctx.sendMessage(DigiMsg.parse("§7El resto del equipo se consigue incubando §eDigiEggs §7en las mesas de incubacion."));
             return;
         }
 
         String especie1 = capitalizar(args[0]);
-        String especie2 = args.length > 1 ? capitalizar(args[1]) : "Punimon";
-        String nombre1  = args.length > 2 ? args[2] : especie1;
-        String nombre2  = args.length > 3 ? args[3] : especie2;
+        String nombre1  = args.length > 1 ? args[1] : especie1;
 
-        if (!esValida(especie1) || !esValida(especie2)) {
-            ctx.sendMessage(Message.raw("§cEspecie inválida. Usa: §fBotamon, Punimon, Poyomon, Yuramon, Pichimon §co §fNyokimon"));
+        if (!esValida(especie1)) {
+            ctx.sendMessage(DigiMsg.parse("§cEspecie invalida. Usa: §fBotamon, Punimon, Poyomon, Yuramon, Pichimon §co §fNyokimon"));
             return;
         }
 
-        if (especie1.equals(especie2)) {
-            ctx.sendMessage(Message.raw("§cElige dos especies §ediferentes §cpara tu equipo."));
-            return;
-        }
-
-        datos.companeroA = DatoDigimon.crearInicial(especie1);
-        datos.companeroA.nombre = nombre1;
-        datos.companeroB = DatoDigimon.crearInicial(especie2);
-        datos.companeroB.nombre = nombre2;
+        DatoDigimon ini1 = DatoDigimon.crearInicial(especie1);
+        ini1.nombre = nombre1;
+        datos.setSlot(0, ini1);
+        datos.activoA = 0;
+        datos.activoB = 1;
         datos.tieneEquipo = true;
 
-        ctx.sendMessage(Message.raw("§6✦ ¡Tu aventura DigiTale comienza! ✦"));
-        ctx.sendMessage(Message.raw("§a[A] §f" + nombre1 + " §8(" + especie1 + " Baby - " + datos.companeroA.elemento + ")"));
-        ctx.sendMessage(Message.raw("§a[B] §f" + nombre2 + " §8(" + especie2 + " Baby - " + datos.companeroB.elemento + ")"));
-        ctx.sendMessage(Message.raw("§7"));
-        ctx.sendMessage(Message.raw("§7Cuídalos con §e/digi_cuidar §7y entrena con §e/digi_entrenar"));
-        ctx.sendMessage(Message.raw("§7Cuando estén listos, evolucionarán solos o usa §e/digi_evolucionar"));
+        // Persistir de inmediato para que no se pierda al salir.
+        try {
+            com.digitale.componentes.PetProgressComponent progress =
+                ComponentRegistry.ensureAndGetProgress(store, ref);
+            if (progress != null) progress.guardarDesde(datos);
+        } catch (Exception e) {
+            // No bloquear el comando si el guardado falla.
+        }
+
+        ctx.sendMessage(DigiMsg.parse("§6* !Tu aventura DigiTale comienza! *"));
+        ctx.sendMessage(DigiMsg.parse("§a[1] §f" + nombre1 + " §8(" + especie1 + " Baby - " + ini1.elemento + ")"));
+        ctx.sendMessage(DigiMsg.parse("§7Busca §eDigiEggs §7y usalos en una §emesa de incubacion §7para ampliar tu equipo (6 max)."));
+        ctx.sendMessage(DigiMsg.parse("§7"));
+        ctx.sendMessage(DigiMsg.parse("§7Cuidalo con §e/digi_tab §7y entrena con §e/digi_entrenar"));
+        ctx.sendMessage(DigiMsg.parse("§7Cuando este listo, evolucionara solo o usa §e/digi_evolucionar"));
     }
 
     private boolean esValida(String e) {

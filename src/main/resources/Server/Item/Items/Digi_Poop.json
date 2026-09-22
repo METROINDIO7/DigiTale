@@ -12,7 +12,7 @@
     "CustomModelTexture": [
       {
         "Weight": 1,
-        "Texture": "Items/Ingredients/Poop_Texture.png"
+        "Texture": "NPC/Textures/Items/Poop_Texture.png"
       }
     ],
     "Group": "",
@@ -30,7 +30,7 @@
         }
       ]
     },
-    "ParticleColor": "#765222",
+    "ParticleColor": "#ff71f8",
     "Material": "Empty",
     "HitboxType": "Plant_Small",
     "Particles": [
@@ -60,7 +60,7 @@
       16.875
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Ingredient_Poop.png",
+  "Icon": "Icons/ItemsGenerated/Digi_Poop.png",
   "Scale": 1.5,
   "Interactions": {
     "Secondary": "Item_Throw"
@@ -70,7 +70,7 @@
       "Interactions": [
         {
           "Parent": "Item_Throw_Projectile",
-          "ProjectileId": "Ingredient_Poop",
+          "ProjectileId": "Digi_Poop",
           "Effects": {
             "CameraEffect": "Unarmed_Swing_Horizontal"
           }

@@ -1,31 +1,31 @@
 {
   "Type": "Abstract",
   "StartState": "Idle",
-  "$Comment": "ARENA ENEMY BASIC: Enemigo estándar en la arena. Agresivo, ataca al jugador y compañeros. Basado en el patrón agresivo, con AI para combate en arena (no leash lejos, foco en targets cercanos). Puede ser escalado para dificultad.",
+  "$Comment": "ARENA ENEMY BASIC: Enemigo est\u00e1ndar en la arena. Agresivo, ataca al jugador y compa\u00f1eros. Basado en el patr\u00f3n agresivo, con AI para combate en arena (no leash lejos, foco en targets cercanos). Puede ser escalado para dificultad.",
   "Parameters": {
     "Appearance": {
       "Value": "Veemon_Model",
-      "Description": "Modelo del enemigo básico (e.g., Trork-like)"
+      "Description": "Modelo del enemigo b\u00e1sico (e.g., Trork-like)"
     },
     "WanderRadius": {
       "Value": 10,
-      "Description": "Radio de deambulación en arena"
+      "Description": "Radio de deambulaci\u00f3n en arena"
     },
     "ViewRange": {
       "Value": 25,
-      "Description": "Distancia de visión"
+      "Description": "Distancia de visi\u00f3n"
     },
     "ViewSector": {
       "Value": 150,
-      "Description": "Ángulo de visión"
+      "Description": "\u00c1ngulo de visi\u00f3n"
     },
     "HearingRange": {
       "Value": 15,
-      "Description": "Distancia de oído"
+      "Description": "Distancia de o\u00eddo"
     },
     "AbsoluteDetectionRange": {
       "Value": 5,
-      "Description": "Rango garantizado de detección"
+      "Description": "Rango garantizado de detecci\u00f3n"
     },
     "AlertedRange": {
       "Value": 30,
@@ -44,7 +44,7 @@
     },
     "Attack": {
       "Value": "Root_NPC_Attack_Melee_Enemy",
-      "Description": "Ataque melee básico"
+      "Description": "Ataque melee b\u00e1sico"
     },
     "AttackPauseRange": {
       "Value": [
@@ -99,7 +99,7 @@
         1,
         2
       ],
-      "Description": "Duración de retroceso"
+      "Description": "Duraci\u00f3n de retroceso"
     },
     "CombatMovingRelativeSpeed": {
       "Value": 0.8,
@@ -115,7 +115,7 @@
     },
     "ChaseRelativeSpeed": {
       "Value": 1.1,
-      "Description": "Velocidad de persecución"
+      "Description": "Velocidad de persecuci\u00f3n"
     },
     "ChanceToBeAlertedWhenFlockAlerted": {
       "Value": 90,
@@ -149,7 +149,7 @@
         1,
         2
       ],
-      "Description": "Tiempo de confusión"
+      "Description": "Tiempo de confusi\u00f3n"
     },
     "SearchTimeRange": {
       "Value": [
@@ -171,7 +171,7 @@
     },
     "MaxSpeed": {
       "Value": 7,
-      "Description": "Velocidad máxima"
+      "Description": "Velocidad m\u00e1xima"
     },
     "RunThreshold": {
       "Value": 0.45,
@@ -183,12 +183,12 @@
     },
     "MaxHealth": {
       "Value": 80,
-      "Description": "Salud máxima"
+      "Description": "Salud m\u00e1xima"
     },
     "FlockArray": {
       "Value": [],
       "TypeHint": "String",
-      "Description": "Sin flock para enemigos básicos"
+      "Description": "Sin flock para enemigos b\u00e1sicos"
     },
     "BlockAbility": {
       "Value": "",
@@ -196,7 +196,7 @@
     },
     "CombatFleeIfTooCloseDistance": {
       "Value": 1,
-      "Description": "Huye si muy cerca (agresivo con límite)"
+      "Description": "Huye si muy cerca (agresivo con l\u00edmite)"
     },
     "DropList": {
       "Value": "EnemyBasic_Drops",
@@ -208,7 +208,7 @@
     },
     "MemoriesCategory": {
       "Value": "Arena_Enemy",
-      "Description": "Categoría"
+      "Description": "Categor\u00eda"
     },
     "MemoriesNameOverride": {
       "Value": "",
@@ -220,7 +220,7 @@
     },
     "NameTranslationKey": {
       "Value": "server.npcRoles.ArenaEnemyBasic.name",
-      "Description": "Clave de traducción"
+      "Description": "Clave de traducci\u00f3n"
     }
   },
   "IsMemory": {
@@ -282,7 +282,7 @@
     "Melee_Damage": {
       "Interactions": [
         {
-          "$Comment": "Daño melee estándar para arena",
+          "$Comment": "Da\u00f1o melee est\u00e1ndar para arena",
           "Parent": "NPC_Attack_Melee_Damage",
           "DamageCalculator": {
             "Type": "Absolute",
@@ -291,6 +291,22 @@
             },
             "RandomPercentageModifier": 0.2
           }
+        }
+      ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
         }
       ]
     }
@@ -884,9 +900,6 @@
                 },
                 "TargetRange": {
                   "Compute": "TargetRange"
-                },
-                "NextTargetRange": {
-                  "Compute": "max(ViewRange, HearingRange)"
                 }
               }
             },

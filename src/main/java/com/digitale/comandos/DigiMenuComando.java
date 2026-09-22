@@ -32,6 +32,16 @@ public class DigiMenuComando extends AbstractPlayerCommand {
                            @NonNullDecl Ref<EntityStore> ref,
                            @NonNullDecl PlayerRef playerRef,
                            @NonNullDecl World world) {
+        abrir(playerRef, ref, store);
+    }
+
+    /**
+     * Misma lógica que /digi_menu, reutilizable desde el ítem Sapotama:
+     * sin equipo → selección inicial; con equipo → tabs.
+     */
+    public static void abrir(@NonNullDecl PlayerRef playerRef,
+                             @NonNullDecl Ref<EntityStore> ref,
+                             @NonNullDecl Store<EntityStore> store) {
         if (AlmacenJugadores.existe(playerRef.getUuid())) {
             SapotamaTabUI.open(playerRef, ref, store);
         } else {

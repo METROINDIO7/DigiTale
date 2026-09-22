@@ -1,0 +1,27 @@
+{
+  "Icon": "Icons/ItemsGenerated/Icon_Dato_Incuvacion.png",
+  "Model": "NPC/Models/Items/Dato_Incuvacion.blockymodel",
+  "Texture": "NPC/Textures/Items/Dato_Incuvacion.png",
+  "Scale": 1,
+  "PlayerAnimationsId": "Item",
+  "TranslationProperties": {
+    "Name": "Dato Incubacion Punimon"
+  },
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "DigiTale_Dato_Receta"
+        }
+      ]
+    },
+    "Use": {
+      "Interactions": [
+        {
+          "Type": "DigiTale_Dato_Receta"
+        }
+      ]
+    }
+  },
+  "MaxStack": 16
+}

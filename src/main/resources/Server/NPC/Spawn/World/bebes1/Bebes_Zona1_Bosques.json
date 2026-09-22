@@ -1,4 +1,5 @@
 {
+  "Id": "DigiTale_Bebes_Zona1_Bosques",
   "Environments": [
     "Env_Zone1_Forests",
     "Env_Zone1_Caves_Forests"
@@ -6,70 +7,27 @@
   "NPCs": [
     {
       "Weight": 28,
-      "SpawnBlockSet": "Soil",
-      "Id": "Yuramon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Id": "Botamon_Salvaje"
     },
     {
       "Weight": 26,
-      "SpawnBlockSet": "Soil",
-      "Id": "Curimon_Salvaje",
-      "Flock": { "Size": [1, 2] }
-    },
-    {
-      "Weight": 26,
-      "SpawnBlockSet": "Soil",
-      "Id": "Keemon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Id": "Nyokimon_Salvaje"
     },
     {
       "Weight": 24,
-      "SpawnBlockSet": "Soil",
-      "Id": "Pitchmon_Salvaje",
-      "Flock": { "Size": [1, 2] }
-    },
-    {
-      "Weight": 24,
-      "SpawnBlockSet": "Soil",
-      "Id": "Cocomon_Salvaje",
-      "Flock": { "Size": [1, 2] }
-    },
-    {
-      "Weight": 24,
-      "SpawnBlockSet": "Soil",
-      "Id": "Dodomon_Salvaje",
-      "Flock": { "Size": [1, 2] }
-    },
-    {
-      "Weight": 24,
-      "SpawnBlockSet": "Soil",
-      "Id": "Popomon_Salvaje",
-      "Flock": { "Size": [1, 2] }
-    },
-    {
-      "Weight": 24,
-      "SpawnBlockSet": "Soil",
-      "Id": "Pururumon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Id": "Chibimon_Salvaje"
     },
     {
       "Weight": 22,
-      "SpawnBlockSet": "Soil",
-      "Id": "Sakumon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Id": "Pichimon_Salvaje"
     },
     {
-      "Weight": 10,
-      "SpawnBlockSet": "Soil",
-      "Id": "Conomon_Salvaje",
-      "Flock": { "Size": [1, 1] }
-    },
-    {
-      "Weight": 10,
-      "SpawnBlockSet": "Soil",
-      "Id": "Zurumon_Salvaje",
-      "Flock": { "Size": [1, 1] }
+      "Weight": 4,
+      "Id": "Digitama_NPC_Verde"
     }
   ],
-  "DayTimeRange": [6, 20]
+  "DayTimeRange": [
+    6,
+    20
+  ]
 }

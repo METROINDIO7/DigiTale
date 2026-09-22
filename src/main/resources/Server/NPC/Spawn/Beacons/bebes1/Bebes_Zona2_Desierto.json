@@ -7,21 +7,41 @@
   ],
   "MinDistanceFromPlayer": 12,
   "MaxSpawnedNPCs": 3,
-  "ConcurrentSpawnsRange": [1, 2],
-  "SpawnAfterGameTimeRange": ["PT15M", "PT50M"],
+  "ConcurrentSpawnsRange": [
+    1,
+    2
+  ],
   "NPCIdleDespawnTime": 100,
   "BeaconVacantDespawnGameTime": "PT20M",
   "BeaconRadius": 70,
   "SpawnRadius": 50,
   "TargetDistanceFromPlayer": 20,
   "NPCs": [
-    { "Weight": 35, "Id": "Jyarimon_Salvaje" },
-    { "Weight": 32, "Id": "Choromon_Salvaje" },
-    { "Weight": 28, "Id": "Sunamon_Salvaje" },
-    { "Weight": 14, "Id": "Bombmon_Salvaje" },
-    { "Weight": 14, "Id": "Zerimon_Salvaje" }
+    {
+      "Weight": 30,
+      "Id": "Jyarimon_Salvaje"
+    },
+    {
+      "Weight": 28,
+      "Id": "Kuramon_Salvaje"
+    },
+    {
+      "Weight": 24,
+      "Id": "Pichimon_Salvaje"
+    },
+    {
+      "Weight": 4,
+      "Id": "Digitama_NPC_Rojo"
+    }
   ],
   "LightRanges": {
-    "Light": [4, 15]
-  }
+    "Light": [
+      4,
+      15
+    ]
+  },
+  "SpawnAfterRealTimeRange": [
+    "PT20S",
+    "PT60S"
+  ]
 }

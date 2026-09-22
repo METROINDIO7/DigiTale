@@ -1,0 +1,16 @@
+{
+  "Type": "Random",
+  "Mode": "Shuffle",
+  "AvoidRepeatCount": 1,
+  "AudioCategory": "AudioCat_Music",
+  "FadeInDuration": 2.0,
+  "FadeOutDuration": 3.0,
+  "SilenceAfter": { "Min": 5.0, "Max": 15.0 },
+  "Children": [
+    "DigiTale_Track_Adventure_Sora",
+    "DigiTale_Track_Adventure_Shoury",
+    "DigiTale_Track_Adventure_HappyEnd",
+    "DigiTale_Track_Frontier_Hikari",
+    "DigiTale_Track_Sora_Karaoke"
+  ]
+}

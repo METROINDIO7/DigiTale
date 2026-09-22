@@ -32,6 +32,7 @@ public class PetProgressComponent implements Component<EntityStore> {
     private int lazoA       = 20; private int disciplinaA = 20;
     private int victoriasA  = 0;  private int derrotasA   = 0;
     private boolean vivoA   = false;
+    private boolean dormidoA = false; private int dormidoEnSegA = 0; private int vecesLlenoA = 0;
     private int hambreA     = 100; private int energiaA   = 100;
     private int abiA        = 0;
 
@@ -59,12 +60,53 @@ public class PetProgressComponent implements Component<EntityStore> {
     private int lazoB       = 20; private int disciplinaB = 20;
     private int victoriasB  = 0;  private int derrotasB   = 0;
     private boolean vivoB   = false;
+    private boolean dormidoB = false; private int dormidoEnSegB = 0; private int vecesLlenoB = 0;
     private int hambreB     = 100; private int energiaB   = 100;
     private int abiB        = 0;
 
     // ── Compañero B: progreso (XP/nivel de aventura) ─────────────
     private int levelB      = 1;
     private int experienceB = 0;
+
+    // ── Compañeros C-F: identidad ───────────────────────────────
+    private String nombreC = ""; private String especieC = ""; private String elementoC = "NEUTRO"; private int nivelEvoC = 1;
+    private String nombreD = ""; private String especieD = ""; private String elementoD = "NEUTRO"; private int nivelEvoD = 1;
+    private String nombreE = ""; private String especieE = ""; private String elementoE = "NEUTRO"; private int nivelEvoE = 1;
+    private String nombreF = ""; private String especieF = ""; private String elementoF = "NEUTRO"; private int nivelEvoF = 1;
+
+    // ── Compañeros C-F: stats ───────────────────────────────────
+    private int hpC = 40;    private int maxHpC = 40; private int atkC = 3; private int defC = 3; private int spdC = 4; private int wisC = 3;
+    private int hpD = 40;    private int maxHpD = 40; private int atkD = 3; private int defD = 3; private int spdD = 4; private int wisD = 3;
+    private int hpE = 40;    private int maxHpE = 40; private int atkE = 3; private int defE = 3; private int spdE = 4; private int wisE = 3;
+    private int hpF = 40;    private int maxHpF = 40; private int atkF = 3; private int defF = 3; private int spdF = 4; private int wisF = 3;
+
+    // ── Compañeros C-F: entrenamiento ───────────────────────────
+    private int entAtkC = 0; private int entDefC = 0; private int entSpdC = 0; private int entWisC = 0; private int entHpC = 0;
+    private int entAtkD = 0; private int entDefD = 0; private int entSpdD = 0; private int entWisD = 0; private int entHpD = 0;
+    private int entAtkE = 0; private int entDefE = 0; private int entSpdE = 0; private int entWisE = 0; private int entHpE = 0;
+    private int entAtkF = 0; private int entDefF = 0; private int entSpdF = 0; private int entWisF = 0; private int entHpF = 0;
+
+    // ── Compañeros C-F: vínculo y estado ────────────────────────
+    private int lazoC = 20; private int disciplinaC = 20; private int victoriasC = 0; private int derrotasC = 0;
+    private boolean vivoC = false; private boolean dormidoC = false; private int dormidoEnSegC = 0; private int vecesLlenoC = 0; private int hambreC = 100; private int energiaC = 100; private int abiC = 0;
+    private int lazoD = 20; private int disciplinaD = 20; private int victoriasD = 0; private int derrotasD = 0;
+    private boolean vivoD = false; private boolean dormidoD = false; private int dormidoEnSegD = 0; private int vecesLlenoD = 0; private int hambreD = 100; private int energiaD = 100; private int abiD = 0;
+    private int lazoE = 20; private int disciplinaE = 20; private int victoriasE = 0; private int derrotasE = 0;
+    private boolean vivoE = false; private boolean dormidoE = false; private int dormidoEnSegE = 0; private int vecesLlenoE = 0; private int hambreE = 100; private int energiaE = 100; private int abiE = 0;
+    private int lazoF = 20; private int disciplinaF = 20; private int victoriasF = 0; private int derrotasF = 0;
+    private boolean vivoF = false; private boolean dormidoF = false; private int dormidoEnSegF = 0; private int vecesLlenoF = 0; private int hambreF = 100; private int energiaF = 100; private int abiF = 0;
+
+    // ── Compañeros C-F: progreso ────────────────────────────────
+    private int levelC = 1; private int experienceC = 0;
+    private int levelD = 1; private int experienceD = 0;
+    private int levelE = 1; private int experienceE = 0;
+    private int levelF = 1; private int experienceF = 0;
+
+    // ── Incubación activa ─────────────────────────────────────────
+    private String incubaHuevoId = "";
+    private int incubaInicioSeg = 0;
+    private int incubaCiclos = 0;
+    private int incubaEnergia = 5;
 
     // ── Flags de equipo ───────────────────────────────────────────
     private boolean tieneEquipo = false;
@@ -98,6 +140,9 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("VictoriasA",  Codec.INTEGER), (d,v)->d.victoriasA=v,  d->d.victoriasA).add()
             .append(new KeyedCodec<>("DerrotasA",   Codec.INTEGER), (d,v)->d.derrotasA=v,   d->d.derrotasA).add()
             .append(new KeyedCodec<>("VivoA",       Codec.BOOLEAN), (d,v)->d.vivoA=v,       d->d.vivoA).add()
+            .append(new KeyedCodec<>("DormidoA",   Codec.BOOLEAN), (d,v)->d.dormidoA=v,   d->d.dormidoA).add()
+            .append(new KeyedCodec<>("DormidoEnSegA", Codec.INTEGER), (d,v)->d.dormidoEnSegA=v, d->d.dormidoEnSegA).add()
+            .append(new KeyedCodec<>("VecesLlenoA", Codec.INTEGER), (d,v)->d.vecesLlenoA=v, d->d.vecesLlenoA).add()
             .append(new KeyedCodec<>("HambreA",     Codec.INTEGER), (d,v)->d.hambreA=v,     d->d.hambreA).add()
             .append(new KeyedCodec<>("EnergiaA",    Codec.INTEGER), (d,v)->d.energiaA=v,    d->d.energiaA).add()
             .append(new KeyedCodec<>("AbiA",        Codec.INTEGER), (d,v)->d.abiA=v,        d->d.abiA).add()
@@ -128,12 +173,136 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("VictoriasB",  Codec.INTEGER), (d,v)->d.victoriasB=v,  d->d.victoriasB).add()
             .append(new KeyedCodec<>("DerrotasB",   Codec.INTEGER), (d,v)->d.derrotasB=v,   d->d.derrotasB).add()
             .append(new KeyedCodec<>("VivoB",       Codec.BOOLEAN), (d,v)->d.vivoB=v,       d->d.vivoB).add()
+            .append(new KeyedCodec<>("DormidoB",   Codec.BOOLEAN), (d,v)->d.dormidoB=v,   d->d.dormidoB).add()
+            .append(new KeyedCodec<>("DormidoEnSegB", Codec.INTEGER), (d,v)->d.dormidoEnSegB=v, d->d.dormidoEnSegB).add()
+            .append(new KeyedCodec<>("VecesLlenoB", Codec.INTEGER), (d,v)->d.vecesLlenoB=v, d->d.vecesLlenoB).add()
             .append(new KeyedCodec<>("HambreB",     Codec.INTEGER), (d,v)->d.hambreB=v,     d->d.hambreB).add()
             .append(new KeyedCodec<>("EnergiaB",    Codec.INTEGER), (d,v)->d.energiaB=v,    d->d.energiaB).add()
             .append(new KeyedCodec<>("AbiB",        Codec.INTEGER), (d,v)->d.abiB=v,        d->d.abiB).add()
             // ── B progreso
             .append(new KeyedCodec<>("LevelB",      Codec.INTEGER), (d,v)->d.levelB=v,      d->d.levelB).add()
             .append(new KeyedCodec<>("ExperienceB", Codec.INTEGER), (d,v)->d.experienceB=v, d->d.experienceB).add()
+            // ── C identidad/stats/entrenamiento/vínculo/progreso
+            .append(new KeyedCodec<>("NombreC",   Codec.STRING),  (d,v)->d.nombreC=v,   d->d.nombreC).add()
+            .append(new KeyedCodec<>("EspecieC",  Codec.STRING),  (d,v)->d.especieC=v,  d->d.especieC).add()
+            .append(new KeyedCodec<>("ElementoC", Codec.STRING),  (d,v)->d.elementoC=v, d->d.elementoC).add()
+            .append(new KeyedCodec<>("NivelEvoC", Codec.INTEGER), (d,v)->d.nivelEvoC=v, d->d.nivelEvoC).add()
+            .append(new KeyedCodec<>("HpC",    Codec.INTEGER), (d,v)->d.hpC=v,    d->d.hpC).add()
+            .append(new KeyedCodec<>("MaxHpC", Codec.INTEGER), (d,v)->d.maxHpC=v, d->d.maxHpC).add()
+            .append(new KeyedCodec<>("AtkC",   Codec.INTEGER), (d,v)->d.atkC=v,   d->d.atkC).add()
+            .append(new KeyedCodec<>("DefC",   Codec.INTEGER), (d,v)->d.defC=v,   d->d.defC).add()
+            .append(new KeyedCodec<>("SpdC",   Codec.INTEGER), (d,v)->d.spdC=v,   d->d.spdC).add()
+            .append(new KeyedCodec<>("WisC",   Codec.INTEGER), (d,v)->d.wisC=v,   d->d.wisC).add()
+            .append(new KeyedCodec<>("EntAtkC", Codec.INTEGER), (d,v)->d.entAtkC=v, d->d.entAtkC).add()
+            .append(new KeyedCodec<>("EntDefC", Codec.INTEGER), (d,v)->d.entDefC=v, d->d.entDefC).add()
+            .append(new KeyedCodec<>("EntSpdC", Codec.INTEGER), (d,v)->d.entSpdC=v, d->d.entSpdC).add()
+            .append(new KeyedCodec<>("EntWisC", Codec.INTEGER), (d,v)->d.entWisC=v, d->d.entWisC).add()
+            .append(new KeyedCodec<>("EntHpC",  Codec.INTEGER), (d,v)->d.entHpC=v,  d->d.entHpC).add()
+            .append(new KeyedCodec<>("LazoC",       Codec.INTEGER), (d,v)->d.lazoC=v,       d->d.lazoC).add()
+            .append(new KeyedCodec<>("DisciplinaC", Codec.INTEGER), (d,v)->d.disciplinaC=v, d->d.disciplinaC).add()
+            .append(new KeyedCodec<>("VictoriasC",  Codec.INTEGER), (d,v)->d.victoriasC=v,  d->d.victoriasC).add()
+            .append(new KeyedCodec<>("DerrotasC",   Codec.INTEGER), (d,v)->d.derrotasC=v,   d->d.derrotasC).add()
+            .append(new KeyedCodec<>("VivoC",       Codec.BOOLEAN), (d,v)->d.vivoC=v,       d->d.vivoC).add()
+            .append(new KeyedCodec<>("DormidoC",   Codec.BOOLEAN), (d,v)->d.dormidoC=v,   d->d.dormidoC).add()
+            .append(new KeyedCodec<>("DormidoEnSegC", Codec.INTEGER), (d,v)->d.dormidoEnSegC=v, d->d.dormidoEnSegC).add()
+            .append(new KeyedCodec<>("VecesLlenoC", Codec.INTEGER), (d,v)->d.vecesLlenoC=v, d->d.vecesLlenoC).add()
+            .append(new KeyedCodec<>("HambreC",     Codec.INTEGER), (d,v)->d.hambreC=v,     d->d.hambreC).add()
+            .append(new KeyedCodec<>("EnergiaC",    Codec.INTEGER), (d,v)->d.energiaC=v,    d->d.energiaC).add()
+            .append(new KeyedCodec<>("AbiC",        Codec.INTEGER), (d,v)->d.abiC=v,        d->d.abiC).add()
+            .append(new KeyedCodec<>("LevelC",      Codec.INTEGER), (d,v)->d.levelC=v,      d->d.levelC).add()
+            .append(new KeyedCodec<>("ExperienceC", Codec.INTEGER), (d,v)->d.experienceC=v, d->d.experienceC).add()
+            // ── D identidad/stats/entrenamiento/vínculo/progreso
+            .append(new KeyedCodec<>("NombreD",   Codec.STRING),  (d,v)->d.nombreD=v,   d->d.nombreD).add()
+            .append(new KeyedCodec<>("EspecieD",  Codec.STRING),  (d,v)->d.especieD=v,  d->d.especieD).add()
+            .append(new KeyedCodec<>("ElementoD", Codec.STRING),  (d,v)->d.elementoD=v, d->d.elementoD).add()
+            .append(new KeyedCodec<>("NivelEvoD", Codec.INTEGER), (d,v)->d.nivelEvoD=v, d->d.nivelEvoD).add()
+            .append(new KeyedCodec<>("HpD",    Codec.INTEGER), (d,v)->d.hpD=v,    d->d.hpD).add()
+            .append(new KeyedCodec<>("MaxHpD", Codec.INTEGER), (d,v)->d.maxHpD=v, d->d.maxHpD).add()
+            .append(new KeyedCodec<>("AtkD",   Codec.INTEGER), (d,v)->d.atkD=v,   d->d.atkD).add()
+            .append(new KeyedCodec<>("DefD",   Codec.INTEGER), (d,v)->d.defD=v,   d->d.defD).add()
+            .append(new KeyedCodec<>("SpdD",   Codec.INTEGER), (d,v)->d.spdD=v,   d->d.spdD).add()
+            .append(new KeyedCodec<>("WisD",   Codec.INTEGER), (d,v)->d.wisD=v,   d->d.wisD).add()
+            .append(new KeyedCodec<>("EntAtkD", Codec.INTEGER), (d,v)->d.entAtkD=v, d->d.entAtkD).add()
+            .append(new KeyedCodec<>("EntDefD", Codec.INTEGER), (d,v)->d.entDefD=v, d->d.entDefD).add()
+            .append(new KeyedCodec<>("EntSpdD", Codec.INTEGER), (d,v)->d.entSpdD=v, d->d.entSpdD).add()
+            .append(new KeyedCodec<>("EntWisD", Codec.INTEGER), (d,v)->d.entWisD=v, d->d.entWisD).add()
+            .append(new KeyedCodec<>("EntHpD",  Codec.INTEGER), (d,v)->d.entHpD=v,  d->d.entHpD).add()
+            .append(new KeyedCodec<>("LazoD",       Codec.INTEGER), (d,v)->d.lazoD=v,       d->d.lazoD).add()
+            .append(new KeyedCodec<>("DisciplinaD", Codec.INTEGER), (d,v)->d.disciplinaD=v, d->d.disciplinaD).add()
+            .append(new KeyedCodec<>("VictoriasD",  Codec.INTEGER), (d,v)->d.victoriasD=v,  d->d.victoriasD).add()
+            .append(new KeyedCodec<>("DerrotasD",   Codec.INTEGER), (d,v)->d.derrotasD=v,   d->d.derrotasD).add()
+            .append(new KeyedCodec<>("VivoD",       Codec.BOOLEAN), (d,v)->d.vivoD=v,       d->d.vivoD).add()
+            .append(new KeyedCodec<>("DormidoD",   Codec.BOOLEAN), (d,v)->d.dormidoD=v,   d->d.dormidoD).add()
+            .append(new KeyedCodec<>("DormidoEnSegD", Codec.INTEGER), (d,v)->d.dormidoEnSegD=v, d->d.dormidoEnSegD).add()
+            .append(new KeyedCodec<>("VecesLlenoD", Codec.INTEGER), (d,v)->d.vecesLlenoD=v, d->d.vecesLlenoD).add()
+            .append(new KeyedCodec<>("HambreD",     Codec.INTEGER), (d,v)->d.hambreD=v,     d->d.hambreD).add()
+            .append(new KeyedCodec<>("EnergiaD",    Codec.INTEGER), (d,v)->d.energiaD=v,    d->d.energiaD).add()
+            .append(new KeyedCodec<>("AbiD",        Codec.INTEGER), (d,v)->d.abiD=v,        d->d.abiD).add()
+            .append(new KeyedCodec<>("LevelD",      Codec.INTEGER), (d,v)->d.levelD=v,      d->d.levelD).add()
+            .append(new KeyedCodec<>("ExperienceD", Codec.INTEGER), (d,v)->d.experienceD=v, d->d.experienceD).add()
+            // ── E identidad/stats/entrenamiento/vínculo/progreso
+            .append(new KeyedCodec<>("NombreE",   Codec.STRING),  (d,v)->d.nombreE=v,   d->d.nombreE).add()
+            .append(new KeyedCodec<>("EspecieE",  Codec.STRING),  (d,v)->d.especieE=v,  d->d.especieE).add()
+            .append(new KeyedCodec<>("ElementoE", Codec.STRING),  (d,v)->d.elementoE=v, d->d.elementoE).add()
+            .append(new KeyedCodec<>("NivelEvoE", Codec.INTEGER), (d,v)->d.nivelEvoE=v, d->d.nivelEvoE).add()
+            .append(new KeyedCodec<>("HpE",    Codec.INTEGER), (d,v)->d.hpE=v,    d->d.hpE).add()
+            .append(new KeyedCodec<>("MaxHpE", Codec.INTEGER), (d,v)->d.maxHpE=v, d->d.maxHpE).add()
+            .append(new KeyedCodec<>("AtkE",   Codec.INTEGER), (d,v)->d.atkE=v,   d->d.atkE).add()
+            .append(new KeyedCodec<>("DefE",   Codec.INTEGER), (d,v)->d.defE=v,   d->d.defE).add()
+            .append(new KeyedCodec<>("SpdE",   Codec.INTEGER), (d,v)->d.spdE=v,   d->d.spdE).add()
+            .append(new KeyedCodec<>("WisE",   Codec.INTEGER), (d,v)->d.wisE=v,   d->d.wisE).add()
+            .append(new KeyedCodec<>("EntAtkE", Codec.INTEGER), (d,v)->d.entAtkE=v, d->d.entAtkE).add()
+            .append(new KeyedCodec<>("EntDefE", Codec.INTEGER), (d,v)->d.entDefE=v, d->d.entDefE).add()
+            .append(new KeyedCodec<>("EntSpdE", Codec.INTEGER), (d,v)->d.entSpdE=v, d->d.entSpdE).add()
+            .append(new KeyedCodec<>("EntWisE", Codec.INTEGER), (d,v)->d.entWisE=v, d->d.entWisE).add()
+            .append(new KeyedCodec<>("EntHpE",  Codec.INTEGER), (d,v)->d.entHpE=v,  d->d.entHpE).add()
+            .append(new KeyedCodec<>("LazoE",       Codec.INTEGER), (d,v)->d.lazoE=v,       d->d.lazoE).add()
+            .append(new KeyedCodec<>("DisciplinaE", Codec.INTEGER), (d,v)->d.disciplinaE=v, d->d.disciplinaE).add()
+            .append(new KeyedCodec<>("VictoriasE",  Codec.INTEGER), (d,v)->d.victoriasE=v,  d->d.victoriasE).add()
+            .append(new KeyedCodec<>("DerrotasE",   Codec.INTEGER), (d,v)->d.derrotasE=v,   d->d.derrotasE).add()
+            .append(new KeyedCodec<>("VivoE",       Codec.BOOLEAN), (d,v)->d.vivoE=v,       d->d.vivoE).add()
+            .append(new KeyedCodec<>("DormidoE",   Codec.BOOLEAN), (d,v)->d.dormidoE=v,   d->d.dormidoE).add()
+            .append(new KeyedCodec<>("DormidoEnSegE", Codec.INTEGER), (d,v)->d.dormidoEnSegE=v, d->d.dormidoEnSegE).add()
+            .append(new KeyedCodec<>("VecesLlenoE", Codec.INTEGER), (d,v)->d.vecesLlenoE=v, d->d.vecesLlenoE).add()
+            .append(new KeyedCodec<>("HambreE",     Codec.INTEGER), (d,v)->d.hambreE=v,     d->d.hambreE).add()
+            .append(new KeyedCodec<>("EnergiaE",    Codec.INTEGER), (d,v)->d.energiaE=v,    d->d.energiaE).add()
+            .append(new KeyedCodec<>("AbiE",        Codec.INTEGER), (d,v)->d.abiE=v,        d->d.abiE).add()
+            .append(new KeyedCodec<>("LevelE",      Codec.INTEGER), (d,v)->d.levelE=v,      d->d.levelE).add()
+            .append(new KeyedCodec<>("ExperienceE", Codec.INTEGER), (d,v)->d.experienceE=v, d->d.experienceE).add()
+            // ── F identidad/stats/entrenamiento/vínculo/progreso
+            .append(new KeyedCodec<>("NombreF",   Codec.STRING),  (d,v)->d.nombreF=v,   d->d.nombreF).add()
+            .append(new KeyedCodec<>("EspecieF",  Codec.STRING),  (d,v)->d.especieF=v,  d->d.especieF).add()
+            .append(new KeyedCodec<>("ElementoF", Codec.STRING),  (d,v)->d.elementoF=v, d->d.elementoF).add()
+            .append(new KeyedCodec<>("NivelEvoF", Codec.INTEGER), (d,v)->d.nivelEvoF=v, d->d.nivelEvoF).add()
+            .append(new KeyedCodec<>("HpF",    Codec.INTEGER), (d,v)->d.hpF=v,    d->d.hpF).add()
+            .append(new KeyedCodec<>("MaxHpF", Codec.INTEGER), (d,v)->d.maxHpF=v, d->d.maxHpF).add()
+            .append(new KeyedCodec<>("AtkF",   Codec.INTEGER), (d,v)->d.atkF=v,   d->d.atkF).add()
+            .append(new KeyedCodec<>("DefF",   Codec.INTEGER), (d,v)->d.defF=v,   d->d.defF).add()
+            .append(new KeyedCodec<>("SpdF",   Codec.INTEGER), (d,v)->d.spdF=v,   d->d.spdF).add()
+            .append(new KeyedCodec<>("WisF",   Codec.INTEGER), (d,v)->d.wisF=v,   d->d.wisF).add()
+            .append(new KeyedCodec<>("EntAtkF", Codec.INTEGER), (d,v)->d.entAtkF=v, d->d.entAtkF).add()
+            .append(new KeyedCodec<>("EntDefF", Codec.INTEGER), (d,v)->d.entDefF=v, d->d.entDefF).add()
+            .append(new KeyedCodec<>("EntSpdF", Codec.INTEGER), (d,v)->d.entSpdF=v, d->d.entSpdF).add()
+            .append(new KeyedCodec<>("EntWisF", Codec.INTEGER), (d,v)->d.entWisF=v, d->d.entWisF).add()
+            .append(new KeyedCodec<>("EntHpF",  Codec.INTEGER), (d,v)->d.entHpF=v,  d->d.entHpF).add()
+            .append(new KeyedCodec<>("LazoF",       Codec.INTEGER), (d,v)->d.lazoF=v,       d->d.lazoF).add()
+            .append(new KeyedCodec<>("DisciplinaF", Codec.INTEGER), (d,v)->d.disciplinaF=v, d->d.disciplinaF).add()
+            .append(new KeyedCodec<>("VictoriasF",  Codec.INTEGER), (d,v)->d.victoriasF=v,  d->d.victoriasF).add()
+            .append(new KeyedCodec<>("DerrotasF",   Codec.INTEGER), (d,v)->d.derrotasF=v,   d->d.derrotasF).add()
+            .append(new KeyedCodec<>("VivoF",       Codec.BOOLEAN), (d,v)->d.vivoF=v,       d->d.vivoF).add()
+            .append(new KeyedCodec<>("DormidoF",   Codec.BOOLEAN), (d,v)->d.dormidoF=v,   d->d.dormidoF).add()
+            .append(new KeyedCodec<>("DormidoEnSegF", Codec.INTEGER), (d,v)->d.dormidoEnSegF=v, d->d.dormidoEnSegF).add()
+            .append(new KeyedCodec<>("VecesLlenoF", Codec.INTEGER), (d,v)->d.vecesLlenoF=v, d->d.vecesLlenoF).add()
+            .append(new KeyedCodec<>("HambreF",     Codec.INTEGER), (d,v)->d.hambreF=v,     d->d.hambreF).add()
+            .append(new KeyedCodec<>("EnergiaF",    Codec.INTEGER), (d,v)->d.energiaF=v,    d->d.energiaF).add()
+            .append(new KeyedCodec<>("AbiF",        Codec.INTEGER), (d,v)->d.abiF=v,        d->d.abiF).add()
+            .append(new KeyedCodec<>("LevelF",      Codec.INTEGER), (d,v)->d.levelF=v,      d->d.levelF).add()
+            .append(new KeyedCodec<>("ExperienceF", Codec.INTEGER), (d,v)->d.experienceF=v, d->d.experienceF).add()
+            // ── incubación
+            .append(new KeyedCodec<>("IncubaHuevoId", Codec.STRING),  (d,v)->d.incubaHuevoId=v,   d->d.incubaHuevoId).add()
+            .append(new KeyedCodec<>("IncubaInicioSeg", Codec.INTEGER), (d,v)->d.incubaInicioSeg=v, d->d.incubaInicioSeg).add()
+            .append(new KeyedCodec<>("IncubaCiclos", Codec.INTEGER), (d,v)->d.incubaCiclos=v, d->d.incubaCiclos).add()
+            .append(new KeyedCodec<>("IncubaEnergia", Codec.INTEGER), (d,v)->d.incubaEnergia=v, d->d.incubaEnergia).add()
             // ── flags
             .append(new KeyedCodec<>("TieneEquipo", Codec.BOOLEAN), (d,v)->d.tieneEquipo=v, d->d.tieneEquipo).add()
             .build();
@@ -145,17 +314,47 @@ public class PetProgressComponent implements Component<EntityStore> {
         this.hpA=o.hpA; this.maxHpA=o.maxHpA; this.atkA=o.atkA; this.defA=o.defA; this.spdA=o.spdA; this.wisA=o.wisA;
         this.entAtkA=o.entAtkA; this.entDefA=o.entDefA; this.entSpdA=o.entSpdA; this.entWisA=o.entWisA; this.entHpA=o.entHpA;
         this.lazoA=o.lazoA; this.disciplinaA=o.disciplinaA; this.victoriasA=o.victoriasA; this.derrotasA=o.derrotasA;
-        this.vivoA=o.vivoA; this.hambreA=o.hambreA; this.energiaA=o.energiaA; this.abiA=o.abiA;
+        this.vivoA=o.vivoA; this.dormidoA=o.dormidoA; this.dormidoEnSegA=o.dormidoEnSegA; this.vecesLlenoA=o.vecesLlenoA; this.hambreA=o.hambreA; this.energiaA=o.energiaA; this.abiA=o.abiA;
         this.levelA=o.levelA; this.experienceA=o.experienceA;
 
         this.nombreB=o.nombreB; this.especieB=o.especieB; this.elementoB=o.elementoB; this.nivelEvoB=o.nivelEvoB;
         this.hpB=o.hpB; this.maxHpB=o.maxHpB; this.atkB=o.atkB; this.defB=o.defB; this.spdB=o.spdB; this.wisB=o.wisB;
         this.entAtkB=o.entAtkB; this.entDefB=o.entDefB; this.entSpdB=o.entSpdB; this.entWisB=o.entWisB; this.entHpB=o.entHpB;
         this.lazoB=o.lazoB; this.disciplinaB=o.disciplinaB; this.victoriasB=o.victoriasB; this.derrotasB=o.derrotasB;
-        this.vivoB=o.vivoB; this.hambreB=o.hambreB; this.energiaB=o.energiaB; this.abiB=o.abiB;
+        this.vivoB=o.vivoB; this.dormidoB=o.dormidoB; this.dormidoEnSegB=o.dormidoEnSegB; this.vecesLlenoB=o.vecesLlenoB; this.hambreB=o.hambreB; this.energiaB=o.energiaB; this.abiB=o.abiB;
         this.levelB=o.levelB; this.experienceB=o.experienceB;
 
+        this.nombreC=o.nombreC; this.especieC=o.especieC; this.elementoC=o.elementoC; this.nivelEvoC=o.nivelEvoC;
+        this.hpC=o.hpC; this.maxHpC=o.maxHpC; this.atkC=o.atkC; this.defC=o.defC; this.spdC=o.spdC; this.wisC=o.wisC;
+        this.entAtkC=o.entAtkC; this.entDefC=o.entDefC; this.entSpdC=o.entSpdC; this.entWisC=o.entWisC; this.entHpC=o.entHpC;
+        this.lazoC=o.lazoC; this.disciplinaC=o.disciplinaC; this.victoriasC=o.victoriasC; this.derrotasC=o.derrotasC;
+        this.vivoC=o.vivoC; this.dormidoC=o.dormidoC; this.dormidoEnSegC=o.dormidoEnSegC; this.vecesLlenoC=o.vecesLlenoC; this.hambreC=o.hambreC; this.energiaC=o.energiaC; this.abiC=o.abiC;
+        this.levelC=o.levelC; this.experienceC=o.experienceC;
+
+        this.nombreD=o.nombreD; this.especieD=o.especieD; this.elementoD=o.elementoD; this.nivelEvoD=o.nivelEvoD;
+        this.hpD=o.hpD; this.maxHpD=o.maxHpD; this.atkD=o.atkD; this.defD=o.defD; this.spdD=o.spdD; this.wisD=o.wisD;
+        this.entAtkD=o.entAtkD; this.entDefD=o.entDefD; this.entSpdD=o.entSpdD; this.entWisD=o.entWisD; this.entHpD=o.entHpD;
+        this.lazoD=o.lazoD; this.disciplinaD=o.disciplinaD; this.victoriasD=o.victoriasD; this.derrotasD=o.derrotasD;
+        this.vivoD=o.vivoD; this.dormidoD=o.dormidoD; this.dormidoEnSegD=o.dormidoEnSegD; this.vecesLlenoD=o.vecesLlenoD; this.hambreD=o.hambreD; this.energiaD=o.energiaD; this.abiD=o.abiD;
+        this.levelD=o.levelD; this.experienceD=o.experienceD;
+
+        this.nombreE=o.nombreE; this.especieE=o.especieE; this.elementoE=o.elementoE; this.nivelEvoE=o.nivelEvoE;
+        this.hpE=o.hpE; this.maxHpE=o.maxHpE; this.atkE=o.atkE; this.defE=o.defE; this.spdE=o.spdE; this.wisE=o.wisE;
+        this.entAtkE=o.entAtkE; this.entDefE=o.entDefE; this.entSpdE=o.entSpdE; this.entWisE=o.entWisE; this.entHpE=o.entHpE;
+        this.lazoE=o.lazoE; this.disciplinaE=o.disciplinaE; this.victoriasE=o.victoriasE; this.derrotasE=o.derrotasE;
+        this.vivoE=o.vivoE; this.dormidoE=o.dormidoE; this.dormidoEnSegE=o.dormidoEnSegE; this.vecesLlenoE=o.vecesLlenoE; this.hambreE=o.hambreE; this.energiaE=o.energiaE; this.abiE=o.abiE;
+        this.levelE=o.levelE; this.experienceE=o.experienceE;
+
+        this.nombreF=o.nombreF; this.especieF=o.especieF; this.elementoF=o.elementoF; this.nivelEvoF=o.nivelEvoF;
+        this.hpF=o.hpF; this.maxHpF=o.maxHpF; this.atkF=o.atkF; this.defF=o.defF; this.spdF=o.spdF; this.wisF=o.wisF;
+        this.entAtkF=o.entAtkF; this.entDefF=o.entDefF; this.entSpdF=o.entSpdF; this.entWisF=o.entWisF; this.entHpF=o.entHpF;
+        this.lazoF=o.lazoF; this.disciplinaF=o.disciplinaF; this.victoriasF=o.victoriasF; this.derrotasF=o.derrotasF;
+        this.vivoF=o.vivoF; this.dormidoF=o.dormidoF; this.dormidoEnSegF=o.dormidoEnSegF; this.vecesLlenoF=o.vecesLlenoF; this.hambreF=o.hambreF; this.energiaF=o.energiaF; this.abiF=o.abiF;
+        this.levelF=o.levelF; this.experienceF=o.experienceF;
+
         this.tieneEquipo=o.tieneEquipo;
+        this.incubaHuevoId=o.incubaHuevoId; this.incubaInicioSeg=o.incubaInicioSeg;
+        this.incubaCiclos=o.incubaCiclos; this.incubaEnergia=o.incubaEnergia;
     }
 
     @Override
@@ -166,51 +365,209 @@ public class PetProgressComponent implements Component<EntityStore> {
     // ═════════════════════════════════════════════════════════════
     public void guardarDesde(com.digitale.datos.AlmacenJugadores.DatosJugador datos) {
         this.tieneEquipo = datos.tieneEquipo;
-        if (datos.companeroA != null) {
-            com.digitale.datos.DatoDigimon a = datos.companeroA;
+        this.incubaHuevoId = datos.incubaHuevoId != null ? datos.incubaHuevoId : "";
+        this.incubaInicioSeg = datos.incubaInicioSeg;
+        this.incubaCiclos = datos.incubaCiclos;
+        this.incubaEnergia = datos.incubaEnergia;
+        com.digitale.datos.DatoDigimon a = datos.getSlot(0);
+        if (a != null) {
             nombreA=a.nombre; especieA=a.especie; elementoA=a.elemento; nivelEvoA=a.nivel;
             hpA=a.hp; maxHpA=a.maxHp; atkA=a.atk; defA=a.def; spdA=a.spd; wisA=a.wis;
             entAtkA=a.entAtk; entDefA=a.entDef; entSpdA=a.entSpd; entWisA=a.entWis; entHpA=a.entHp;
             lazoA=a.lazo; disciplinaA=a.disciplina; victoriasA=a.victorias; derrotasA=a.derrotas;
-            vivoA=a.vivo; hambreA=a.hambre; energiaA=a.energia; abiA=a.abi;
+            vivoA=a.vivo; dormidoA=a.dormido; dormidoEnSegA=a.dormidoEnSeg; vecesLlenoA=a.vecesLleno; hambreA=a.hambre; energiaA=a.energia; abiA=a.abi;
+        } else {
+            especieA = ""; nombreA = "";
         }
-        if (datos.companeroB != null) {
-            com.digitale.datos.DatoDigimon b = datos.companeroB;
+        com.digitale.datos.DatoDigimon b = datos.getSlot(1);
+        if (b != null) {
             nombreB=b.nombre; especieB=b.especie; elementoB=b.elemento; nivelEvoB=b.nivel;
             hpB=b.hp; maxHpB=b.maxHp; atkB=b.atk; defB=b.def; spdB=b.spd; wisB=b.wis;
             entAtkB=b.entAtk; entDefB=b.entDef; entSpdB=b.entSpd; entWisB=b.entWis; entHpB=b.entHp;
             lazoB=b.lazo; disciplinaB=b.disciplina; victoriasB=b.victorias; derrotasB=b.derrotas;
-            vivoB=b.vivo; hambreB=b.hambre; energiaB=b.energia; abiB=b.abi;
+            vivoB=b.vivo; dormidoB=b.dormido; dormidoEnSegB=b.dormidoEnSeg; vecesLlenoB=b.vecesLleno; hambreB=b.hambre; energiaB=b.energia; abiB=b.abi;
+        } else {
+            especieB = ""; nombreB = "";
         }
+        guardarSlot(2, datos.getSlot(2));
+        guardarSlot(3, datos.getSlot(3));
+        guardarSlot(4, datos.getSlot(4));
+        guardarSlot(5, datos.getSlot(5));
+    }
+
+    private void guardarSlot(int idx, com.digitale.datos.DatoDigimon d) {
+        if (d == null) {
+            setEspecieSlot(idx, "");
+            return;
+        }
+        setNombreSlot(idx, d.nombre); setEspecieSlot(idx, d.especie);
+        setElementoSlot(idx, d.elemento); setNivelEvoSlot(idx, d.nivel);
+        setHpSlot(idx, d.hp); setMaxHpSlot(idx, d.maxHp);
+        setAtkSlot(idx, d.atk); setDefSlot(idx, d.def);
+        setSpdSlot(idx, d.spd); setWisSlot(idx, d.wis);
+        setEntAtkSlot(idx, d.entAtk); setEntDefSlot(idx, d.entDef);
+        setEntSpdSlot(idx, d.entSpd); setEntWisSlot(idx, d.entWis); setEntHpSlot(idx, d.entHp);
+        setLazoSlot(idx, d.lazo); setDisciplinaSlot(idx, d.disciplina);
+        setVictoriasSlot(idx, d.victorias); setDerrotasSlot(idx, d.derrotas);
+        setVivoSlot(idx, d.vivo); setDormidoSlot(idx, d.dormido); setDormidoEnSegSlot(idx, d.dormidoEnSeg); setVecesLlenoSlot(idx, d.vecesLleno); setHambreSlot(idx, d.hambre);
+        setEnergiaSlot(idx, d.energia); setAbiSlot(idx, d.abi);
+    }
+
+    // ── Acceso por índice a los slots C-F (2-5) ───────────────────
+    private void setNombreSlot(int i, String v) {
+        switch (i) { case 2 -> nombreC = v; case 3 -> nombreD = v; case 4 -> nombreE = v; default -> nombreF = v; }
+    }
+    private void setEspecieSlot(int i, String v) {
+        switch (i) { case 2 -> especieC = v; case 3 -> especieD = v; case 4 -> especieE = v; default -> especieF = v; }
+    }
+    private void setElementoSlot(int i, String v) {
+        switch (i) { case 2 -> elementoC = v; case 3 -> elementoD = v; case 4 -> elementoE = v; default -> elementoF = v; }
+    }
+    private void setNivelEvoSlot(int i, int v) {
+        switch (i) { case 2 -> nivelEvoC = v; case 3 -> nivelEvoD = v; case 4 -> nivelEvoE = v; default -> nivelEvoF = v; }
+    }
+    private void setHpSlot(int i, int v) {
+        switch (i) { case 2 -> hpC = v; case 3 -> hpD = v; case 4 -> hpE = v; default -> hpF = v; }
+    }
+    private void setMaxHpSlot(int i, int v) {
+        switch (i) { case 2 -> maxHpC = v; case 3 -> maxHpD = v; case 4 -> maxHpE = v; default -> maxHpF = v; }
+    }
+    private void setAtkSlot(int i, int v) {
+        switch (i) { case 2 -> atkC = v; case 3 -> atkD = v; case 4 -> atkE = v; default -> atkF = v; }
+    }
+    private void setDefSlot(int i, int v) {
+        switch (i) { case 2 -> defC = v; case 3 -> defD = v; case 4 -> defE = v; default -> defF = v; }
+    }
+    private void setSpdSlot(int i, int v) {
+        switch (i) { case 2 -> spdC = v; case 3 -> spdD = v; case 4 -> spdE = v; default -> spdF = v; }
+    }
+    private void setWisSlot(int i, int v) {
+        switch (i) { case 2 -> wisC = v; case 3 -> wisD = v; case 4 -> wisE = v; default -> wisF = v; }
+    }
+    private void setEntAtkSlot(int i, int v) {
+        switch (i) { case 2 -> entAtkC = v; case 3 -> entAtkD = v; case 4 -> entAtkE = v; default -> entAtkF = v; }
+    }
+    private void setEntDefSlot(int i, int v) {
+        switch (i) { case 2 -> entDefC = v; case 3 -> entDefD = v; case 4 -> entDefE = v; default -> entDefF = v; }
+    }
+    private void setEntSpdSlot(int i, int v) {
+        switch (i) { case 2 -> entSpdC = v; case 3 -> entSpdD = v; case 4 -> entSpdE = v; default -> entSpdF = v; }
+    }
+    private void setEntWisSlot(int i, int v) {
+        switch (i) { case 2 -> entWisC = v; case 3 -> entWisD = v; case 4 -> entWisE = v; default -> entWisF = v; }
+    }
+    private void setEntHpSlot(int i, int v) {
+        switch (i) { case 2 -> entHpC = v; case 3 -> entHpD = v; case 4 -> entHpE = v; default -> entHpF = v; }
+    }
+    private void setLazoSlot(int i, int v) {
+        switch (i) { case 2 -> lazoC = v; case 3 -> lazoD = v; case 4 -> lazoE = v; default -> lazoF = v; }
+    }
+    private void setDisciplinaSlot(int i, int v) {
+        switch (i) { case 2 -> disciplinaC = v; case 3 -> disciplinaD = v; case 4 -> disciplinaE = v; default -> disciplinaF = v; }
+    }
+    private void setVictoriasSlot(int i, int v) {
+        switch (i) { case 2 -> victoriasC = v; case 3 -> victoriasD = v; case 4 -> victoriasE = v; default -> victoriasF = v; }
+    }
+    private void setDerrotasSlot(int i, int v) {
+        switch (i) { case 2 -> derrotasC = v; case 3 -> derrotasD = v; case 4 -> derrotasE = v; default -> derrotasF = v; }
+    }
+    private void setVivoSlot(int i, boolean v) {
+        switch (i) { case 2 -> vivoC = v; case 3 -> vivoD = v; case 4 -> vivoE = v; default -> vivoF = v; }
+    }
+    private void setDormidoSlot(int i, boolean v) {
+        switch (i) { case 2 -> dormidoC = v; case 3 -> dormidoD = v; case 4 -> dormidoE = v; default -> dormidoF = v; }
+    }
+    private void setDormidoEnSegSlot(int i, int v) {
+        switch (i) { case 2 -> dormidoEnSegC = v; case 3 -> dormidoEnSegD = v; case 4 -> dormidoEnSegE = v; default -> dormidoEnSegF = v; }
+    }
+    private void setVecesLlenoSlot(int i, int v) {
+        switch (i) { case 2 -> vecesLlenoC = v; case 3 -> vecesLlenoD = v; case 4 -> vecesLlenoE = v; default -> vecesLlenoF = v; }
+    }
+    private void setHambreSlot(int i, int v) {
+        switch (i) { case 2 -> hambreC = v; case 3 -> hambreD = v; case 4 -> hambreE = v; default -> hambreF = v; }
+    }
+    private void setEnergiaSlot(int i, int v) {
+        switch (i) { case 2 -> energiaC = v; case 3 -> energiaD = v; case 4 -> energiaE = v; default -> energiaF = v; }
+    }
+    private void setAbiSlot(int i, int v) {
+        switch (i) { case 2 -> abiC = v; case 3 -> abiD = v; case 4 -> abiE = v; default -> abiF = v; }
     }
 
     // ═════════════════════════════════════════════════════════════
     // Cargar de componente → DatosJugador (llamar al conectar)
     // ═════════════════════════════════════════════════════════════
     public void cargarEn(com.digitale.datos.AlmacenJugadores.DatosJugador datos) {
-        if (!tieneEquipo || especieA.isEmpty()) return;
+        // Incubación siempre (aunque aún no tenga equipo).
+        datos.incubaHuevoId = incubaHuevoId != null ? incubaHuevoId : "";
+        datos.incubaInicioSeg = incubaInicioSeg;
+        datos.incubaCiclos = incubaCiclos;
+        datos.incubaEnergia = incubaEnergia != 0 ? incubaEnergia : 5;
+        if (!tieneEquipo) return;
 
         datos.tieneEquipo = true;
-
-        com.digitale.datos.DatoDigimon a = new com.digitale.datos.DatoDigimon();
-        a.nombre=nombreA; a.especie=especieA; a.elemento=elementoA; a.nivel=nivelEvoA;
-        a.hp=hpA; a.maxHp=maxHpA; a.atk=atkA; a.def=defA; a.spd=spdA; a.wis=wisA;
-        a.entAtk=entAtkA; a.entDef=entDefA; a.entSpd=entSpdA; a.entWis=entWisA; a.entHp=entHpA;
-        a.lazo=lazoA; a.disciplina=disciplinaA; a.victorias=victoriasA; a.derrotas=derrotasA;
-        a.vivo=vivoA; a.hambre=hambreA; a.energia=energiaA; a.abi=abiA;
-        a.hpCombate=hpA;
-        datos.companeroA = a;
-
-        if (!especieB.isEmpty()) {
-            com.digitale.datos.DatoDigimon b = new com.digitale.datos.DatoDigimon();
-            b.nombre=nombreB; b.especie=especieB; b.elemento=elementoB; b.nivel=nivelEvoB;
-            b.hp=hpB; b.maxHp=maxHpB; b.atk=atkB; b.def=defB; b.spd=spdB; b.wis=wisB;
-            b.entAtk=entAtkB; b.entDef=entDefB; b.entSpd=entSpdB; b.entWis=entWisB; b.entHp=entHpB;
-            b.lazo=lazoB; b.disciplina=disciplinaB; b.victorias=victoriasB; b.derrotas=derrotasB;
-            b.vivo=vivoB; b.hambre=hambreB; b.energia=energiaB; b.abi=abiB;
-            b.hpCombate=hpB;
-            datos.companeroB = b;
+        boolean alguno = false;        for (int i = 0; i < 6; i++) {
+            com.digitale.datos.DatoDigimon d = leerSlot(i);
+            datos.setSlot(i, d);
+            if (d != null) alguno = true;
         }
+        if (!alguno) {
+            datos.tieneEquipo = false;
+            return;
+        }
+        datos.activoA = 0;
+        datos.activoB = 1;
+    }
+
+    private com.digitale.datos.DatoDigimon leerSlot(int idx) {
+        String especie = switch (idx) {
+            case 0 -> especieA; case 1 -> especieB; case 2 -> especieC;
+            case 3 -> especieD; case 4 -> especieE; default -> especieF;
+        };
+        if (especie == null || especie.isEmpty()) return null;
+
+        com.digitale.datos.DatoDigimon d = new com.digitale.datos.DatoDigimon();
+        d.nombre = pick(idx, nombreA, nombreB, nombreC, nombreD, nombreE, nombreF);
+        d.especie = especie;
+        d.elemento = pick(idx, elementoA, elementoB, elementoC, elementoD, elementoE, elementoF);
+        d.nivel = pickInt(idx, nivelEvoA, nivelEvoB, nivelEvoC, nivelEvoD, nivelEvoE, nivelEvoF);
+        d.hp = pickInt(idx, hpA, hpB, hpC, hpD, hpE, hpF);
+        d.maxHp = pickInt(idx, maxHpA, maxHpB, maxHpC, maxHpD, maxHpE, maxHpF);
+        d.atk = pickInt(idx, atkA, atkB, atkC, atkD, atkE, atkF);
+        d.def = pickInt(idx, defA, defB, defC, defD, defE, defF);
+        d.spd = pickInt(idx, spdA, spdB, spdC, spdD, spdE, spdF);
+        d.wis = pickInt(idx, wisA, wisB, wisC, wisD, wisE, wisF);
+        d.entAtk = pickInt(idx, entAtkA, entAtkB, entAtkC, entAtkD, entAtkE, entAtkF);
+        d.entDef = pickInt(idx, entDefA, entDefB, entDefC, entDefD, entDefE, entDefF);
+        d.entSpd = pickInt(idx, entSpdA, entSpdB, entSpdC, entSpdD, entSpdE, entSpdF);
+        d.entWis = pickInt(idx, entWisA, entWisB, entWisC, entWisD, entWisE, entWisF);
+        d.entHp = pickInt(idx, entHpA, entHpB, entHpC, entHpD, entHpE, entHpF);
+        d.lazo = pickInt(idx, lazoA, lazoB, lazoC, lazoD, lazoE, lazoF);
+        d.disciplina = pickInt(idx, disciplinaA, disciplinaB, disciplinaC, disciplinaD, disciplinaE, disciplinaF);
+        d.victorias = pickInt(idx, victoriasA, victoriasB, victoriasC, victoriasD, victoriasE, victoriasF);
+        d.derrotas = pickInt(idx, derrotasA, derrotasB, derrotasC, derrotasD, derrotasE, derrotasF);
+        d.vivo = pickBool(idx, vivoA, vivoB, vivoC, vivoD, vivoE, vivoF);
+        d.dormido = pickBool(idx, dormidoA, dormidoB, dormidoC, dormidoD, dormidoE, dormidoF);
+        d.dormidoEnSeg = pickInt(idx, dormidoEnSegA, dormidoEnSegB, dormidoEnSegC, dormidoEnSegD, dormidoEnSegE, dormidoEnSegF);
+        d.vecesLleno = pickInt(idx, vecesLlenoA, vecesLlenoB, vecesLlenoC, vecesLlenoD, vecesLlenoE, vecesLlenoF);
+        d.nivelAv = pickInt(idx, levelA, levelB, levelC, levelD, levelE, levelF);
+        if (d.nivelAv < 1) d.nivelAv = 1;
+        d.hambre = pickInt(idx, hambreA, hambreB, hambreC, hambreD, hambreE, hambreF);
+        d.energia = pickInt(idx, energiaA, energiaB, energiaC, energiaD, energiaE, energiaF);
+        d.abi = pickInt(idx, abiA, abiB, abiC, abiD, abiE, abiF);
+        d.hpCombate = d.hp;
+        return d;
+    }
+
+    private static String pick(int idx, String a, String b, String c, String d, String e, String f) {
+        return switch (idx) { case 0 -> a; case 1 -> b; case 2 -> c; case 3 -> d; case 4 -> e; default -> f; };
+    }
+
+    private static int pickInt(int idx, int a, int b, int c, int d, int e, int f) {
+        return switch (idx) { case 0 -> a; case 1 -> b; case 2 -> c; case 3 -> d; case 4 -> e; default -> f; };
+    }
+
+    private static boolean pickBool(int idx, boolean a, boolean b, boolean c, boolean d, boolean e, boolean f) {
+        return switch (idx) { case 0 -> a; case 1 -> b; case 2 -> c; case 3 -> d; case 4 -> e; default -> f; };
     }
 
     // ═════════════════════════════════════════════════════════════
@@ -240,12 +597,59 @@ public class PetProgressComponent implements Component<EntityStore> {
 
     public void resetA() { levelA=1; experienceA=0; }
     public void resetB() { levelB=1; experienceB=0; }
-    public void resetAll() { resetA(); resetB(); }
+    public void resetAll() {
+        resetA(); resetB();
+        levelC=1; experienceC=0; levelD=1; experienceD=0;
+        levelE=1; experienceE=0; levelF=1; experienceF=0;
+    }
+
+    /** Resetea el slot i (0-5). Retorna false si el índice es inválido. */
+    public boolean resetSlot(int i) {
+        switch (i) {
+            case 0 -> { levelA=1; experienceA=0; return true; }
+            case 1 -> { levelB=1; experienceB=0; return true; }
+            case 2 -> { levelC=1; experienceC=0; return true; }
+            case 3 -> { levelD=1; experienceD=0; return true; }
+            case 4 -> { levelE=1; experienceE=0; return true; }
+            case 5 -> { levelF=1; experienceF=0; return true; }
+            default -> { return false; }
+        }
+    }
+
+    /** Setea nivel/XP del slot i (0-5). Retorna false si el índice es inválido. */
+    public boolean setSlotProgress(int i, int level, int exp) {
+        int lvl = Math.max(1, level);
+        int xp = Math.max(0, exp);
+        switch (i) {
+            case 0 -> { levelA=lvl; experienceA=xp; return true; }
+            case 1 -> { levelB=lvl; experienceB=xp; return true; }
+            case 2 -> { levelC=lvl; experienceC=xp; return true; }
+            case 3 -> { levelD=lvl; experienceD=xp; return true; }
+            case 4 -> { levelE=lvl; experienceE=xp; return true; }
+            case 5 -> { levelF=lvl; experienceF=xp; return true; }
+            default -> { return false; }
+        }
+    }
+
+    /** Convierte "a"-"f" o "1"-"6" a índice de slot (0-5), o -1 si inválido. */
+    public static int slotDesdeNombre(String s) {
+        if (s == null) return -1;
+        return switch (s.toLowerCase()) {
+            case "a", "1" -> 0;
+            case "b", "2" -> 1;
+            case "c", "3" -> 2;
+            case "d", "4" -> 3;
+            case "e", "5" -> 4;
+            case "f", "6" -> 5;
+            default -> -1;
+        };
+    }
 
     public boolean isTieneEquipo() { return tieneEquipo; }
 
     public String getProgressString() {
-        return String.format("A: Lvl %d (%d/100 XP) | B: Lvl %d (%d/100 XP)",
-                levelA, experienceA, levelB, experienceB);
+        return String.format("A: Lvl %d (%d/100) | B: Lvl %d (%d/100) | C: Lvl %d (%d/100) | D: Lvl %d (%d/100) | E: Lvl %d (%d/100) | F: Lvl %d (%d/100)",
+                levelA, experienceA, levelB, experienceB, levelC, experienceC,
+                levelD, experienceD, levelE, experienceE, levelF, experienceF);
     }
 }

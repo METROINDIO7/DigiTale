@@ -1,0 +1,29 @@
+{
+  "TranslationProperties": {
+    "Name": "Digitama Plant"
+  },
+  "Quality": "Epic",
+  "PlayerAnimationsId": "Item",
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "SpawnNPC",
+          "EntityId": "Digitama_NPC_Llamas",
+          "Next": {
+            "Type": "ModifyInventory",
+            "AdjustHeldItemQuantity": -1
+          },
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 0.5,
+            "Z": 0
+          }
+        }
+      ]
+    }
+  },
+  "Model": "NPC/Models/Digitama/Digitama.blockymodel",
+  "Texture": "NPC/Textures/Digitama/Digitama_Llamas.png",
+  "Icon": "Icons/ItemsGenerated/Digitamas/Icon_Digitama_Llamas.png"
+}

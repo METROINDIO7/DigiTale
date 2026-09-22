@@ -2,7 +2,7 @@
   "Type": "Abstract",
   "KnockbackScale": 0.5,
   "StartState": "Idle",
-  "$Comment": "NADADOR NEUTRO (Acuático): Nada tranquilamente, ignora al jugador. SOLO ataca si es atacado primero. Basado en Template_Swimming_Passive nativo. Update 3 compatible.",
+  "$Comment": "NADADOR NEUTRO (Acu\u00e1tico): Nada tranquilamente, ignora al jugador. SOLO ataca si es atacado primero. Basado en Template_Swimming_Passive nativo. Update 3 compatible.",
   "Parameters": {
     "Appearance": {
       "Value": "Bluegill",
@@ -131,6 +131,22 @@
             },
             "RandomPercentageModifier": 0.1
           }
+        }
+      ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
         }
       ]
     }
@@ -263,7 +279,7 @@
               ]
             },
             {
-              "$Comment": "CLAVE: Solo reacciona si recibe daño - se vuelve hostil",
+              "$Comment": "CLAVE: Solo reacciona si recibe da\u00f1o - se vuelve hostil",
               "Sensor": {
                 "Type": "Damage",
                 "Environment": true,

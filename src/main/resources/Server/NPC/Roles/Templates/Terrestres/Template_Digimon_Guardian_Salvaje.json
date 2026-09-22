@@ -1,15 +1,15 @@
 {
   "Type": "Abstract",
   "StartState": "Idle",
-  "$Comment": "GUARDIÁN VOLADOR: Centinela territorial aéreo. Permanece en suelo vigilando. SOLO VUELA al abandonar el puesto para perseguir. AVISA antes de atacar. Ideal para Digimon que custodian lugares sagrados. Nivel Perfecto/Definitivo. Compatible con Update 3+.",
+  "$Comment": "GUARDI\u00c1N VOLADOR: Centinela territorial a\u00e9reo. Permanece en suelo vigilando. SOLO VUELA al abandonar el puesto para perseguir. AVISA antes de atacar. Ideal para Digimon que custodian lugares sagrados. Nivel Perfecto/Definitivo. Compatible con Update 3+.",
   "Parameters": {
     "Appearance": {
       "Value": "Angemon",
-      "Description": "Modelo del Digimon guardián"
+      "Description": "Modelo del Digimon guardi\u00e1n"
     },
     "MaxHealth": {
       "Value": 150,
-      "Description": "Salud alta — nivel Perfecto/Definitivo"
+      "Description": "Salud alta \u2014 nivel Perfecto/Definitivo"
     },
     "MaxSpeed": {
       "Value": 6,
@@ -17,7 +17,7 @@
     },
     "FlySpeed": {
       "Value": 14,
-      "Description": "Velocidad maxima en vuelo — solo al perseguir"
+      "Description": "Velocidad maxima en vuelo \u2014 solo al perseguir"
     },
     "RunThreshold": {
       "Value": 0.35,
@@ -29,19 +29,19 @@
     },
     "MinHeightOverGround": {
       "Value": 0.5,
-      "Description": "Altura minima — casi en suelo cuando vigila"
+      "Description": "Altura minima \u2014 casi en suelo cuando vigila"
     },
     "MaxHeightOverGround": {
       "Value": 12,
-      "Description": "Altura maxima en vuelo — limitado al perseguir"
+      "Description": "Altura maxima en vuelo \u2014 limitado al perseguir"
     },
     "TerritoryRange": {
       "Value": 16,
-      "Description": "Zona de vigilancia — mira al jugador pero no ataca"
+      "Description": "Zona de vigilancia \u2014 mira al jugador pero no ataca"
     },
     "GateRange": {
       "Value": 6,
-      "Description": "Zona de exclusion — ataque inmediato si la cruza"
+      "Description": "Zona de exclusion \u2014 ataque inmediato si la cruza"
     },
     "ViewRange": {
       "Value": 18,
@@ -49,11 +49,11 @@
     },
     "ViewSector": {
       "Value": 120,
-      "Description": "Angulo de vision — guardian mira al frente"
+      "Description": "Angulo de vision \u2014 guardian mira al frente"
     },
     "HearingRange": {
       "Value": 8,
-      "Description": "Oido — detecta sonidos cercanos"
+      "Description": "Oido \u2014 detecta sonidos cercanos"
     },
     "AbsoluteDetectionRange": {
       "Value": 4,
@@ -98,7 +98,7 @@
     },
     "CombatStrafeWeight": {
       "Value": 8,
-      "Description": "Peso strafe — el guardian rodea al jugador"
+      "Description": "Peso strafe \u2014 el guardian rodea al jugador"
     },
     "CombatDirectWeight": {
       "Value": 12,
@@ -110,7 +110,7 @@
     },
     "CombatBackOffAfterAttack": {
       "Value": false,
-      "Description": "No retrocede tras atacar — implacable"
+      "Description": "No retrocede tras atacar \u2014 implacable"
     },
     "CombatBackOffDistanceRange": {
       "Value": [
@@ -136,7 +136,7 @@
     },
     "ChaseRelativeSpeed": {
       "Value": 0.9,
-      "Description": "Velocidad de persecucion — rapido en vuelo"
+      "Description": "Velocidad de persecucion \u2014 rapido en vuelo"
     },
     "LeashDistance": {
       "Value": 12,
@@ -283,7 +283,7 @@
     "Melee_Damage": {
       "Interactions": [
         {
-          "$Comment": "Guardián poderoso — daño considerable",
+          "$Comment": "Guardi\u00e1n poderoso \u2014 da\u00f1o considerable",
           "Parent": "NPC_Attack_Melee_Damage",
           "DamageCalculator": {
             "Type": "Absolute",
@@ -292,6 +292,22 @@
             },
             "RandomPercentageModifier": 0.15
           }
+        }
+      ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
         }
       ]
     }
@@ -405,7 +421,7 @@
           },
           "Instructions": [
             {
-              "$Comment": "Si recibe daño de combate, ataca directamente",
+              "$Comment": "Si recibe da\u00f1o de combate, ataca directamente",
               "Sensor": {
                 "Type": "Damage",
                 "Combat": true
@@ -449,7 +465,7 @@
               ]
             },
             {
-              "$Comment": "Detecta intruso en TerritoryRange → Alerted (aviso visual)",
+              "$Comment": "Detecta intruso en TerritoryRange \u2192 Alerted (aviso visual)",
               "Sensor": {
                 "Reference": "Component_Sensor_Standard_Detection",
                 "Modify": {
@@ -479,7 +495,7 @@
               ]
             },
             {
-              "$Comment": "Guardián QUIETO en su puesto — movimiento minimo en tierra",
+              "$Comment": "Guardi\u00e1n QUIETO en su puesto \u2014 movimiento minimo en tierra",
               "BodyMotion": {
                 "Type": "Sequence",
                 "Looped": true,
@@ -513,7 +529,7 @@
           ]
         },
         {
-          "$Comment": "ALERTED: Aviso — mira fijamente sin moverse (en tierra)",
+          "$Comment": "ALERTED: Aviso \u2014 mira fijamente sin moverse (en tierra)",
           "Sensor": {
             "Type": "State",
             "State": "Alerted"
@@ -548,7 +564,7 @@
               ]
             },
             {
-              "$Comment": "Si lo atacan durante el aviso → combate inmediato",
+              "$Comment": "Si lo atacan durante el aviso \u2192 combate inmediato",
               "Sensor": {
                 "Type": "Damage",
                 "Combat": true
@@ -561,7 +577,7 @@
               ]
             },
             {
-              "$Comment": "Mira FIJAMENTE al intruso — sin moverse del puesto",
+              "$Comment": "Mira FIJAMENTE al intruso \u2014 sin moverse del puesto",
               "Continue": true,
               "Sensor": {
                 "Type": "Target",
@@ -579,7 +595,7 @@
               }
             },
             {
-              "$Comment": "Si cruza GateRange → ataque INMEDIATO",
+              "$Comment": "Si cruza GateRange \u2192 ataque INMEDIATO",
               "Enabled": {
                 "Compute": "GateRange > 0"
               },
@@ -688,9 +704,6 @@
                 },
                 "TargetRange": {
                   "Compute": "TargetRange"
-                },
-                "NextTargetRange": {
-                  "Compute": "max(AlertedRange, HearingRange)"
                 }
               }
             },
@@ -1267,7 +1280,7 @@
           ]
         },
         {
-          "$Comment": "PANICO: Solo ante daño ambiental",
+          "$Comment": "PANICO: Solo ante da\u00f1o ambiental",
           "Sensor": {
             "Type": "State",
             "State": "Panic"

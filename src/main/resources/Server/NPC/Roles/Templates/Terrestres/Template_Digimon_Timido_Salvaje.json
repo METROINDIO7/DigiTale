@@ -120,6 +120,22 @@
           }
         }
       ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
     }
   },
   "StateTransitions": [

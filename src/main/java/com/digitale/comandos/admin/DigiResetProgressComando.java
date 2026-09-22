@@ -2,6 +2,7 @@ package com.digitale.comandos.admin;
 
 import com.digitale.componentes.ComponentRegistry;
 import com.digitale.componentes.PetProgressComponent;
+import com.digitale.util.DigiMsg;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -13,13 +14,13 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 /**
- * /digi_resetprogress [a|b|all] — Comando de administrador para resetear progreso de compañeros.
- * 
+ * /digi_resetprogress [a|b|c|d|e|f|1-6|all] — Resetea progreso (nivel 1, sin XP).
+ *
  * Uso:
- *   /digi_resetprogress all     - Resetea ambos compañeros (nivel 1, sin XP)
- *   /digi_resetprogress a       - Resetea solo el compañero A
- *   /digi_resetprogress b       - Resetea solo el compañero B
- * 
+ *   /digi_resetprogress all     - Resetea los 6 slots
+ *   /digi_resetprogress a       - Resetea solo el slot 1 (A)
+ *   /digi_resetprogress 3       - Resetea solo el slot 3 (C)
+ *
  * Requiere permisos de administrador.
  */
 public class DigiResetProgressComando extends AbstractPlayerCommand {
@@ -44,11 +45,10 @@ public class DigiResetProgressComando extends AbstractPlayerCommand {
         
         String target = args.length > 0 ? args[0].toLowerCase() : "all";
 
-        if (!target.matches("^(a|b|all)$")) {
-            ctx.sendMessage(Message.raw("§cUso: §f/digi_resetprogress [a|b|all]"));
-            ctx.sendMessage(Message.raw("  §fa§8 - Resetea compañero A"));
-            ctx.sendMessage(Message.raw("  §fb§8 - Resetea compañero B"));
-            ctx.sendMessage(Message.raw("  §fall§8 - Resetea ambos compañeros"));
+        if (!target.matches("^(a|b|c|d|e|f|1|2|3|4|5|6|all)$")) {
+            ctx.sendMessage(DigiMsg.parse("§cUso: §f/digi_resetprogress [a-f|1-6|all]"));
+            ctx.sendMessage(DigiMsg.parse("  §fa-f §8- Resetea un slot (a=1, b=2, ...)"));
+            ctx.sendMessage(DigiMsg.parse("  §fall §8- Resetea los 6 slots"));
             return;
         }
 
@@ -57,19 +57,23 @@ public class DigiResetProgressComando extends AbstractPlayerCommand {
             // Obtener o crear el componente
             PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, ref);
 
-            // Resetear según el argumento
-            if (target.equals("a")) {
+            if (target.equals("all")) {
+                progress.resetAll();
+                ctx.sendMessage(DigiMsg.parse("§a> Progreso de los 6 slots reiniciado."));
+            } else if (target.equals("a")) {
+                // Compatibilidad: "a"/"b" solos siguen funcionando.
                 progress.resetA();
-                ctx.sendMessage(Message.raw("§a✓ Progreso del compañero A reiniciado."));
+                ctx.sendMessage(DigiMsg.parse("§a> Progreso del slot 1 (A) reiniciado."));
             } else if (target.equals("b")) {
                 progress.resetB();
-                ctx.sendMessage(Message.raw("§a✓ Progreso del compañero B reiniciado."));
+                ctx.sendMessage(DigiMsg.parse("§a> Progreso del slot 2 (B) reiniciado."));
             } else {
-                progress.resetAll();
-                ctx.sendMessage(Message.raw("§a✓ Progreso de ambos compañeros reiniciado."));
+                int slot = PetProgressComponent.slotDesdeNombre(target);
+                progress.resetSlot(slot);
+                ctx.sendMessage(DigiMsg.parse("§a> Progreso del slot " + (slot + 1) + " reiniciado."));
             }
 
-            ctx.sendMessage(Message.raw("§7Nuevo estado: " + progress.getProgressString()));
+            ctx.sendMessage(DigiMsg.parse("§7Nuevo estado: " + progress.getProgressString()));
         });
     }
 }

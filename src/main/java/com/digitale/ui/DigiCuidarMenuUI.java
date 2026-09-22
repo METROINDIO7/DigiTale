@@ -4,6 +4,7 @@ import com.digitale.componentes.ComponentRegistry;
 import com.digitale.componentes.PetProgressComponent;
 import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
+import com.digitale.sistema.SistemaPaseo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hypixel.hytale.component.Ref;
@@ -25,6 +26,127 @@ import java.util.logging.Logger;
 public class DigiCuidarMenuUI extends CustomUIPage {
 
     private static final Logger LOGGER = Logger.getLogger(DigiCuidarMenuUI.class.getName());
+
+    /** Slot al que se va a dar de comer (-1 = modo tarjetas). */
+    private int slotComida = -1;
+    /** Mensaje pendiente para #LblInfo tras rebuild. */
+    private String msgPendiente = "";
+
+    /** Una comida distinta en la mochila. */
+    public static class ComidaEntry {
+        public int seccion;
+        public short slot;
+        public String id;
+        public String nombre;
+        public int cantidad;
+        public int h;
+        public int e;
+        public int hpPct;
+    }
+
+    /** ¿Es comestible? (consumible o categoría food). */
+    private static boolean esComida(com.hypixel.hytale.server.core.asset.type.item.config.Item item) {
+        if (item == null) return false;
+        try {
+            if (item.isConsumable()) return true;
+        } catch (Exception ignored) {
+        }
+        try {
+            String[] cats = item.getCategories();
+            if (cats != null) {
+                for (String c : cats) {
+                    if (c != null && c.toLowerCase(java.util.Locale.ROOT).contains("food")) return true;
+                }
+            }
+            String sub = item.getSubCategory();
+            if (sub != null && sub.toLowerCase(java.util.Locale.ROOT).contains("food")) return true;
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
+    /** Nutrición por id (H, E, %HP). Lo no listado: ración normal. */
+    private static int[] valorComida(String id) {
+        String s = id == null ? "" : id.toLowerCase(java.util.Locale.ROOT);
+        if (s.contains("cook")) return new int[]{30, 15, 15};
+        if (s.contains("berry") || s.contains("apple") || s.contains("melon") || s.contains("bread") || s.contains("cheese")) {
+            return new int[]{20, 10, 10};
+        }
+        if (s.contains("raw") || s.contains("rotten") || s.contains("poop")) return new int[]{8, 4, 0};
+        return new int[]{15, 8, 5};
+    }
+
+    private static String nombreBonito(String id) {
+        if (id == null) return "?";
+        String base = id.contains(":") ? id.substring(id.indexOf(':') + 1) : id;
+        return base.replace('_', ' ');
+    }
+
+    /** Lista comidas distintas (máx 6) con su posición para gastar. */
+    static java.util.List<ComidaEntry> listarComidas(Ref<EntityStore> ref, Store<EntityStore> store) {
+        java.util.List<ComidaEntry> out = new java.util.ArrayList<>();
+        java.util.Set<String> vistas = new java.util.HashSet<>();
+        try {
+            for (int seccion = 0; seccion < 32 && out.size() < 6; seccion++) {
+                com.hypixel.hytale.server.core.inventory.container.ItemContainer cont;
+                try {
+                    cont = com.hypixel.hytale.server.core.inventory.InventoryUtils.getSectionById(ref, seccion, store);
+                } catch (Exception e) {
+                    continue;
+                }
+                if (cont == null) continue;
+                short cap;
+                try {
+                    cap = cont.getCapacity();
+                } catch (Exception e) {
+                    continue;
+                }
+                for (short i = 0; i < cap && out.size() < 6; i++) {
+                    com.hypixel.hytale.server.core.inventory.ItemStack stack;
+                    try {
+                        stack = cont.getItemStack(i);
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    if (stack == null) continue;
+                    String id;
+                    try {
+                        id = stack.getItemId();
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    if (id == null || vistas.contains(id)) continue;
+                    boolean comida = false;
+                    try {
+                        comida = esComida(stack.getItem());
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    if (!comida) continue;
+                    vistas.add(id);
+                    int cantidad = 1;
+                    try {
+                        cantidad = Math.max(1, stack.getQuantity());
+                    } catch (Exception ignored) {
+                    }
+                    int[] v = valorComida(id);
+                    ComidaEntry ce = new ComidaEntry();
+                    ce.seccion = seccion;
+                    ce.slot = i;
+                    ce.id = id;
+                    ce.nombre = nombreBonito(id);
+                    ce.cantidad = cantidad;
+                    ce.h = v[0];
+                    ce.e = v[1];
+                    ce.hpPct = v[2];
+                    out.add(ce);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "listarComidas: " + e.getMessage());
+        }
+        return out;
+    }
 
     public DigiCuidarMenuUI(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss);
@@ -54,36 +176,124 @@ public class DigiCuidarMenuUI extends CustomUIPage {
                       @Nonnull UICommandBuilder cmd,
                       @Nonnull UIEventBuilder event,
                       @Nonnull Store<EntityStore> store) {
+        if (slotComida >= 0) {
+            cmd.appendInline(null, buildComidas());
+            java.util.List<ComidaEntry> comidas = listarComidas(ref, store);
+            for (int i = 0; i < comidas.size(); i++) {
+                event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnDar" + i,
+                    EventData.of("action", "dar_comida").append("value", String.valueOf(i)), false);
+            }
+            event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnComidaVolver",
+                EventData.of("action", "comida_volver"), false);
+            actualizarComidas(cmd, ref, store, comidas);
+            return;
+        }
+
         String ui = buildPanel();
         cmd.appendInline(null, ui);
 
-        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnAlimentarA",
-            EventData.of("action", "alimentar").append("slot", "A"), false);
-        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnAlimentarB",
-            EventData.of("action", "alimentar").append("slot", "B"), false);
-        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnDormirA",
-            EventData.of("action", "dormir").append("slot", "A"), false);
-        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnDormirB",
-            EventData.of("action", "dormir").append("slot", "B"), false);
-        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnJugarA",
-            EventData.of("action", "jugar").append("slot", "A"), false);
-        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnJugarB",
-            EventData.of("action", "jugar").append("slot", "B"), false);
+        for (int i = 0; i < AlmacenJugadores.DatosJugador.MAX_EQUIPO; i++) {
+            event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnAlim" + i,
+                EventData.of("action", "alimentar").append("slot", String.valueOf(i)), false);
+            event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnDorm" + i,
+                EventData.of("action", "dormir").append("slot", String.valueOf(i)), false);
+            event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnJugar" + i,
+                EventData.of("action", "jugar").append("slot", String.valueOf(i)), false);
+        }
         event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnVolver",
             EventData.of("action", "volver"), false);
 
         actualizarEstado(cmd, store);
     }
 
+    /** Panel de selección de comida para el slot elegido. */
+    private String buildComidas() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("""
+            Group {
+                LayoutMode: Top;
+                Anchor: (Height: 560, Width: 560);
+
+                Group {
+                    LayoutMode: Top;
+                    Background: (Color: #0b1220);
+                    Padding: (Full: 15);
+
+                    Label {
+                        Text: "ELEGIR COMIDA";
+                        Style: (TextColor: #ffcc00, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+                        Anchor: (Height: 26);
+                    }
+                    Label #LblComidaSlot {
+                        Text: "";
+                        Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                        Anchor: (Height: 16);
+                    }
+                    Group { Anchor: (Height: 6); }
+
+            """);
+        for (int i = 0; i < 6; i++) {
+            sb.append("                    Group {\n");
+            sb.append("                        LayoutMode: Left;\n");
+            sb.append("                        Anchor: (Height: 36);\n");
+            sb.append("                        Label #Comida").append(i).append("Name {\n");
+            sb.append("                            Text: \"\";\n");
+            sb.append("                            Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center);\n");
+            sb.append("                            Anchor: (Width: 300, Height: 36);\n");
+            sb.append("                        }\n");
+            sb.append("                        Group { Anchor: (Width: 8); }\n");
+            sb.append("                        TextButton #BtnDar").append(i).append(" {\n");
+            sb.append("                            Text: \"Dar\";\n");
+            sb.append("                            Anchor: (Width: 100, Height: 34);\n");
+            sb.append("                            Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #ffcc00, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));\n");
+            sb.append("                        }\n");
+            sb.append("                    }\n");
+        }
+        sb.append("""
+                    Group { Anchor: (Height: 8); }
+                    TextButton #BtnComidaVolver {
+                        Text: "Volver";
+                        Anchor: (Width: 160, Height: 36);
+                        Style: (Default: (Background: (Color: #16213e), LabelStyle: (FontSize: 13, TextColor: #8899aa, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)));
+                    }
+                }
+            }
+            """);
+        return sb.toString();
+    }
+
+    private void actualizarComidas(UICommandBuilder cmd, Ref<EntityStore> ref,
+                                   Store<EntityStore> store,
+                                   java.util.List<ComidaEntry> comidas) {
+        AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
+        DatoDigimon digi = (d != null) ? d.getSlot(slotComida) : null;
+        cmd.set("#LblComidaSlot.Text", digi != null
+            ? "Para: " + digi.nombre + " (H:" + digi.hambre + " E:" + digi.energia + ")"
+            : "Slot vacio");
+        for (int i = 0; i < 6; i++) {
+            if (i < comidas.size()) {
+                ComidaEntry ce = comidas.get(i);
+                cmd.set("#Comida" + i + "Name.Visible", true);
+                cmd.set("#BtnDar" + i + ".Visible", true);
+                cmd.set("#Comida" + i + "Name.Text",
+                    ce.nombre + " x" + ce.cantidad + "  (H+" + ce.h + " E+" + ce.e + ")");
+            } else {
+                cmd.set("#Comida" + i + "Name.Text", "");
+                cmd.set("#Comida" + i + "Name.Visible", false);
+                cmd.set("#BtnDar" + i + ".Visible", false);
+            }
+        }
+    }
+
     private String buildPanel() {
         return """
             Group {
                 LayoutMode: Top;
-                Anchor: (Height: 520, Width: 500);
+                Anchor: (Height: 560, Width: 560);
 
                 Group {
                     LayoutMode: Top;
-                    Background: (Color: #1a1a2e);
+                    Background: (Color: #0b1220);
                     Padding: (Full: 15);
 
                     Label {
@@ -91,27 +301,17 @@ public class DigiCuidarMenuUI extends CustomUIPage {
                         Style: (TextColor: #ffcc00, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
                         Anchor: (Height: 24);
                     }
-                    Group {
-                        LayoutMode: Left;
-
-                        Group { FlexWeight: 1; }
-
-                        TextButton #BtnVolver {
-                            Text: "Volver";
-                            Anchor: (Width: 80, Height: 32);
-                            Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
-                        }
+                    TextButton #BtnVolver {
+                        Text: "Volver";
+                        Anchor: (Width: 80, Height: 32);
+                        Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 13, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center)));
                     }
                     Group { Anchor: (Height: 6); }
-                    Label {
-                        Text: "________________________";
-                        Style: (TextColor: #ffcc00, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
+                    Group { Anchor: (Height: 2); Background: (Color: #ffcc00); }
                     Group { Anchor: (Height: 4); }
 
                     Label {
-                        Text: "SELECCIONA UN DIGIMON";
+                        Text: "CUUDA A TU EQUIPO (6)";
                         Style: (TextColor: #00d4ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
                         Anchor: (Height: 18);
                     }
@@ -119,116 +319,289 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                     Group {
                         LayoutMode: Left;
+                        Anchor: (Height: 82);
 
                         Group {
-                            Anchor: (Width: 210, Height: 180);
-                            Background: (Color: #16213e);
+                            Anchor: (Width: 250);
+                            Background: (Color: #141d33);
                             Padding: (Full: 8);
                             LayoutMode: Top;
 
-                            Label {
-                                Text: "COMPANERO A";
-                                Style: (TextColor: #00d4ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center);
-                                Anchor: (Height: 16);
-                            }
-                            Label #NombreA {
-                                Text: "-";
-                                Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                            Label #Cuidar0Name {
+                                Text: "1. -";
+                                Style: (TextColor: #e0e8f0, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
                                 Anchor: (Height: 18);
                             }
-                            Label #NivelA {
-                                Text: "-";
-                                Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                            Label #Cuidar0Info {
+                                Text: "vacio";
+                                Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
                                 Anchor: (Height: 16);
                             }
-                            Label #BarA {
-                                Text: "";
-                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
-                                Anchor: (Height: 14);
-                            }
-
-                            Group { Anchor: (Height: 8); }
-
+                            Group { Anchor: (Height: 4); }
                             Group {
                                 LayoutMode: Left;
+                                Anchor: (Height: 28);
 
-                                TextButton #BtnAlimentarA {
+                                TextButton #BtnAlim0 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 60, Height: 28);
+                                    Anchor: (Width: 70, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
-                                Group { Anchor: (Width: 4); }
+                                Group { Anchor: (Width: 6); }
 
-                                TextButton #BtnDormirA {
+                                TextButton #BtnDorm0 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 60, Height: 28);
+                                    Anchor: (Width: 70, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
-                                Group { Anchor: (Width: 4); }
+                                Group { Anchor: (Width: 6); }
 
-                                TextButton #BtnJugarA {
-                                    Text: "Jugar";
-                                    Anchor: (Width: 60, Height: 28);
+                                TextButton #BtnJugar0 {
+                                    Text: "Pasear";
+                                    Anchor: (Width: 70, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
                         }
 
-                        Group { FlexWeight: 1; }
+                        Group { Anchor: (Width: 8); }
 
                         Group {
-                            Anchor: (Width: 210, Height: 180);
-                            Background: (Color: #16213e);
+                            Anchor: (Width: 250);
+                            Background: (Color: #141d33);
                             Padding: (Full: 8);
                             LayoutMode: Top;
 
-                            Label {
-                                Text: "COMPANERO B";
-                                Style: (TextColor: #ff00ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center);
-                                Anchor: (Height: 16);
-                            }
-                            Label #NombreB {
-                                Text: "-";
-                                Style: (TextColor: #e0e8f0, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                            Label #Cuidar1Name {
+                                Text: "2. -";
+                                Style: (TextColor: #e0e8f0, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
                                 Anchor: (Height: 18);
                             }
-                            Label #NivelB {
-                                Text: "-";
-                                Style: (TextColor: #8899aa, FontSize: 12, HorizontalAlignment: Center);
+                            Label #Cuidar1Info {
+                                Text: "vacio";
+                                Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
                                 Anchor: (Height: 16);
                             }
-                            Label #BarB {
-                                Text: "";
-                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
-                                Anchor: (Height: 14);
-                            }
-
-                            Group { Anchor: (Height: 8); }
-
+                            Group { Anchor: (Height: 4); }
                             Group {
                                 LayoutMode: Left;
+                                Anchor: (Height: 28);
 
-                                TextButton #BtnAlimentarB {
+                                TextButton #BtnAlim1 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 60, Height: 28);
+                                    Anchor: (Width: 70, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
-                                Group { Anchor: (Width: 4); }
+                                Group { Anchor: (Width: 6); }
 
-                                TextButton #BtnDormirB {
+                                TextButton #BtnDorm1 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 60, Height: 28);
+                                    Anchor: (Width: 70, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
-                                Group { Anchor: (Width: 4); }
+                                Group { Anchor: (Width: 6); }
 
-                                TextButton #BtnJugarB {
-                                    Text: "Jugar";
-                                    Anchor: (Width: 60, Height: 28);
+                                TextButton #BtnJugar1 {
+                                    Text: "Pasear";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+                            }
+                        }
+                    }
+                    Group { Anchor: (Height: 6); }
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 82);
+
+                        Group {
+                            Anchor: (Width: 250);
+                            Background: (Color: #141d33);
+                            Padding: (Full: 8);
+                            LayoutMode: Top;
+
+                            Label #Cuidar2Name {
+                                Text: "3. -";
+                                Style: (TextColor: #e0e8f0, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 18);
+                            }
+                            Label #Cuidar2Info {
+                                Text: "vacio";
+                                Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Group { Anchor: (Height: 4); }
+                            Group {
+                                LayoutMode: Left;
+                                Anchor: (Height: 28);
+
+                                TextButton #BtnAlim2 {
+                                    Text: "Alimentar";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnDorm2 {
+                                    Text: "Dormir";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnJugar2 {
+                                    Text: "Pasear";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+                            }
+                        }
+
+                        Group { Anchor: (Width: 8); }
+
+                        Group {
+                            Anchor: (Width: 250);
+                            Background: (Color: #141d33);
+                            Padding: (Full: 8);
+                            LayoutMode: Top;
+
+                            Label #Cuidar3Name {
+                                Text: "4. -";
+                                Style: (TextColor: #e0e8f0, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 18);
+                            }
+                            Label #Cuidar3Info {
+                                Text: "vacio";
+                                Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Group { Anchor: (Height: 4); }
+                            Group {
+                                LayoutMode: Left;
+                                Anchor: (Height: 28);
+
+                                TextButton #BtnAlim3 {
+                                    Text: "Alimentar";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnDorm3 {
+                                    Text: "Dormir";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnJugar3 {
+                                    Text: "Pasear";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+                            }
+                        }
+                    }
+                    Group { Anchor: (Height: 6); }
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 82);
+
+                        Group {
+                            Anchor: (Width: 250);
+                            Background: (Color: #141d33);
+                            Padding: (Full: 8);
+                            LayoutMode: Top;
+
+                            Label #Cuidar4Name {
+                                Text: "5. -";
+                                Style: (TextColor: #e0e8f0, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 18);
+                            }
+                            Label #Cuidar4Info {
+                                Text: "vacio";
+                                Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Group { Anchor: (Height: 4); }
+                            Group {
+                                LayoutMode: Left;
+                                Anchor: (Height: 28);
+
+                                TextButton #BtnAlim4 {
+                                    Text: "Alimentar";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnDorm4 {
+                                    Text: "Dormir";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnJugar4 {
+                                    Text: "Pasear";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+                            }
+                        }
+
+                        Group { Anchor: (Width: 8); }
+
+                        Group {
+                            Anchor: (Width: 250);
+                            Background: (Color: #141d33);
+                            Padding: (Full: 8);
+                            LayoutMode: Top;
+
+                            Label #Cuidar5Name {
+                                Text: "6. -";
+                                Style: (TextColor: #e0e8f0, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
+                                Anchor: (Height: 18);
+                            }
+                            Label #Cuidar5Info {
+                                Text: "vacio";
+                                Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center);
+                                Anchor: (Height: 16);
+                            }
+                            Group { Anchor: (Height: 4); }
+                            Group {
+                                LayoutMode: Left;
+                                Anchor: (Height: 28);
+
+                                TextButton #BtnAlim5 {
+                                    Text: "Alimentar";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnDorm5 {
+                                    Text: "Dormir";
+                                    Anchor: (Width: 70, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnJugar5 {
+                                    Text: "Pasear";
+                                    Anchor: (Width: 70, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
@@ -236,22 +609,18 @@ public class DigiCuidarMenuUI extends CustomUIPage {
                     }
 
                     Group { Anchor: (Height: 8); }
-                    Label {
-                        Text: "________________________";
-                        Style: (TextColor: #ff00ff, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
+                    Group { Anchor: (Height: 2); Background: (Color: #ff00ff); }
                     Group { Anchor: (Height: 4); }
 
                     Label {
-                        Text: "INFORMACION DE CRIANZA";
+                        Text: "ULTIMA ACCION";
                         Style: (TextColor: #ff00ff, FontSize: 13, RenderBold: true, HorizontalAlignment: Center);
                         Anchor: (Height: 18);
                     }
                     Label #LblInfo {
                         Text: "-";
                         Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
-                        Anchor: (Height: 60);
+                        Anchor: (Height: 40);
                     }
                 }
             }
@@ -272,37 +641,122 @@ public class DigiCuidarMenuUI extends CustomUIPage {
         AlmacenJugadores.DatosJugador datos = AlmacenJugadores.getDatos(playerRef.getUuid());
         if (datos == null) return;
 
-        String slot = json.has("slot") ? json.get("slot").getAsString() : "A";
-        DatoDigimon digimon = "A".equals(slot) ? datos.companeroA : datos.companeroB;
+        int slot = parseSlot(json);
+        DatoDigimon digimon = datos.getSlot(slot);
 
         switch (action) {
             case "alimentar" -> {
-                if (digimon != null) {
-                    digimon.alimentar(20);
-                    LOGGER.log(Level.INFO, slot + " alimentado: hambre=" + digimon.hambre + ", energia=" + digimon.energia);
+                if (digimon != null && digimon.dormido) {
+                    // Regla: dormido no come.
+                    UICommandBuilder cmd = new UICommandBuilder();
+                    cmd.set("#LblInfo.Text", digimon.nombre + " duerme (Zzz). Despiertalo para alimentarlo.");
+                    actualizarEstado(cmd, store);
+                    sendUpdate(cmd);
+                } else if (digimon != null) {
+                    java.util.List<ComidaEntry> comidas = listarComidas(ref, store);
+                    if (comidas.isEmpty()) {
+                        UICommandBuilder cmd = new UICommandBuilder();
+                        cmd.set("#LblInfo.Text", "Sin comida en la mochila para " + digimon.nombre + ".");
+                        actualizarEstado(cmd, store);
+                        sendUpdate(cmd);
+                    } else {
+                        slotComida = slot;
+                        rebuild();
+                    }
+                } else {
+                    UICommandBuilder cmd = new UICommandBuilder();
+                    actualizarEstado(cmd, store);
+                    sendUpdate(cmd);
                 }
-                actualizarEstado(new UICommandBuilder(), store);
+            }
+            case "dar_comida" -> {
+                int cual = -1;
+                try {
+                    cual = Integer.parseInt(json.has("value") ? json.get("value").getAsString() : "-1");
+                } catch (NumberFormatException ignored) {
+                }
+                java.util.List<ComidaEntry> comidas = listarComidas(ref, store);
+                DatoDigimon hambriento = (datos != null) ? datos.getSlot(slotComida) : null;
+                if (hambriento != null && cual >= 0 && cual < comidas.size()) {
+                    ComidaEntry ce = comidas.get(cual);
+                    boolean gastado = gastarComida(ref, store, ce);
+                    // Sobre-alimentar a tope 3 veces seguidas = Burpmon (reinicio).
+                    if (hambriento.hambre >= 100) {
+                        hambriento.vecesLleno++;
+                    } else {
+                        hambriento.vecesLleno = 0;
+                    }
+                    if (hambriento.vecesLleno >= 3) {
+                        String antes = hambriento.nombre;
+                        DatoDigimon burp = DatoDigimon.crearInicial("Burpmon");
+                        burp.nombre = "Burpmon";
+                        datos.setSlot(slotComida, burp);
+                        guardarProgreso(ref, store, datos);
+                        msgPendiente = "¡" + antes + " comio demasiado y se volvio Burpmon! (reinicio)"
+                            + (gastado ? "" : " [no se pudo gastar]");
+                    } else {
+                        hambriento.comer(ce.h, ce.e, ce.hpPct);
+                        guardarProgreso(ref, store, datos);
+                        msgPendiente = hambriento.nombre + " comio " + ce.nombre
+                            + " (H+" + ce.h + " E+" + ce.e + ")" + (gastado ? "" : " [no se pudo gastar]");
+                    }
+                } else {
+                    msgPendiente = "No se pudo dar de comer.";
+                }
+                slotComida = -1;
+                rebuild();
+            }
+            case "comida_volver" -> {
+                slotComida = -1;
+                rebuild();
             }
             case "dormir" -> {
+                UICommandBuilder cmd = new UICommandBuilder();
                 if (digimon != null) {
-                    digimon.descansar();
-                    LOGGER.log(Level.INFO, slot + " durmiendo: energia=" + digimon.energia + ", hp=" + digimon.hp);
+                    if (digimon.dormido) {
+                        double frac = digimon.despertar();
+                        int pct = (int) Math.round(frac * 100);
+                        LOGGER.log(Level.INFO, slot + " despertado (" + pct + "%): hp=" + digimon.hp + ", hambre=" + digimon.hambre);
+                        cmd.set("#LblInfo.Text", digimon.nombre + " desperto (" + pct + "%): HP " + digimon.hp + "/" + digimon.maxHp + " EN " + digimon.energia + " (5min=full).");
+                    } else if (!digimon.puedeDormir()) {
+                        cmd.set("#LblInfo.Text", digimon.nombre + " tiene hambre (H:" + digimon.hambre + "). Alimentalo antes de dormir.");
+                    } else {
+                        digimon.dormir();
+                        LOGGER.log(Level.INFO, slot + " a dormir.");
+                        cmd.set("#LblInfo.Text", digimon.nombre + " a dormir (Zzz). La cura depende del tiempo (5 min = full).");
+                    }
+                    guardarProgreso(ref, store, datos);
                 }
-                actualizarEstado(new UICommandBuilder(), store);
+                actualizarEstado(cmd, store);
+                sendUpdate(cmd);
             }
             case "jugar" -> {
+                UICommandBuilder cmd = new UICommandBuilder();
                 if (digimon != null) {
-                    digimon.interactuar();
-                    digimon.energia = Math.min(100, digimon.energia + 5);
-                    LOGGER.log(Level.INFO, slot + " jugando: lazo=" + digimon.lazo + ", energia=" + digimon.energia);
+                    // Jugar = sacarlo a pasear (toggle). Pasear juntos sube el lazo.
+                    String msg = SistemaPaseo.alternarPaseo(playerRef, ref, store, slot);
+                    guardarProgreso(ref, store, datos);
+                    cmd.set("#LblInfo.Text", msg != null
+                        ? msg + " (Lazo " + digimon.lazo + "/100)"
+                        : digimon.nombre + " (Lazo " + digimon.lazo + "/100)");
                 }
-                actualizarEstado(new UICommandBuilder(), store);
+                actualizarEstado(cmd, store);
+                sendUpdate(cmd);
             }
-            case "volver" -> {
-                player.getPageManager().setPage(ref, store,
-                    com.hypixel.hytale.protocol.packets.interface_.Page.None);
-                SapotamaTabUI.open(playerRef, ref, store);
+            case "volver" -> SapotamaTabUI.open(playerRef, ref, store);
+            default -> {
+                UICommandBuilder cmd = new UICommandBuilder();
+                sendUpdate(cmd);
             }
+        }
+    }
+
+    private static int parseSlot(JsonObject json) {
+        try {
+            int i = json.has("slot") ? Integer.parseInt(json.get("slot").getAsString()) : 0;
+            return AlmacenJugadores.DatosJugador.slotValido(i) ? i : 0;
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 
@@ -310,33 +764,53 @@ public class DigiCuidarMenuUI extends CustomUIPage {
         AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
         if (d == null) return;
 
-        // Slot A
-        if (d.companeroA != null) {
-            cmd.set("#NombreA.Text", d.companeroA.nombre);
-            cmd.set("#NivelA.Text", d.companeroA.especie + " - Nivel " + d.companeroA.nivel);
-            int filled = d.companeroA.maxHp > 0 ? (d.companeroA.hp * 20 / d.companeroA.maxHp) : 0;
-            cmd.set("#BarA.Text", "=".repeat(Math.max(0, filled)) + " ".repeat(Math.max(0, 20 - filled)));
-
-            String estadoA = String.format(
-                "Hambre:%d/100 Energia:%d/100 Lazo:%d/100 HP:%d/%d",
-                d.companeroA.hambre, d.companeroA.energia, d.companeroA.lazo, d.companeroA.hp, d.companeroA.maxHp);
-            cmd.set("#LblInfo.Text", estadoA);
-        } else {
-            cmd.set("#NombreA.Text", "-");
-            cmd.set("#NivelA.Text", "-");
-            cmd.set("#BarA.Text", "");
+        if (!msgPendiente.isEmpty()) {
+            cmd.set("#LblInfo.Text", msgPendiente);
+            msgPendiente = "";
         }
+        for (int i = 0; i < AlmacenJugadores.DatosJugador.MAX_EQUIPO; i++) {
+            DatoDigimon digi = d.getSlot(i);
+            boolean ocupado = digi != null;
+            if (ocupado) {
+                String marca = d.esActivo(i) ? (i == d.activoA ? " [A]" : " [B]") : "";
+                if (digi.dormido) marca += " [Zzz]";
+                if (d.paseoEn(i)) marca += " (paseando)";
+                cmd.set("#Cuidar" + i + "Name.Text", (i + 1) + ". " + digi.nombre + marca);
+                cmd.set("#Cuidar" + i + "Info.Text",
+                    "H:" + digi.hambre + " E:" + digi.energia + " L:" + digi.lazo + " HP:" + digi.hp + "/" + digi.maxHp);
+                cmd.set("#BtnDorm" + i + ".Text", digi.dormido ? "Despert." : "Dormir");
+            } else {
+                cmd.set("#Cuidar" + i + "Name.Text", (i + 1) + ". -");
+                cmd.set("#Cuidar" + i + "Info.Text", "vacio");
+            }
+            // Solo aparecen acciones en los slots cargados; dormido no come.
+            cmd.set("#BtnAlim" + i + ".Visible", ocupado && !digi.dormido);
+            cmd.set("#BtnDorm" + i + ".Visible", ocupado);
+            cmd.set("#BtnJugar" + i + ".Visible", ocupado);
+        }
+    }
 
-        // Slot B
-        if (d.companeroB != null) {
-            cmd.set("#NombreB.Text", d.companeroB.nombre);
-            cmd.set("#NivelB.Text", d.companeroB.especie + " - Nivel " + d.companeroB.nivel);
-            int filled = d.companeroB.maxHp > 0 ? (d.companeroB.hp * 20 / d.companeroB.maxHp) : 0;
-            cmd.set("#BarB.Text", "=".repeat(Math.max(0, filled)) + " ".repeat(Math.max(0, 20 - filled)));
-        } else {
-            cmd.set("#NombreB.Text", "-");
-            cmd.set("#NivelB.Text", "-");
-            cmd.set("#BarB.Text", "");
+    /** Gasta 1 unidad de la comida indicada. Retorna false si no pudo. */
+    private static boolean gastarComida(Ref<EntityStore> ref, Store<EntityStore> store, ComidaEntry ce) {
+        try {
+            com.hypixel.hytale.server.core.inventory.container.ItemContainer cont =
+                com.hypixel.hytale.server.core.inventory.InventoryUtils.getSectionById(ref, ce.seccion, store);
+            if (cont == null) return false;
+            cont.removeItemStackFromSlot(ce.slot, 1);
+            return true;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "gastarComida: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private void guardarProgreso(Ref<EntityStore> ref, Store<EntityStore> store,
+                                 AlmacenJugadores.DatosJugador datos) {
+        try {
+            PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, ref);
+            if (progress != null) progress.guardarDesde(datos);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "No se pudo guardar progreso de crianza: " + e.getMessage());
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.digitale.comandos;
 
 import com.digitale.sistema.MountMovementSupport;
+import com.digitale.util.DigiMsg;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -33,8 +34,8 @@ public class DigiMountModeComando extends AbstractPlayerCommand {
 
         if (input.isEmpty()) {
             MountMovementSupport.MountMode current = MountMovementSupport.getMode(uuid);
-            ctx.sendMessage(Message.raw("§bModo actual de montura: §f" + current));
-            ctx.sendMessage(Message.raw("§7Uso: §f/digi_mountmode <default|auto|fly|swim>"));
+            ctx.sendMessage(DigiMsg.parse("§bModo actual de montura: §f" + current));
+            ctx.sendMessage(DigiMsg.parse("§7Uso: §f/digi_mountmode <default|auto|fly|swim>"));
             return;
         }
 
@@ -47,7 +48,7 @@ public class DigiMountModeComando extends AbstractPlayerCommand {
         };
 
         if (mode == null) {
-            ctx.sendMessage(Message.raw("§cModo invalido. Usa: §edefault§c, §eauto§c, §efly§c o §eswim§c."));
+            ctx.sendMessage(DigiMsg.parse("§cModo invalido. Usa: §edefault§c, §eauto§c, §efly§c o §eswim§c."));
             return;
         }
 
@@ -57,7 +58,7 @@ public class DigiMountModeComando extends AbstractPlayerCommand {
             MountMovementSupport.restoreOriginalIfNeeded(playerRef, ref, store, uuid);
         }
 
-        ctx.sendMessage(Message.raw("§aModo de montura cambiado a §f" + mode + "§a."));
-        ctx.sendMessage(Message.raw("§7Tip: se aplica cuando estes montado en un Digimon."));
+        ctx.sendMessage(DigiMsg.parse("§aModo de montura cambiado a §f" + mode + "§a."));
+        ctx.sendMessage(DigiMsg.parse("§7Tip: se aplica cuando estes montado en un Digimon."));
     }
 }

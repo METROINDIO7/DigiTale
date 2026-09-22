@@ -1,4 +1,5 @@
 {
+  "Id": "DigiTale_Bebes_Zona3_Frio",
   "Environments": [
     "Env_Zone3_Tundra",
     "Env_Zone3_Forests",
@@ -6,97 +7,24 @@
   ],
   "NPCs": [
     {
-      "Weight": 28,
-      "SpawnBlockSet": "Soil",
-      "Id": "Poyomon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
-      "Weight": 28,
-      "SpawnBlockSet": "Soil",
-      "Id": "Pichimon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
-      "Weight": 24,
-      "SpawnBlockSet": "Soil",
-      "Id": "Pabumon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
-      "Weight": 24,
-      "SpawnBlockSet": "Soil",
-      "Id": "Paomon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
-      "Weight": 22,
-      "SpawnBlockSet": "Soil",
-      "Id": "Pusumon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
-      "Weight": 22,
-      "SpawnBlockSet": "Soil",
-      "Id": "Chibomon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
-      "Weight": 22,
-      "SpawnBlockSet": "Rock_Ice",
-      "Id": "Cotsucomon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
-      "Weight": 22,
-      "SpawnBlockSet": "IceAndSnow",
-      "Id": "Petitmon_Salvaje",
-      "Flock": {
-        "Size": [
-          1,
-          2
-        ]
-      }
-    },
-    {
       "Weight": 30,
-      "SpawnBlockSet": "IceAndSnow",
-      "Id": "Yukimibotamon_Salvaje"
+      "Id": "YukimiBotamon_Salvaje"
+    },
+    {
+      "Weight": 26,
+      "Id": "Pichimon_Salvaje"
+    },
+    {
+      "Weight": 24,
+      "Id": "Nyokimon_Salvaje"
+    },
+    {
+      "Weight": 20,
+      "Id": "Kuramon_Salvaje"
+    },
+    {
+      "Weight": 4,
+      "Id": "Digitama_NPC_Morado"
     }
   ],
   "DayTimeRange": [

@@ -131,4 +131,30 @@ public class EnemigoCombate {
             default -> 1.0;
         };
     }
+
+    /** Elementos conocidos por la tabla (orden canónico para mostrar). */
+    public static final String[] ELEMENTOS = {
+        "FUEGO", "AGUA", "NATURALEZA", "HIELO", "TRUENO",
+        "VIENTO", "LUZ", "OSCURIDAD", "TIERRA", "NEUTRO"
+    };
+
+    /** Elementos a los que 'elem' pega fuerte (x1.5). */
+    public static java.util.List<String> fuerteContra(String elem) {
+        java.util.List<String> out = new java.util.ArrayList<>();
+        if (elem == null) return out;
+        for (String otro : ELEMENTOS) {
+            if (multElemental(elem, otro) > 1.0) out.add(otro);
+        }
+        return out;
+    }
+
+    /** Elementos que pegan fuerte a 'elem' (recibe x1.5). */
+    public static java.util.List<String> debilContra(String elem) {
+        java.util.List<String> out = new java.util.ArrayList<>();
+        if (elem == null) return out;
+        for (String otro : ELEMENTOS) {
+            if (multElemental(otro, elem) > 1.0) out.add(otro);
+        }
+        return out;
+    }
 }

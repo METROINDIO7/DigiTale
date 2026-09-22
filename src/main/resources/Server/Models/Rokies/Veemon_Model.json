@@ -91,6 +91,13 @@
           "Speed": 0.6
         }
       ]
+    },
+    "Laydown": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Feran/Animations/Default/Idle.blockyanim"
+        }
+      ]
     }
   },
   "MinScale": 0.85,

@@ -1,7 +1,7 @@
 {
   "Type": "Abstract",
   "StartState": "Idle",
-  "$Comment": "AGRESIVO VOLADOR (Aéreo): Patrulla volando, detecta al jugador y ataca en picada. CON FRENADO antes de atacar. Digimon territorial aéreo.",
+  "$Comment": "AGRESIVO VOLADOR (A\u00e9reo): Patrulla volando, detecta al jugador y ataca en picada. CON FRENADO antes de atacar. Digimon territorial a\u00e9reo.",
   "Parameters": {
     "Appearance": {
       "Value": "Hawkmon",
@@ -9,7 +9,7 @@
     },
     "WanderRadius": {
       "Value": 12,
-      "Description": "Radio de patrulla aérea"
+      "Description": "Radio de patrulla a\u00e9rea"
     },
     "MinHeightOverGround": {
       "Value": 8,
@@ -33,7 +33,7 @@
     },
     "AbsoluteDetectionRange": {
       "Value": 4,
-      "Description": "Rango garantizado de detección"
+      "Description": "Rango garantizado de detecci\u00f3n"
     },
     "AlertedRange": {
       "Value": 35,
@@ -303,7 +303,7 @@
     "Melee_Damage": {
       "Interactions": [
         {
-          "$Comment": "Digimon agresivo volador — poco dano fisico, ataque en picada",
+          "$Comment": "Digimon agresivo volador \u2014 poco dano fisico, ataque en picada",
           "Parent": "NPC_Attack_Melee_Damage",
           "DamageCalculator": {
             "Type": "Absolute",
@@ -312,6 +312,22 @@
             },
             "RandomPercentageModifier": 0.15
           }
+        }
+      ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
         }
       ]
     }
@@ -1090,9 +1106,6 @@
                 },
                 "TargetRange": {
                   "Compute": "TargetRange"
-                },
-                "NextTargetRange": {
-                  "Compute": "max(ViewRange, HearingRange)"
                 }
               }
             },

@@ -2,7 +2,7 @@
   "Type": "Abstract",
   "KnockbackScale": 0.5,
   "StartState": "Idle",
-  "$Comment": "NADADOR AGRESIVO (Acuático): Patrulla, detecta al jugador y ataca. Basado en Template_Swimming_Aggressive nativo. Update 3 compatible.",
+  "$Comment": "NADADOR AGRESIVO (Acu\u00e1tico): Patrulla, detecta al jugador y ataca. Basado en Template_Swimming_Aggressive nativo. Update 3 compatible.",
   "Parameters": {
     "Appearance": {
       "Value": "Shark_Hammerhead",
@@ -150,6 +150,22 @@
             },
             "RandomPercentageModifier": 0.15
           }
+        }
+      ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
         }
       ]
     }

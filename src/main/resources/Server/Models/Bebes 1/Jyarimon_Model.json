@@ -91,6 +91,13 @@
           "Looping": false
         }
       ]
+    },
+    "Laydown": {
+      "Animations": [
+        {
+          "Animation": "NPC/Livestock/Rabbit/Animations/Default/Idle.blockyanim"
+        }
+      ]
     }
   },
   "MinScale": 1.55,

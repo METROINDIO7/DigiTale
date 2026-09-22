@@ -1,0 +1,29 @@
+{
+  "Model": "NPC/Models/Digitama/Digitama.blockymodel",
+  "HitBox": {
+    "Max": {
+      "X": 0.2,
+      "Y": 0.4,
+      "Z": 0.2
+    },
+    "Min": {
+      "X": -0.2,
+      "Y": 0.0,
+      "Z": -0.2
+    }
+  },
+  "MinScale": 2,
+  "MaxScale": 3,
+  "Trails": [],
+  "Texture": "NPC/Textures/Digitama/Digitama_Rosa.png",
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Digitama/Idle.blockyanim",
+          "Looping": true
+        }
+      ]
+    }
+  }
+}

@@ -1,4 +1,5 @@
 {
+  "Id": "DigiTale_Bebes_Zona2_Desierto",
   "Environments": [
     "Env_Zone2_Deserts",
     "Env_Zone2_Savanna",
@@ -7,35 +8,24 @@
   ],
   "NPCs": [
     {
-      "Weight": 35,
-      "SpawnBlockSet": "Soil",
-      "Id": "Jyarimon_Salvaje",
-      "Flock": { "Size": [1, 2] }
-    },
-    {
-      "Weight": 32,
-      "SpawnBlockSet": "Soil",
-      "Id": "Choromon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Weight": 30,
+      "Id": "Jyarimon_Salvaje"
     },
     {
       "Weight": 28,
-      "SpawnBlockSet": "Soil",
-      "Id": "Sunamon_Salvaje",
-      "Flock": { "Size": [1, 2] }
+      "Id": "Kuramon_Salvaje"
     },
     {
-      "Weight": 14,
-      "SpawnBlockSet": "Soil",
-      "Id": "Bombmon_Salvaje",
-      "Flock": { "Size": [1, 1] }
+      "Weight": 24,
+      "Id": "Pichimon_Salvaje"
     },
     {
-      "Weight": 14,
-      "SpawnBlockSet": "Soil",
-      "Id": "Zerimon_Salvaje",
-      "Flock": { "Size": [1, 1] }
+      "Weight": 4,
+      "Id": "Digitama_NPC_Rojo"
     }
   ],
-  "DayTimeRange": [6, 20]
+  "DayTimeRange": [
+    6,
+    20
+  ]
 }

@@ -5,15 +5,15 @@
   "Parameters": {
     "Appearance": {
       "Value": "Devimon",
-      "Description": "Modelo del Digimon nocturno — cambiar segun el Digimon"
+      "Description": "Modelo del Digimon nocturno \u2014 cambiar segun el Digimon"
     },
     "MaxHealth": {
       "Value": 90,
-      "Description": "Salud — nivel Adulto/Perfecto"
+      "Description": "Salud \u2014 nivel Adulto/Perfecto"
     },
     "MaxSpeed": {
       "Value": 7,
-      "Description": "Velocidad maxima — rapido para un predador nocturno"
+      "Description": "Velocidad maxima \u2014 rapido para un predador nocturno"
     },
     "RunThreshold": {
       "Value": 0.35,
@@ -32,11 +32,11 @@
         6.01,
         17.99
       ],
-      "Description": "Rango horario de dia — durante este periodo el Digimon DUERME"
+      "Description": "Rango horario de dia \u2014 durante este periodo el Digimon DUERME"
     },
     "NightViewRange": {
       "Value": 22,
-      "Description": "Vision nocturna mejorada — detecta mas lejos en la oscuridad"
+      "Description": "Vision nocturna mejorada \u2014 detecta mas lejos en la oscuridad"
     },
     "NightViewSector": {
       "Value": 160,
@@ -59,7 +59,7 @@
         1,
         2
       ],
-      "Description": "Tiempo de amenaza antes de atacar — los nocturnos son mas impulsivos"
+      "Description": "Tiempo de amenaza antes de atacar \u2014 los nocturnos son mas impulsivos"
     },
     "AttackDistance": {
       "Value": 2,
@@ -74,14 +74,14 @@
         1.0,
         1.8
       ],
-      "Description": "Pausa entre ataques — nocturno ataca frecuentemente"
+      "Description": "Pausa entre ataques \u2014 nocturno ataca frecuentemente"
     },
     "CombatAttackPreDelay": {
       "Value": [
         0.2,
         0.3
       ],
-      "Description": "Retraso antes del ataque — rapido en la oscuridad"
+      "Description": "Retraso antes del ataque \u2014 rapido en la oscuridad"
     },
     "CombatAttackPostDelay": {
       "Value": [
@@ -138,7 +138,7 @@
     },
     "LeashDistance": {
       "Value": 20,
-      "Description": "Radio de leash — los nocturnos defienden territorios amplios"
+      "Description": "Radio de leash \u2014 los nocturnos defienden territorios amplios"
     },
     "LeashMinPlayerDistance": {
       "Value": 3,
@@ -195,7 +195,7 @@
     },
     "ChanceToBeAlertedWhenFlockAlerted": {
       "Value": 85,
-      "Description": "Alta probabilidad de unirse cuando su grupo ataca — cazan en manada de noche"
+      "Description": "Alta probabilidad de unirse cuando su grupo ataca \u2014 cazan en manada de noche"
     },
     "DropList": {
       "Value": "Empty",
@@ -284,7 +284,7 @@
     "Melee_Damage": {
       "Interactions": [
         {
-          "$Comment": "Nocturno — dano medio-alto, peligroso de noche",
+          "$Comment": "Nocturno \u2014 dano medio-alto, peligroso de noche",
           "Parent": "NPC_Attack_Melee_Damage",
           "DamageCalculator": {
             "Type": "Absolute",
@@ -293,6 +293,22 @@
             },
             "RandomPercentageModifier": 0.15
           }
+        }
+      ]
+    },
+    "Melee_Start": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
+        }
+      ]
+    },
+    "Melee_End": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.1
         }
       ]
     }
@@ -482,7 +498,7 @@
               ]
             },
             {
-              "$Comment": "CRITICO: Si es de dia, ir a dormir inmediatamente — son nocturnos",
+              "$Comment": "CRITICO: Si es de dia, ir a dormir inmediatamente \u2014 son nocturnos",
               "Sensor": {
                 "Type": "Time",
                 "Period": {
@@ -612,7 +628,7 @@
               ]
             },
             {
-              "$Comment": "Deambulacion nocturna — mas activo, mas rapido que diurno",
+              "$Comment": "Deambulacion nocturna \u2014 mas activo, mas rapido que diurno",
               "BodyMotion": {
                 "Type": "Sequence",
                 "Looped": true,
@@ -705,7 +721,7 @@
               ]
             },
             {
-              "$Comment": "CRITICO: Se despierta cuando ya NO es de dia — es decir, cuando llega la noche",
+              "$Comment": "CRITICO: Se despierta cuando ya NO es de dia \u2014 es decir, cuando llega la noche",
               "Sensor": {
                 "Type": "Not",
                 "Sensor": {
@@ -732,7 +748,7 @@
           ]
         },
         {
-          "$Comment": "ALERTED de noche: tiempo de amenaza MUY corto — ataca casi de inmediato",
+          "$Comment": "ALERTED de noche: tiempo de amenaza MUY corto \u2014 ataca casi de inmediato",
           "Sensor": {
             "Type": "State",
             "State": "Alerted"
@@ -1005,9 +1021,6 @@
                 },
                 "TargetRange": {
                   "Compute": "TargetRange"
-                },
-                "NextTargetRange": {
-                  "Compute": "max(NightViewRange, NightHearingRange)"
                 }
               }
             },

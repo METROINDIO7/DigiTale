@@ -5,28 +5,45 @@
   ],
   "MinDistanceFromPlayer": 12,
   "MaxSpawnedNPCs": 4,
-  "ConcurrentSpawnsRange": [1, 2],
-  "SpawnAfterGameTimeRange": ["PT15M", "PT45M"],
+  "ConcurrentSpawnsRange": [
+    1,
+    2
+  ],
   "NPCIdleDespawnTime": 120,
   "BeaconVacantDespawnGameTime": "PT20M",
   "BeaconRadius": 70,
   "SpawnRadius": 50,
   "TargetDistanceFromPlayer": 20,
   "NPCs": [
-    { "Weight": 30, "Id": "Botamon_Salvaje" },
-    { "Weight": 28, "Id": "Nyokimon_Salvaje" },
-    { "Weight": 26, "Id": "Tsubumon_Salvaje" },
-    { "Weight": 24, "Id": "Fufumon_Salvaje" },
-    { "Weight": 22, "Id": "Kiimon_Salvaje" },
-    { "Weight": 22, "Id": "Datirimon_Salvaje" },
-    { "Weight": 22, "Id": "Pafumon_Salvaje" },
-    { "Weight": 22, "Id": "Pupumon_Salvaje" },
-    { "Weight": 22, "Id": "Puttimon_Salvaje" },
-    { "Weight": 22, "Id": "Puwamon_Salvaje" },
-    { "Weight": 20, "Id": "Pyonmon_Salvaje" },
-    { "Weight": 8,  "Id": "Chibickmon_Salvaje" }
+    {
+      "Weight": 28,
+      "Id": "Botamon_Salvaje"
+    },
+    {
+      "Weight": 26,
+      "Id": "Punimon_Salvaje"
+    },
+    {
+      "Weight": 24,
+      "Id": "Kuramon_Salvaje"
+    },
+    {
+      "Weight": 22,
+      "Id": "Nyokimon_Salvaje"
+    },
+    {
+      "Weight": 4,
+      "Id": "Digitama_NPC_Naranja"
+    }
   ],
   "LightRanges": {
-    "Light": [5, 15]
-  }
+    "Light": [
+      5,
+      15
+    ]
+  },
+  "SpawnAfterRealTimeRange": [
+    "PT20S",
+    "PT60S"
+  ]
 }
