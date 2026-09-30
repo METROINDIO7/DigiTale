@@ -91,8 +91,9 @@ public class DigiIncubarComando extends AbstractPlayerCommand {
             return;
         }
         guardar(store, ref, datos);
-        ctx.sendMessage(DigiMsg.parse("§a> Eclosiono " + def.nombre + ": §f" + datos.getSlot(slot).nombre
-            + " §8(" + def.especie + " Nv" + def.nivelRes + ") §aen slot " + (slot + 1) + "."));
+        com.digitale.datos.DatoDigimon nacido = datos.getSlot(slot);
+        ctx.sendMessage(DigiMsg.parse("§a> Eclosiono " + def.nombre + ": §f" + (nacido != null ? nacido.nombre : "?")
+            + " §8(" + (nacido != null ? nacido.especie : "?") + ") §aen slot " + (slot + 1) + "."));
     }
 
     private void nacer(CommandContext ctx, Store<EntityStore> store, Ref<EntityStore> ref,

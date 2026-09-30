@@ -1,0 +1,233 @@
+{
+  "DisplayNameKey": "server.barter.criador_digitama_dragon.title",
+  "RefreshInterval": {
+    "Days": 2
+  },
+  "RestockHour": 8,
+  "TradeSlots": [
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Bebydomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Bebydomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Botamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Botamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Budmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Budmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Frimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Frimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Gurimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Gurimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Jyarimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Jyarimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Kapurimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Kapurimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Koromon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Koromon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Mococomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Mococomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Motimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Motimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Pickmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Pickmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_TorikaraBallmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_TorikaraBallmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Upamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Upamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Yaamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Yaamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    }
+  ]
+}

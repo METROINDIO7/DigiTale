@@ -1,0 +1,41 @@
+{
+  "Environments": [
+    "Env_Zone1_Forests",
+    "Env_Zone1_Caves_Forests"
+  ],
+  "MinDistanceFromPlayer": 18,
+  "MaxSpawnedNPCs": 2,
+  "ConcurrentSpawnsRange": [
+    1,
+    1
+  ],
+  "NPCIdleDespawnTime": 180,
+  "BeaconVacantDespawnGameTime": "PT20M",
+  "BeaconRadius": 80,
+  "SpawnRadius": 60,
+  "TargetDistanceFromPlayer": 25,
+  "NPCs": [
+    {
+      "Weight": 14,
+      "Id": "Gatomon_Salvaje"
+    },
+    {
+      "Weight": 14,
+      "Id": "BlackGatomon_Salvaje"
+    },
+    {
+      "Weight": 2,
+      "Id": "Gatomon_XAntibody_Salvaje"
+    }
+  ],
+  "LightRanges": {
+    "Light": [
+      0,
+      12
+    ]
+  },
+  "SpawnAfterRealTimeRange": [
+    "PT60S",
+    "PT120S"
+  ]
+}

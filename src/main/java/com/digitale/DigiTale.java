@@ -6,8 +6,10 @@ import com.digitale.componentes.PetProgressComponent;
 import com.digitale.datos.AlmacenJugadores;
 import com.digitale.item.DigiMountInputFilter;
 import com.digitale.item.BattleInputFilter;
+import com.digitale.item.DigiMesaProcesaInteraction;
+import com.digitale.item.DigiHuevoIncubandoInteraction;
+import com.digitale.item.DigiPcBaseInteraction;
 import com.digitale.item.DigiRecetaInteraction;
-import com.digitale.ui.DigiMesaUI;
 import com.digitale.item.SapotamaHitInteraction;
 import com.digitale.item.SapotamaMenuInteraction;
 import com.digitale.util.DigiMsg;
@@ -18,8 +20,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
-import com.hypixel.hytale.server.core.event.events.ecs.UseBlockEvent;
-import com.hypixel.hytale.server.core.event.events.entity.LivingEntityUseBlockEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
@@ -37,10 +37,8 @@ import java.util.logging.Level;
 
 public class DigiTale extends JavaPlugin {
 
-    private PacketFilter sapotamaFilter;
     private PacketFilter battleFilter;
     private PacketFilter mountSupportFilter;
-    private ComponentType<EntityStore, PetProgressComponent> petProgressType;
 
     // Cache de Ref<EntityStore> por UUID para usarlo al desconectar
     private static final ConcurrentHashMap<UUID, Ref<EntityStore>> storeRefCache = new ConcurrentHashMap<>();
@@ -50,9 +48,10 @@ public class DigiTale extends JavaPlugin {
     @Override
     protected void setup() {
         super.setup();
-        this.petProgressType = this.getEntityStoreRegistry().registerComponent(
+        ComponentType<EntityStore, PetProgressComponent> petProgressType =
+            this.getEntityStoreRegistry().registerComponent(
                 PetProgressComponent.class, "PetProgressComponent", PetProgressComponent.CODEC);
-        ComponentRegistry.registerPetProgressType(this.petProgressType);
+        ComponentRegistry.registerPetProgressType(petProgressType);
         // Interacción custom del Sapotama (clic derecho / F → abre /digi_menu).
         this.getCodecRegistry(Interaction.CODEC).register(
             "DigiTale_Sapotama_Menu", SapotamaMenuInteraction.class, SapotamaMenuInteraction.CODEC);
@@ -62,9 +61,26 @@ public class DigiTale extends JavaPlugin {
         // Examinar Dato Incubación (revela receta del bebé).
         this.getCodecRegistry(Interaction.CODEC).register(
             "DigiTale_Dato_Receta", DigiRecetaInteraction.class, DigiRecetaInteraction.CODEC);
-        // NOTA: el filtro de paquetes del Sapotama queda desactivado; el menú lo abre
-        // la interacción custom. El filtro se reutilizará para detectar golpes (PvP/salvajes).
-        // sapotamaFilter = PacketAdapters.registerInbound(new SapotamaInputFilter());
+        // Recetas de incubación editables (Server/Crianza/Recetas.json).
+        try (java.io.InputStream in = getClass().getResourceAsStream("/Server/Crianza/Recetas.json")) {
+            if (in != null) {
+                int n = com.digitale.crianza.SistemaIncubacion.cargarDesdeJson(in);
+                getLogger().at(Level.INFO).log("DigiTale recetas de incubacion: " + n);
+            }
+        } catch (Exception e) {
+            getLogger().at(Level.WARNING).log("No se pudieron cargar recetas: " + e.getMessage());
+        }
+        // Procesar la Mesa de Crianza (bench nativo): combina inputs del bench.
+        this.getCodecRegistry(Interaction.CODEC).register(
+            "DigiTale_Mesa_Procesa", DigiMesaProcesaInteraction.class, DigiMesaProcesaInteraction.CODEC);
+        // Usar Huevo Incubando (token): abre reclamo si hay crias listas.
+        this.getCodecRegistry(Interaction.CODEC).register(
+            "DigiTale_Huevo_Incubando", DigiHuevoIncubandoInteraction.class, DigiHuevoIncubandoInteraction.CODEC);
+        // PC Digital (base): abre el banco.
+        this.getCodecRegistry(Interaction.CODEC).register(
+            "DigiTale_PC_Base", DigiPcBaseInteraction.class, DigiPcBaseInteraction.CODEC);
+        // Bebe recien eclosionado (item) -> unir al equipo con clic.
+
         // Input del menú de combate por teclado (WASD/espacio/Q, congela al moverse).
         battleFilter = PacketAdapters.registerInbound(new BattleInputFilter());
         mountSupportFilter = PacketAdapters.registerInbound(new DigiMountInputFilter());
@@ -76,6 +92,8 @@ public class DigiTale extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new DigiStartComando("digi_start", "Elige companeros (comando rapido)"));
         this.getCommandRegistry().registerCommand(new DigiStatusComando("digi_status", "Ver estado del equipo (comando rapido)"));
         this.getCommandRegistry().registerCommand(new DigiMountModeComando("digi_mountmode", "Control de montura: default/auto/fly/swim"));
+        this.getCommandRegistry().registerCommand(new DigiGridTestComando("digi_gridtest", "TEST: ItemGrid con arrastre"));
+        this.getCommandRegistry().registerCommand(new DigiCamComando("digi_cam", "TEST: camara fija [dist] [lock] [cursor]"));
 
         // ===== Comando de reinicio =====
         this.getCommandRegistry().registerCommand(new DigiResetComando("digi_reset", "Reinicia tu equipo borrando todos los digimons"));
@@ -90,61 +108,15 @@ public class DigiTale extends JavaPlugin {
     /** ¿Tiene el jugador un Sapotama en alguna sección del inventario? */
     private static boolean tieneSapotama(Store<EntityStore> store, Ref<EntityStore> ref) {
         try {
-            // Secciones por ID numérico (los getters directos están deprecados).
-            for (int seccion = 0; seccion < 32; seccion++) {
-                com.hypixel.hytale.server.core.inventory.container.ItemContainer cont;
-                try {
-                    cont = com.hypixel.hytale.server.core.inventory.InventoryUtils
-                        .getSectionById(ref, seccion, store);
-                } catch (Exception e) {
-                    continue;
-                }
-                if (cont == null) continue;
-                short cap;
-                try {
-                    cap = cont.getCapacity();
-                } catch (Exception e) {
-                    continue;
-                }
-                for (short i = 0; i < cap; i++) {
-                    try {
-                        ItemStack stack = cont.getItemStack(i);
-                        if (stack == null) continue;
-                        String id = stack.getItemId();
-                        if (id != null && (id.equals("Sapotama") || id.endsWith(":Sapotama"))) return true;
-                    } catch (Exception ignored) {
-                    }
-                }
-            }
-            return false;
+            java.util.List<com.digitale.util.Inventarios.Hallazgo> hallados =
+                com.digitale.util.Inventarios.buscar(ref, store,
+                    (id, corto) -> corto.equals("Sapotama"));
+            return !hallados.isEmpty();
         } catch (Exception e) {
             return true;
         }
     }
 
-    /** Anti-doble-apertura de la mesa (dos eventos pueden disparar a la vez). */
-    private static final java.util.concurrent.ConcurrentHashMap<java.util.UUID, Long> MESA_OPEN =
-        new java.util.concurrent.ConcurrentHashMap<>();
-
-    private void abrirMesa(PlayerRef playerRef, Ref<EntityStore> eref, Store<EntityStore> store) {
-        long ahora = System.currentTimeMillis();
-        Long ultimo = MESA_OPEN.get(playerRef.getUuid());
-        if (ultimo != null && ahora - ultimo < 1500L) return;
-        MESA_OPEN.put(playerRef.getUuid(), ahora);
-        try {
-            store.getExternalData().getWorld().execute(() -> {
-                try {
-                    com.digitale.ui.DigiMesaUI.open(playerRef, eref, store);
-                } catch (Exception e) {
-                    getLogger().at(Level.WARNING).log("No se pudo abrir mesa: " + e.getMessage());
-                }
-            });
-        } catch (Exception e) {
-            getLogger().at(Level.WARNING).log("abrirMesa: " + e.getMessage());
-        }
-    }
-
-    @SuppressWarnings("removal") // LivingEntityUseBlockEvent deprecado pero funcional; UseBlockEvent es el camino futuro.
     private void registrarEventosJugador() {
         // AL ENTRAR: guardar storeRef en cache y restaurar datos a RAM
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
@@ -158,6 +130,23 @@ public class DigiTale extends JavaPlugin {
                 PetProgressComponent progress = ComponentRegistry.ensureAndGetProgress(store, storeRef);
                 AlmacenJugadores.DatosJugador datos = AlmacenJugadores.obtener(uuid);
                 progress.cargarEn(datos);
+                // Aviso de incubaciones listas (una sola vez, aunque la mesa esté cerrada).
+                for (java.util.Map.Entry<String, AlmacenJugadores.DatosJugador.IncubacionMesa> en
+                        : datos.incubaciones.entrySet()) {
+                    AlmacenJugadores.DatosJugador.IncubacionMesa im = en.getValue();
+                    if (im == null || im.notificado) continue;
+                    if (!com.digitale.crianza.Incubacion.listo(im.inicioSeg, im.ciclos, im.segCiclo)) continue;
+                    im.notificado = true;
+                    try {
+                        progress.guardarDesde(datos);
+                    } catch (Exception ignored) {
+                    }
+                    try {
+                        playerRef.sendMessage(DigiMsg.parse("§d> ¡Tu " + im.huevoId
+                            + " de la mesa " + en.getKey() + " termino de incubar! Reclama tu cria."));
+                    } catch (Exception ignored) {
+                    }
+                }
                 // Sin menú de batalla colgado de otra sesión.
                 datos.menuAbierto = false;
                 // Sapotama gratis si aún no tiene equipo (primer ingreso o tras reset).
@@ -181,7 +170,6 @@ public class DigiTale extends JavaPlugin {
         // AL SALIR: despawnear NPCs si el paseo estaba activo, luego guardar datos
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
             PlayerRef playerRef = event.getPlayerRef();
-            if (playerRef == null) return;
 
             UUID uuid = playerRef.getUuid();
             Ref<EntityStore> storeRef = storeRefCache.remove(uuid);
@@ -209,6 +197,12 @@ public class DigiTale extends JavaPlugin {
 
                 MountMovementSupport.clearPlayer(uuid);
 
+                // Soltar cámara de combate si quedó fija.
+                try {
+                    com.digitale.sistema.CamaraCombate.salir(playerRef);
+                } catch (Exception ignored) {
+                }
+
                 // Guardar datos al componente persistente
                 PetProgressComponent progress = ComponentRegistry.getProgress(store, storeRef);
                 if (progress == null) return;
@@ -219,50 +213,13 @@ public class DigiTale extends JavaPlugin {
 
         getLogger().at(Level.INFO).log("Eventos Ready/Disconnect registrados.");
 
-        // Mesa de Crianza: abrir nuestra UI al usar el bloque.
-        // Se escuchan ambos eventos (ecs = API vigente, entity = deprecado pero fiable).
-        getEventRegistry().registerGlobal(UseBlockEvent.class, event -> {
-            try {
-                var blockType = event.getBlockType();
-                if (blockType == null || blockType.getId() == null) return;
-                String id = blockType.getId();
-                if (!id.equals("Mesa_De_Crianza") && !id.endsWith(":Mesa_De_Crianza")) return;
-                var ctx = event.getContext();
-                if (ctx == null) return;
-                Ref<EntityStore> eref = ctx.getEntity();
-                if (eref == null || !eref.isValid()) return;
-                Store<EntityStore> store = eref.getStore();
-                PlayerRef pref = store.getComponent(eref, PlayerRef.getComponentType());
-                if (pref == null) return;
-                abrirMesa(pref, eref, store);
-            } catch (Exception e) {
-                getLogger().at(Level.WARNING).log("UseBlock mesa: " + e.getMessage());
-            }
-        });
-        // Mesa de Crianza: abrir nuestra UI al usar el bloque (evento concreto).
-        getEventRegistry().registerGlobal(LivingEntityUseBlockEvent.class, event -> {
-            try {
-                String id = event.getBlockType();
-                if (id == null || (!id.equals("Mesa_De_Crianza") && !id.endsWith(":Mesa_De_Crianza"))) return;
-                Ref<EntityStore> eref = event.getRef();
-                if (eref == null || !eref.isValid()) return;
-                Store<EntityStore> store = eref.getStore();
-                PlayerRef pref = store.getComponent(eref, PlayerRef.getComponentType());
-                if (pref == null) return;
-                abrirMesa(pref, eref, store);
-            } catch (Exception e) {
-                getLogger().at(Level.WARNING).log("UseBlock mesa: " + e.getMessage());
-            }
-        });
     }
 
     @Override
     protected void shutdown() {
         super.shutdown();
-        if (sapotamaFilter != null) PacketAdapters.deregisterInbound(sapotamaFilter);
         if (battleFilter != null) PacketAdapters.deregisterInbound(battleFilter);
         if (mountSupportFilter != null) PacketAdapters.deregisterInbound(mountSupportFilter);
         storeRefCache.clear();
-
     }
 }

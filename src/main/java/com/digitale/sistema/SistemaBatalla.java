@@ -36,9 +36,13 @@ public class SistemaBatalla {
     private static final double PCT_FALLO_DEF_SCALE = 0.002;
 
     public static EstadoCombate iniciarCombate(java.util.List<DatoDigimon> party) {
+        return iniciarCombate(party, null);
+    }
+
+    public static EstadoCombate iniciarCombate(java.util.List<DatoDigimon> party, String especieEnemiga) {
         int nivel = 1;
         for (DatoDigimon d : party) if (d != null && d.nivel > nivel) nivel = d.nivel;
-        EstadoCombate c = EnemigoCombate.generarCombate(nivel);
+        EstadoCombate c = EnemigoCombate.generarCombatePara(nivel, especieEnemiga);
         DatoDigimon a = lado(party, 0);
         DatoDigimon b = lado(party, 1);
         DatoDigimon cc = lado(party, 2);
@@ -70,6 +74,8 @@ public class SistemaBatalla {
         java.util.List<DatoDigimon> party = datos.equipoCombate();
         if (party.isEmpty()) return null;
         EstadoCombate c = iniciarCombate(party);
+        c.calumonDobla = datos.tieneCalumon();
+        if (c.calumonDobla) c.logear("¡Calumon apoya! Stats x2.");
         aplicarDormidosIniciales(c, party);
         datos.combate = c;
         return c;
@@ -82,13 +88,22 @@ public class SistemaBatalla {
     public static EstadoCombate iniciarEncuentroSalvaje(AlmacenJugadores.DatosJugador datos,
                                                         int nivelZona,
                                                         com.hypixel.hytale.component.Ref<?> objetivo) {
+        return iniciarEncuentroSalvaje(datos, nivelZona, objetivo, null);
+    }
+
+    public static EstadoCombate iniciarEncuentroSalvaje(AlmacenJugadores.DatosJugador datos,
+                                                        int nivelZona,
+                                                        com.hypixel.hytale.component.Ref<?> objetivo,
+                                                        String especieEnemiga) {
         if (datos == null || !datos.puedeCombatir()) return null;
         java.util.List<DatoDigimon> party = datos.equipoCombate();
         if (party.isEmpty()) return null;
         int nivelParty = 1;
         for (DatoDigimon d : party) if (d != null && d.nivel > nivelParty) nivelParty = d.nivel;
         int total = tamanoEncuentro(nivelParty, Math.max(1, nivelZona), party.size());
-        EstadoCombate c = iniciarCombate(party);
+        EstadoCombate c = iniciarCombate(party, especieEnemiga);
+        c.calumonDobla = datos.tieneCalumon();
+        if (c.calumonDobla) c.logear("¡Calumon apoya! Stats x2.");
         c.nivelZona = Math.max(1, nivelZona);
         c.objetivo = objetivo;
         c.totalOleada = total;
@@ -128,6 +143,27 @@ public class SistemaBatalla {
         return (party != null && i >= 0 && i < party.size()) ? party.get(i) : null;
     }
 
+    // ── Stats efectivas: ×2 con Calumon vivo en el equipo (soporte) ──
+    static int atkEf(DatoDigimon d, EstadoCombate c) {
+        if (d == null) return 0;
+        return (c != null && c.calumonDobla) ? d.atk * 2 : d.atk;
+    }
+
+    static int defEf(DatoDigimon d, EstadoCombate c) {
+        if (d == null) return 0;
+        return (c != null && c.calumonDobla) ? d.def * 2 : d.def;
+    }
+
+    static int spdEf(DatoDigimon d, EstadoCombate c) {
+        if (d == null) return 5;
+        return (c != null && c.calumonDobla) ? d.spd * 2 : d.spd;
+    }
+
+    static int wisEf(DatoDigimon d, EstadoCombate c) {
+        if (d == null) return 0;
+        return (c != null && c.calumonDobla) ? d.wis * 2 : d.wis;
+    }
+
     private static int hpLado(EstadoCombate c, int i) {
         return switch (i) {
             case 0 -> c.hpCombateA;
@@ -148,9 +184,9 @@ public class SistemaBatalla {
         DatoDigimon a = lado(party, 0);
         DatoDigimon b = lado(party, 1);
         DatoDigimon cc = lado(party, 2);
-        int spdA = a != null ? a.spd : 5;
-        int spdB = b != null ? b.spd : 5;
-        int spdC = cc != null ? cc.spd : 5;
+        int spdA = a != null ? spdEf(a, c) : 5;
+        int spdB = b != null ? spdEf(b, c) : 5;
+        int spdC = cc != null ? spdEf(cc, c) : 5;
         int spdE = c.enemigoSpd;
         int spdR = c.refuerzoSpd;
 
@@ -422,7 +458,7 @@ public class SistemaBatalla {
         int spdEq = 0;
         for (int i = 0; i < 3; i++) {
             DatoDigimon d = lado(party, i);
-            if (d != null && d.spd > spdEq) spdEq = d.spd;
+            if (d != null && spdEf(d, c) > spdEq) spdEq = spdEf(d, c);
         }
         int spdEn = c.enemigoSpd + (c.refuerzoActivo ? c.refuerzoSpd : 0);
         double prob = 0.35 + (spdEq / (double) Math.max(1, spdEq + spdEn)) * 0.45;
@@ -526,7 +562,7 @@ public class SistemaBatalla {
             c.victoria = false; c.activa = false;
             c.fase = Fase.FIN_COMBATE;
             c.logear("Derrota... el equipo cayo!");
-            aplicarDerrota(party);
+            aplicarDerrota(party, c);
         } else {
             c.fase = Fase.INICIATIVA;
         }
@@ -553,9 +589,9 @@ public class SistemaBatalla {
         DatoDigimon a = lado(party, 0);
         DatoDigimon b = lado(party, 1);
         DatoDigimon cc = lado(party, 2);
-        int spdA = a != null ? a.spd : 5;
-        int spdB = b != null ? b.spd : 5;
-        int spdC = cc != null ? cc.spd : 5;
+        int spdA = a != null ? spdEf(a, c) : 5;
+        int spdB = b != null ? spdEf(b, c) : 5;
+        int spdC = cc != null ? spdEf(cc, c) : 5;
         int spdE = c.enemigoSpd;
         int spdR = c.refuerzoSpd;
 
@@ -587,30 +623,30 @@ public class SistemaBatalla {
 
         double multElem = EnemigoCombate.multElemental(d.elemento, elemTgt);
 
-        boolean muyCritico = RNG.nextDouble() < (PCT_MUY_CRIT_BASE + d.wis * PCT_MUY_CRIT_WIS_SCALE);
-        boolean critico    = !muyCritico && RNG.nextDouble() < (PCT_CRIT_BASE + d.wis * PCT_CRIT_WIS_SCALE);
+        boolean muyCritico = RNG.nextDouble() < (PCT_MUY_CRIT_BASE + wisEf(d, c) * PCT_MUY_CRIT_WIS_SCALE);
+        boolean critico    = !muyCritico && RNG.nextDouble() < (PCT_CRIT_BASE + wisEf(d, c) * PCT_CRIT_WIS_SCALE);
         boolean fallo      = RNG.nextDouble() < (PCT_FALLO_BASE + defTarget * PCT_FALLO_DEF_SCALE);
 
         int base;
         boolean usoHab = ladoIdx == 0 && c.habMult_A > 0;
         String nombreHab = usoHab ? c.habNombre_A : "";
         if (usoHab) {
-            base = Math.max(1, (int) (d.atk * c.habMult_A * multElem));
+            base = Math.max(1, (int) (atkEf(d, c) * c.habMult_A * multElem));
             c.habMult_A = 0;
             c.habNombre_A = "";
         } else if (c.exeFusion && c.turnosExeRestantes > 0) {
-            base = (int)(d.atk * 4.0 * multElem);
+            base = (int)(atkEf(d, c) * 4.0 * multElem);
         } else if (especial) {
-            base = (int)(d.atk * 2.5 * multElem);
+            base = (int)(atkEf(d, c) * 2.5 * multElem);
         } else if (forzado) {
-            base = (int)(d.atk * 1.6 * multElem);
+            base = (int)(atkEf(d, c) * 1.6 * multElem);
         } else {
             double ratio = switch (ladoIdx == 0 ? c.tacticaA : ladoIdx == 1 ? c.tacticaB : c.tacticaC) {
                 case AGRESIVO   -> 1.4;
                 case DEFENSIVO   -> 0.7;
                 default          -> 1.0;
             };
-            base = Math.max(1, d.atk - defTarget / 2);
+            base = Math.max(1, atkEf(d, c) - defTarget / 2);
             base = (int)(base * ratio * multElem);
         }
 
@@ -707,7 +743,7 @@ public class SistemaBatalla {
             c.logear(nom + " ataca a " + obj.nombre + " pero FALLA!");
             dano = 0;
         } else {
-            dano = Math.max(1, (int)(Math.max(1, atk - obj.def / 2) * multE
+            dano = Math.max(1, (int)(Math.max(1, atk - defEf(obj, c) / 2) * multE
                     * (guard ? 0.4 : 1.0)
                     * (fuerte ? 2.0 : 1.0)
                     * (critico ? 1.5 : 1.0)
@@ -790,11 +826,39 @@ public class SistemaBatalla {
         }
     }
 
-    public static void aplicarDerrota(java.util.List<DatoDigimon> party) {
+    /**
+     * Derrota en encuentro salvaje/jefe (NO PvP): derrotas/energía/lazo como
+     * siempre + los CAÍDOS pierden 20% de stats (10% con Calumon vivo).
+     */
+    public static void aplicarDerrota(java.util.List<DatoDigimon> party, EstadoCombate c) {
+        boolean pvp = c != null && c.esPvP;
+        boolean calumon = c != null && c.calumonDobla;
+        double factor = calumon ? 0.9 : 0.8;
         for (int i = 0; i < 3; i++) {
             DatoDigimon d = lado(party, i);
-            if (d != null) { d.derrotas++; d.energia = Math.max(5, d.energia - 25); d.lazo = Math.max(0, d.lazo - 3); }
+            if (d != null) {
+                d.derrotas++;
+                d.energia = Math.max(5, d.energia - 25);
+                d.lazo = Math.max(0, d.lazo - 3);
+                if (!pvp && d.hpCombate <= 0) {
+                    d.atk = Math.max(1, (int) (d.atk * factor));
+                    d.def = Math.max(1, (int) (d.def * factor));
+                    d.spd = Math.max(1, (int) (d.spd * factor));
+                    d.wis = Math.max(1, (int) (d.wis * factor));
+                    d.maxHp = Math.max(10, (int) (d.maxHp * factor));
+                    d.hp = Math.min(d.hp, d.maxHp);
+                    if (c != null) {
+                        c.logear(d.nombre + " cae derrotado: -" + (calumon ? "10" : "20")
+                            + "% stats" + (calumon ? " (Calumon protege)" : "") + ".");
+                    }
+                }
+            }
         }
+    }
+
+    /** Compatibilidad: derrota sin contexto (cuenta como salvaje sin Calumon). */
+    public static void aplicarDerrota(java.util.List<DatoDigimon> party) {
+        aplicarDerrota(party, null);
     }
 
     public static String nombreEstado(EstadoAlterado e) {

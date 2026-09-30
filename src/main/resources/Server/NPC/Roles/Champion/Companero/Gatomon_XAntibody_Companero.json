@@ -3,8 +3,8 @@
   "Reference": "Template_Digimon_Combat_Companero",
   "Modify": {
     "Appearance": "Gatomon_XAntibody_Model",
-    "MaxHealth": 50,
-    "MaxSpeed": 6,
+    "MaxHealth": 70,
+    "MaxSpeed": 7,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }

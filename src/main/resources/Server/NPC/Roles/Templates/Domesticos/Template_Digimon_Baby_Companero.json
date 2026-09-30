@@ -410,6 +410,23 @@
                   ]
                 }
               ]
+            },
+            {
+              "ActionsBlocking": true,
+              "Actions": [
+                {
+                  "Type": "Timeout",
+                  "Delay": [
+                    4,
+                    9
+                  ]
+                },
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Face",
+                  "Animation": "Blink"
+                }
+              ]
             }
           ]
         }

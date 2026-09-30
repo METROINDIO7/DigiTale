@@ -7,7 +7,7 @@ import java.util.Map;
  *
  * Los PNG viven en {@code Common/UI/Custom/png_Digis/} y en el markup inline
  * se referencian con ruta absoluta desde Common:
- * {@code AssetPath: "UI/Custom/png_Digis/botamon.png"}.
+ * {@code AssetPath: "UI/Custom/png_Digis/Botamon.png"}.
  *
  * Si la especie no tiene PNG, retorna null y la UI debe ocultar el
  * AssetImage (Visible=false) en vez de apuntar a un archivo inexistente.
@@ -18,20 +18,22 @@ public final class DigiImagenes {
     }
 
     /** Nombre exacto del archivo en disco (las rutas son case-sensitive). */
-    private static final Map<String, String> ARCHIVO = Map.of(
-        "botamon", "botamon.png",
-        "chibimon", "Chibimon.png",
-        "jyarimon", "Jyarimon.png",
-        "kuramon", "Kuramon.png",
-        "nyokimon", "Nyokimon.png",
-        "pichimon", "Pichimon.png",
-        "punimon", "Punimon.png",
-        "veemon", "Veemon.png",
-        "yukimibotamon", "YukimiBotamon.png"
+    private static final Map<String, String> ARCHIVO = Map.ofEntries(
+        Map.entry("botamon", "Botamon.png"),
+        Map.entry("chibomon", "Chibomon.png"),
+        Map.entry("jyarimon", "Jyarimon.png"),
+        Map.entry("kuramon", "Kuramon.png"),
+        Map.entry("nyokimon", "Nyokimon.png"),
+        Map.entry("pichimon", "Pichimon.png"),
+        Map.entry("punimon", "Punimon.png"),
+        Map.entry("poyomon", "Poyomon.png"),
+        Map.entry("yuramon", "Yuramon.png"),
+        Map.entry("veemon", "Veemon.png"),
+        Map.entry("yukimibotamon", "YukimiBotamo.png")
     );
 
     /** Retrato por defecto (siempre existe). */
-    public static final String POR_DEFECTO = "UI/Custom/png_Digis/botamon.png";
+    public static final String POR_DEFECTO = "UI/Custom/png_Digis/Botamon.png";
 
     /**
      * Icono del elemento. Ruta exacta (case-sensitive) o null si no hay.

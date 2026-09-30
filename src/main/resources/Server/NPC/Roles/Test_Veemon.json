@@ -1,0 +1,21 @@
+{
+  "$Comment": "TEST — Compañero terrestre montable con modelo Veemon. Testea Template_Digimon_Combat_Companero + bloque Mount con Veemon_Model.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Companero",
+  "Modify": {
+    "Appearance": "Veemon_Model",
+    "MaxHealth": 100,
+    "MaxSpeed": 7,
+    "IsMountable": true,
+    "MountAnchorY": 1.2,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Veemon_Montable.name",
+      "Description": "Test: Veemon como compañero terrestre montable"
+    }
+  }
+}

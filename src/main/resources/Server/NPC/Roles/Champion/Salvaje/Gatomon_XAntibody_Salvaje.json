@@ -2,11 +2,12 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Botamon_Model",
-    "MaxHealth": 50,
+    "Appearance": "Gatomon_XAntibody_Model",
+    "MaxHealth": 70,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
-    }
+    },
+    "MaxSpeed": 7
   },
   "Parameters": {
     "NameTranslationKey": {

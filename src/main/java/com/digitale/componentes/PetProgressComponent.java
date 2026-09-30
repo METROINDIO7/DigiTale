@@ -34,7 +34,7 @@ public class PetProgressComponent implements Component<EntityStore> {
     private boolean vivoA   = false;
     private boolean dormidoA = false; private int dormidoEnSegA = 0; private int vecesLlenoA = 0;
     private int hambreA     = 100; private int energiaA   = 100;
-    private int abiA        = 0;
+    private int abiA        = 0; private double crecimientoA = 1.0;
 
     // ── Compañero A: progreso (XP/nivel de aventura) ─────────────
     private int levelA      = 1;
@@ -62,7 +62,7 @@ public class PetProgressComponent implements Component<EntityStore> {
     private boolean vivoB   = false;
     private boolean dormidoB = false; private int dormidoEnSegB = 0; private int vecesLlenoB = 0;
     private int hambreB     = 100; private int energiaB   = 100;
-    private int abiB        = 0;
+    private int abiB        = 0; private double crecimientoB = 1.0;
 
     // ── Compañero B: progreso (XP/nivel de aventura) ─────────────
     private int levelB      = 1;
@@ -88,13 +88,13 @@ public class PetProgressComponent implements Component<EntityStore> {
 
     // ── Compañeros C-F: vínculo y estado ────────────────────────
     private int lazoC = 20; private int disciplinaC = 20; private int victoriasC = 0; private int derrotasC = 0;
-    private boolean vivoC = false; private boolean dormidoC = false; private int dormidoEnSegC = 0; private int vecesLlenoC = 0; private int hambreC = 100; private int energiaC = 100; private int abiC = 0;
+    private boolean vivoC = false; private boolean dormidoC = false; private int dormidoEnSegC = 0; private int vecesLlenoC = 0; private int hambreC = 100; private int energiaC = 100; private int abiC = 0; private double crecimientoC = 1.0;
     private int lazoD = 20; private int disciplinaD = 20; private int victoriasD = 0; private int derrotasD = 0;
-    private boolean vivoD = false; private boolean dormidoD = false; private int dormidoEnSegD = 0; private int vecesLlenoD = 0; private int hambreD = 100; private int energiaD = 100; private int abiD = 0;
+    private boolean vivoD = false; private boolean dormidoD = false; private int dormidoEnSegD = 0; private int vecesLlenoD = 0; private int hambreD = 100; private int energiaD = 100; private int abiD = 0; private double crecimientoD = 1.0;
     private int lazoE = 20; private int disciplinaE = 20; private int victoriasE = 0; private int derrotasE = 0;
-    private boolean vivoE = false; private boolean dormidoE = false; private int dormidoEnSegE = 0; private int vecesLlenoE = 0; private int hambreE = 100; private int energiaE = 100; private int abiE = 0;
+    private boolean vivoE = false; private boolean dormidoE = false; private int dormidoEnSegE = 0; private int vecesLlenoE = 0; private int hambreE = 100; private int energiaE = 100; private int abiE = 0; private double crecimientoE = 1.0;
     private int lazoF = 20; private int disciplinaF = 20; private int victoriasF = 0; private int derrotasF = 0;
-    private boolean vivoF = false; private boolean dormidoF = false; private int dormidoEnSegF = 0; private int vecesLlenoF = 0; private int hambreF = 100; private int energiaF = 100; private int abiF = 0;
+    private boolean vivoF = false; private boolean dormidoF = false; private int dormidoEnSegF = 0; private int vecesLlenoF = 0; private int hambreF = 100; private int energiaF = 100; private int abiF = 0; private double crecimientoF = 1.0;
 
     // ── Compañeros C-F: progreso ────────────────────────────────
     private int levelC = 1; private int experienceC = 0;
@@ -107,6 +107,16 @@ public class PetProgressComponent implements Component<EntityStore> {
     private int incubaInicioSeg = 0;
     private int incubaCiclos = 0;
     private int incubaEnergia = 5;
+    private boolean incubaNotificado = false;
+    private String incubaEspecie = "";
+    private int incubaExitoPct = 100;
+    /** Incubaciones por mesa serializadas: clave|huevo|especie|pct|inicio|ciclos|segCiclo|energia|notif|sobrealim;... */
+    private String incubacionesMesa = "";
+    /** Banco PC serializado (gson de List<DatoDigimon>). */
+    private String bancoDigimon = "";
+
+    // ── Recetas desbloqueadas (CSV de bebés) ──────────────────────
+    private String recetasDesbloqueadas = "";
 
     // ── Flags de equipo ───────────────────────────────────────────
     private boolean tieneEquipo = false;
@@ -146,6 +156,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("HambreA",     Codec.INTEGER), (d,v)->d.hambreA=v,     d->d.hambreA).add()
             .append(new KeyedCodec<>("EnergiaA",    Codec.INTEGER), (d,v)->d.energiaA=v,    d->d.energiaA).add()
             .append(new KeyedCodec<>("AbiA",        Codec.INTEGER), (d,v)->d.abiA=v,        d->d.abiA).add()
+            .append(new KeyedCodec<>("CrecimientoA", Codec.DOUBLE), (d,v)->d.crecimientoA=v, d->d.crecimientoA).add()
             // ── A progreso
             .append(new KeyedCodec<>("LevelA",      Codec.INTEGER), (d,v)->d.levelA=v,      d->d.levelA).add()
             .append(new KeyedCodec<>("ExperienceA", Codec.INTEGER), (d,v)->d.experienceA=v, d->d.experienceA).add()
@@ -179,6 +190,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("HambreB",     Codec.INTEGER), (d,v)->d.hambreB=v,     d->d.hambreB).add()
             .append(new KeyedCodec<>("EnergiaB",    Codec.INTEGER), (d,v)->d.energiaB=v,    d->d.energiaB).add()
             .append(new KeyedCodec<>("AbiB",        Codec.INTEGER), (d,v)->d.abiB=v,        d->d.abiB).add()
+            .append(new KeyedCodec<>("CrecimientoB", Codec.DOUBLE), (d,v)->d.crecimientoB=v, d->d.crecimientoB).add()
             // ── B progreso
             .append(new KeyedCodec<>("LevelB",      Codec.INTEGER), (d,v)->d.levelB=v,      d->d.levelB).add()
             .append(new KeyedCodec<>("ExperienceB", Codec.INTEGER), (d,v)->d.experienceB=v, d->d.experienceB).add()
@@ -209,6 +221,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("HambreC",     Codec.INTEGER), (d,v)->d.hambreC=v,     d->d.hambreC).add()
             .append(new KeyedCodec<>("EnergiaC",    Codec.INTEGER), (d,v)->d.energiaC=v,    d->d.energiaC).add()
             .append(new KeyedCodec<>("AbiC",        Codec.INTEGER), (d,v)->d.abiC=v,        d->d.abiC).add()
+            .append(new KeyedCodec<>("CrecimientoC", Codec.DOUBLE), (d,v)->d.crecimientoC=v, d->d.crecimientoC).add()
             .append(new KeyedCodec<>("LevelC",      Codec.INTEGER), (d,v)->d.levelC=v,      d->d.levelC).add()
             .append(new KeyedCodec<>("ExperienceC", Codec.INTEGER), (d,v)->d.experienceC=v, d->d.experienceC).add()
             // ── D identidad/stats/entrenamiento/vínculo/progreso
@@ -238,6 +251,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("HambreD",     Codec.INTEGER), (d,v)->d.hambreD=v,     d->d.hambreD).add()
             .append(new KeyedCodec<>("EnergiaD",    Codec.INTEGER), (d,v)->d.energiaD=v,    d->d.energiaD).add()
             .append(new KeyedCodec<>("AbiD",        Codec.INTEGER), (d,v)->d.abiD=v,        d->d.abiD).add()
+            .append(new KeyedCodec<>("CrecimientoD", Codec.DOUBLE), (d,v)->d.crecimientoD=v, d->d.crecimientoD).add()
             .append(new KeyedCodec<>("LevelD",      Codec.INTEGER), (d,v)->d.levelD=v,      d->d.levelD).add()
             .append(new KeyedCodec<>("ExperienceD", Codec.INTEGER), (d,v)->d.experienceD=v, d->d.experienceD).add()
             // ── E identidad/stats/entrenamiento/vínculo/progreso
@@ -267,6 +281,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("HambreE",     Codec.INTEGER), (d,v)->d.hambreE=v,     d->d.hambreE).add()
             .append(new KeyedCodec<>("EnergiaE",    Codec.INTEGER), (d,v)->d.energiaE=v,    d->d.energiaE).add()
             .append(new KeyedCodec<>("AbiE",        Codec.INTEGER), (d,v)->d.abiE=v,        d->d.abiE).add()
+            .append(new KeyedCodec<>("CrecimientoE", Codec.DOUBLE), (d,v)->d.crecimientoE=v, d->d.crecimientoE).add()
             .append(new KeyedCodec<>("LevelE",      Codec.INTEGER), (d,v)->d.levelE=v,      d->d.levelE).add()
             .append(new KeyedCodec<>("ExperienceE", Codec.INTEGER), (d,v)->d.experienceE=v, d->d.experienceE).add()
             // ── F identidad/stats/entrenamiento/vínculo/progreso
@@ -296,6 +311,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("HambreF",     Codec.INTEGER), (d,v)->d.hambreF=v,     d->d.hambreF).add()
             .append(new KeyedCodec<>("EnergiaF",    Codec.INTEGER), (d,v)->d.energiaF=v,    d->d.energiaF).add()
             .append(new KeyedCodec<>("AbiF",        Codec.INTEGER), (d,v)->d.abiF=v,        d->d.abiF).add()
+            .append(new KeyedCodec<>("CrecimientoF", Codec.DOUBLE), (d,v)->d.crecimientoF=v, d->d.crecimientoF).add()
             .append(new KeyedCodec<>("LevelF",      Codec.INTEGER), (d,v)->d.levelF=v,      d->d.levelF).add()
             .append(new KeyedCodec<>("ExperienceF", Codec.INTEGER), (d,v)->d.experienceF=v, d->d.experienceF).add()
             // ── incubación
@@ -303,6 +319,13 @@ public class PetProgressComponent implements Component<EntityStore> {
             .append(new KeyedCodec<>("IncubaInicioSeg", Codec.INTEGER), (d,v)->d.incubaInicioSeg=v, d->d.incubaInicioSeg).add()
             .append(new KeyedCodec<>("IncubaCiclos", Codec.INTEGER), (d,v)->d.incubaCiclos=v, d->d.incubaCiclos).add()
             .append(new KeyedCodec<>("IncubaEnergia", Codec.INTEGER), (d,v)->d.incubaEnergia=v, d->d.incubaEnergia).add()
+            .append(new KeyedCodec<>("IncubaNotificado", Codec.BOOLEAN), (d,v)->d.incubaNotificado=v, d->d.incubaNotificado).add()
+            .append(new KeyedCodec<>("IncubaEspecie", Codec.STRING),  (d,v)->d.incubaEspecie=v,   d->d.incubaEspecie).add()
+            .append(new KeyedCodec<>("IncubaExitoPct", Codec.INTEGER), (d,v)->d.incubaExitoPct=v, d->d.incubaExitoPct).add()
+            .append(new KeyedCodec<>("IncubacionesMesa", Codec.STRING),  (d,v)->d.incubacionesMesa=v,   d->d.incubacionesMesa).add()
+            .append(new KeyedCodec<>("BancoDigimon", Codec.STRING),  (d,v)->d.bancoDigimon=v,   d->d.bancoDigimon).add()
+            // ── recetas
+            .append(new KeyedCodec<>("RecetasDesbloqueadas", Codec.STRING), (d,v)->d.recetasDesbloqueadas=v, d->d.recetasDesbloqueadas).add()
             // ── flags
             .append(new KeyedCodec<>("TieneEquipo", Codec.BOOLEAN), (d,v)->d.tieneEquipo=v, d->d.tieneEquipo).add()
             .build();
@@ -314,47 +337,52 @@ public class PetProgressComponent implements Component<EntityStore> {
         this.hpA=o.hpA; this.maxHpA=o.maxHpA; this.atkA=o.atkA; this.defA=o.defA; this.spdA=o.spdA; this.wisA=o.wisA;
         this.entAtkA=o.entAtkA; this.entDefA=o.entDefA; this.entSpdA=o.entSpdA; this.entWisA=o.entWisA; this.entHpA=o.entHpA;
         this.lazoA=o.lazoA; this.disciplinaA=o.disciplinaA; this.victoriasA=o.victoriasA; this.derrotasA=o.derrotasA;
-        this.vivoA=o.vivoA; this.dormidoA=o.dormidoA; this.dormidoEnSegA=o.dormidoEnSegA; this.vecesLlenoA=o.vecesLlenoA; this.hambreA=o.hambreA; this.energiaA=o.energiaA; this.abiA=o.abiA;
+        this.vivoA=o.vivoA; this.dormidoA=o.dormidoA; this.dormidoEnSegA=o.dormidoEnSegA; this.vecesLlenoA=o.vecesLlenoA; this.hambreA=o.hambreA; this.energiaA=o.energiaA; this.abiA=o.abiA; this.crecimientoA=o.crecimientoA;
         this.levelA=o.levelA; this.experienceA=o.experienceA;
 
         this.nombreB=o.nombreB; this.especieB=o.especieB; this.elementoB=o.elementoB; this.nivelEvoB=o.nivelEvoB;
         this.hpB=o.hpB; this.maxHpB=o.maxHpB; this.atkB=o.atkB; this.defB=o.defB; this.spdB=o.spdB; this.wisB=o.wisB;
         this.entAtkB=o.entAtkB; this.entDefB=o.entDefB; this.entSpdB=o.entSpdB; this.entWisB=o.entWisB; this.entHpB=o.entHpB;
         this.lazoB=o.lazoB; this.disciplinaB=o.disciplinaB; this.victoriasB=o.victoriasB; this.derrotasB=o.derrotasB;
-        this.vivoB=o.vivoB; this.dormidoB=o.dormidoB; this.dormidoEnSegB=o.dormidoEnSegB; this.vecesLlenoB=o.vecesLlenoB; this.hambreB=o.hambreB; this.energiaB=o.energiaB; this.abiB=o.abiB;
+        this.vivoB=o.vivoB; this.dormidoB=o.dormidoB; this.dormidoEnSegB=o.dormidoEnSegB; this.vecesLlenoB=o.vecesLlenoB; this.hambreB=o.hambreB; this.energiaB=o.energiaB; this.abiB=o.abiB; this.crecimientoB=o.crecimientoB;
         this.levelB=o.levelB; this.experienceB=o.experienceB;
 
         this.nombreC=o.nombreC; this.especieC=o.especieC; this.elementoC=o.elementoC; this.nivelEvoC=o.nivelEvoC;
         this.hpC=o.hpC; this.maxHpC=o.maxHpC; this.atkC=o.atkC; this.defC=o.defC; this.spdC=o.spdC; this.wisC=o.wisC;
         this.entAtkC=o.entAtkC; this.entDefC=o.entDefC; this.entSpdC=o.entSpdC; this.entWisC=o.entWisC; this.entHpC=o.entHpC;
         this.lazoC=o.lazoC; this.disciplinaC=o.disciplinaC; this.victoriasC=o.victoriasC; this.derrotasC=o.derrotasC;
-        this.vivoC=o.vivoC; this.dormidoC=o.dormidoC; this.dormidoEnSegC=o.dormidoEnSegC; this.vecesLlenoC=o.vecesLlenoC; this.hambreC=o.hambreC; this.energiaC=o.energiaC; this.abiC=o.abiC;
+        this.vivoC=o.vivoC; this.dormidoC=o.dormidoC; this.dormidoEnSegC=o.dormidoEnSegC; this.vecesLlenoC=o.vecesLlenoC; this.hambreC=o.hambreC; this.energiaC=o.energiaC; this.abiC=o.abiC; this.crecimientoC=o.crecimientoC;
         this.levelC=o.levelC; this.experienceC=o.experienceC;
 
         this.nombreD=o.nombreD; this.especieD=o.especieD; this.elementoD=o.elementoD; this.nivelEvoD=o.nivelEvoD;
         this.hpD=o.hpD; this.maxHpD=o.maxHpD; this.atkD=o.atkD; this.defD=o.defD; this.spdD=o.spdD; this.wisD=o.wisD;
         this.entAtkD=o.entAtkD; this.entDefD=o.entDefD; this.entSpdD=o.entSpdD; this.entWisD=o.entWisD; this.entHpD=o.entHpD;
         this.lazoD=o.lazoD; this.disciplinaD=o.disciplinaD; this.victoriasD=o.victoriasD; this.derrotasD=o.derrotasD;
-        this.vivoD=o.vivoD; this.dormidoD=o.dormidoD; this.dormidoEnSegD=o.dormidoEnSegD; this.vecesLlenoD=o.vecesLlenoD; this.hambreD=o.hambreD; this.energiaD=o.energiaD; this.abiD=o.abiD;
+        this.vivoD=o.vivoD; this.dormidoD=o.dormidoD; this.dormidoEnSegD=o.dormidoEnSegD; this.vecesLlenoD=o.vecesLlenoD; this.hambreD=o.hambreD; this.energiaD=o.energiaD; this.abiD=o.abiD; this.crecimientoD=o.crecimientoD;
         this.levelD=o.levelD; this.experienceD=o.experienceD;
 
         this.nombreE=o.nombreE; this.especieE=o.especieE; this.elementoE=o.elementoE; this.nivelEvoE=o.nivelEvoE;
         this.hpE=o.hpE; this.maxHpE=o.maxHpE; this.atkE=o.atkE; this.defE=o.defE; this.spdE=o.spdE; this.wisE=o.wisE;
         this.entAtkE=o.entAtkE; this.entDefE=o.entDefE; this.entSpdE=o.entSpdE; this.entWisE=o.entWisE; this.entHpE=o.entHpE;
         this.lazoE=o.lazoE; this.disciplinaE=o.disciplinaE; this.victoriasE=o.victoriasE; this.derrotasE=o.derrotasE;
-        this.vivoE=o.vivoE; this.dormidoE=o.dormidoE; this.dormidoEnSegE=o.dormidoEnSegE; this.vecesLlenoE=o.vecesLlenoE; this.hambreE=o.hambreE; this.energiaE=o.energiaE; this.abiE=o.abiE;
+        this.vivoE=o.vivoE; this.dormidoE=o.dormidoE; this.dormidoEnSegE=o.dormidoEnSegE; this.vecesLlenoE=o.vecesLlenoE; this.hambreE=o.hambreE; this.energiaE=o.energiaE; this.abiE=o.abiE; this.crecimientoE=o.crecimientoE;
         this.levelE=o.levelE; this.experienceE=o.experienceE;
 
         this.nombreF=o.nombreF; this.especieF=o.especieF; this.elementoF=o.elementoF; this.nivelEvoF=o.nivelEvoF;
         this.hpF=o.hpF; this.maxHpF=o.maxHpF; this.atkF=o.atkF; this.defF=o.defF; this.spdF=o.spdF; this.wisF=o.wisF;
         this.entAtkF=o.entAtkF; this.entDefF=o.entDefF; this.entSpdF=o.entSpdF; this.entWisF=o.entWisF; this.entHpF=o.entHpF;
         this.lazoF=o.lazoF; this.disciplinaF=o.disciplinaF; this.victoriasF=o.victoriasF; this.derrotasF=o.derrotasF;
-        this.vivoF=o.vivoF; this.dormidoF=o.dormidoF; this.dormidoEnSegF=o.dormidoEnSegF; this.vecesLlenoF=o.vecesLlenoF; this.hambreF=o.hambreF; this.energiaF=o.energiaF; this.abiF=o.abiF;
+        this.vivoF=o.vivoF; this.dormidoF=o.dormidoF; this.dormidoEnSegF=o.dormidoEnSegF; this.vecesLlenoF=o.vecesLlenoF; this.hambreF=o.hambreF; this.energiaF=o.energiaF; this.abiF=o.abiF; this.crecimientoF=o.crecimientoF;
         this.levelF=o.levelF; this.experienceF=o.experienceF;
 
         this.tieneEquipo=o.tieneEquipo;
+        this.recetasDesbloqueadas=o.recetasDesbloqueadas;
         this.incubaHuevoId=o.incubaHuevoId; this.incubaInicioSeg=o.incubaInicioSeg;
         this.incubaCiclos=o.incubaCiclos; this.incubaEnergia=o.incubaEnergia;
+        this.incubaNotificado=o.incubaNotificado;
+        this.incubaEspecie=o.incubaEspecie; this.incubaExitoPct=o.incubaExitoPct;
+        this.incubacionesMesa=o.incubacionesMesa;
+        this.bancoDigimon=o.bancoDigimon;
     }
 
     @Override
@@ -365,17 +393,39 @@ public class PetProgressComponent implements Component<EntityStore> {
     // ═════════════════════════════════════════════════════════════
     public void guardarDesde(com.digitale.datos.AlmacenJugadores.DatosJugador datos) {
         this.tieneEquipo = datos.tieneEquipo;
+        this.recetasDesbloqueadas = String.join(",", datos.recetas);
         this.incubaHuevoId = datos.incubaHuevoId != null ? datos.incubaHuevoId : "";
         this.incubaInicioSeg = datos.incubaInicioSeg;
         this.incubaCiclos = datos.incubaCiclos;
         this.incubaEnergia = datos.incubaEnergia;
+        this.incubaNotificado = datos.incubaNotificado;
+        this.incubaEspecie = datos.incubaEspecie != null ? datos.incubaEspecie : "";
+        this.incubaExitoPct = datos.incubaExitoPct;
+        StringBuilder sb = new StringBuilder();
+        for (java.util.Map.Entry<String, com.digitale.datos.AlmacenJugadores.DatosJugador.IncubacionMesa> en
+                : datos.incubaciones.entrySet()) {
+            com.digitale.datos.AlmacenJugadores.DatosJugador.IncubacionMesa im = en.getValue();
+            if (im == null || im.huevoId == null || im.huevoId.isEmpty()) continue;
+            if (sb.length() > 0) sb.append(';');
+            sb.append(en.getKey()).append('|').append(im.huevoId).append('|')
+                .append(im.especie != null ? im.especie : "").append('|').append(im.exitoPct).append('|')
+                .append(im.inicioSeg).append('|').append(im.ciclos).append('|').append(im.segCiclo).append('|')
+                .append(im.energia).append('|')
+                .append(im.notificado ? 1 : 0).append('|').append(im.sobrealim);
+        }
+        this.incubacionesMesa = sb.toString();
+        try {
+            this.bancoDigimon = new com.google.gson.Gson().toJson(datos.banco);
+        } catch (Exception e) {
+            this.bancoDigimon = "[]";
+        }
         com.digitale.datos.DatoDigimon a = datos.getSlot(0);
         if (a != null) {
             nombreA=a.nombre; especieA=a.especie; elementoA=a.elemento; nivelEvoA=a.nivel;
             hpA=a.hp; maxHpA=a.maxHp; atkA=a.atk; defA=a.def; spdA=a.spd; wisA=a.wis;
             entAtkA=a.entAtk; entDefA=a.entDef; entSpdA=a.entSpd; entWisA=a.entWis; entHpA=a.entHp;
             lazoA=a.lazo; disciplinaA=a.disciplina; victoriasA=a.victorias; derrotasA=a.derrotas;
-            vivoA=a.vivo; dormidoA=a.dormido; dormidoEnSegA=a.dormidoEnSeg; vecesLlenoA=a.vecesLleno; hambreA=a.hambre; energiaA=a.energia; abiA=a.abi;
+            vivoA=a.vivo; dormidoA=a.dormido; dormidoEnSegA=a.dormidoEnSeg; vecesLlenoA=a.vecesLleno; hambreA=a.hambre; energiaA=a.energia; abiA=a.abi; crecimientoA=a.crecimiento;
         } else {
             especieA = ""; nombreA = "";
         }
@@ -385,7 +435,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             hpB=b.hp; maxHpB=b.maxHp; atkB=b.atk; defB=b.def; spdB=b.spd; wisB=b.wis;
             entAtkB=b.entAtk; entDefB=b.entDef; entSpdB=b.entSpd; entWisB=b.entWis; entHpB=b.entHp;
             lazoB=b.lazo; disciplinaB=b.disciplina; victoriasB=b.victorias; derrotasB=b.derrotas;
-            vivoB=b.vivo; dormidoB=b.dormido; dormidoEnSegB=b.dormidoEnSeg; vecesLlenoB=b.vecesLleno; hambreB=b.hambre; energiaB=b.energia; abiB=b.abi;
+            vivoB=b.vivo; dormidoB=b.dormido; dormidoEnSegB=b.dormidoEnSeg; vecesLlenoB=b.vecesLleno; hambreB=b.hambre; energiaB=b.energia; abiB=b.abi; crecimientoB=b.crecimiento;
         } else {
             especieB = ""; nombreB = "";
         }
@@ -410,7 +460,7 @@ public class PetProgressComponent implements Component<EntityStore> {
         setLazoSlot(idx, d.lazo); setDisciplinaSlot(idx, d.disciplina);
         setVictoriasSlot(idx, d.victorias); setDerrotasSlot(idx, d.derrotas);
         setVivoSlot(idx, d.vivo); setDormidoSlot(idx, d.dormido); setDormidoEnSegSlot(idx, d.dormidoEnSeg); setVecesLlenoSlot(idx, d.vecesLleno); setHambreSlot(idx, d.hambre);
-        setEnergiaSlot(idx, d.energia); setAbiSlot(idx, d.abi);
+        setEnergiaSlot(idx, d.energia); setAbiSlot(idx, d.abi); setCrecimientoSlot(idx, d.crecimiento);
     }
 
     // ── Acceso por índice a los slots C-F (2-5) ───────────────────
@@ -492,16 +542,90 @@ public class PetProgressComponent implements Component<EntityStore> {
     private void setAbiSlot(int i, int v) {
         switch (i) { case 2 -> abiC = v; case 3 -> abiD = v; case 4 -> abiE = v; default -> abiF = v; }
     }
+    private void setCrecimientoSlot(int i, double v) {
+        switch (i) { case 2 -> crecimientoC = v; case 3 -> crecimientoD = v; case 4 -> crecimientoE = v; default -> crecimientoF = v; }
+    }
 
     // ═════════════════════════════════════════════════════════════
     // Cargar de componente → DatosJugador (llamar al conectar)
     // ═════════════════════════════════════════════════════════════
     public void cargarEn(com.digitale.datos.AlmacenJugadores.DatosJugador datos) {
+        // Recetas siempre (aunque aún no tenga equipo).
+        datos.recetas.clear();
+        if (recetasDesbloqueadas != null && !recetasDesbloqueadas.isEmpty()) {
+            for (String r : recetasDesbloqueadas.split(",")) {
+                if (!r.isEmpty()) datos.recetas.add(r);
+            }
+        }
         // Incubación siempre (aunque aún no tenga equipo).
         datos.incubaHuevoId = incubaHuevoId != null ? incubaHuevoId : "";
         datos.incubaInicioSeg = incubaInicioSeg;
         datos.incubaCiclos = incubaCiclos;
         datos.incubaEnergia = incubaEnergia != 0 ? incubaEnergia : 5;
+        datos.incubaNotificado = incubaNotificado;
+        datos.incubaEspecie = incubaEspecie != null ? incubaEspecie : "";
+        datos.incubaExitoPct = incubaExitoPct != 0 ? incubaExitoPct : 100;
+        datos.banco.clear();
+        if (bancoDigimon != null && !bancoDigimon.isEmpty()) {
+            try {
+                java.lang.reflect.Type tipo = new com.google.gson.reflect.TypeToken<java.util.List<com.digitale.datos.DatoDigimon>>() {
+                }.getType();
+                java.util.List<com.digitale.datos.DatoDigimon> lista =
+                    new com.google.gson.Gson().fromJson(bancoDigimon, tipo);
+                if (lista != null) {
+                    for (com.digitale.datos.DatoDigimon b : lista) {
+                        if (b != null && b.especie != null && !b.especie.isEmpty()
+                            && datos.banco.size() < com.digitale.datos.AlmacenJugadores.DatosJugador.BANCO_MAX) {
+                            datos.banco.add(b);
+                        }
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        datos.incubaciones.clear();
+        if (incubacionesMesa != null && !incubacionesMesa.isEmpty()) {
+            for (String e : incubacionesMesa.split(";")) {
+                try {
+                    String[] p = e.split("\\|", -1);
+                    if (p.length < 9 || p[1].isEmpty()) continue;
+                    com.digitale.datos.AlmacenJugadores.DatosJugador.IncubacionMesa im =
+                        new com.digitale.datos.AlmacenJugadores.DatosJugador.IncubacionMesa();
+                    im.huevoId = p[1];
+                    im.especie = p[2];
+                    im.exitoPct = Integer.parseInt(p[3]);
+                    im.inicioSeg = Integer.parseInt(p[4]);
+                    im.ciclos = Integer.parseInt(p[5]);
+                    int idx = 6;
+                    if (p.length >= 10) {
+                        try {
+                            im.segCiclo = Math.max(1, Integer.parseInt(p[6]));
+                        } catch (Exception ignored) {
+                            im.segCiclo = 60;
+                        }
+                        idx = 7;
+                    }
+                    im.energia = Integer.parseInt(p[idx]);
+                    im.notificado = "1".equals(p[idx + 1]);
+                    im.sobrealim = Integer.parseInt(p[idx + 2]);
+                    datos.incubaciones.put(p[0], im);
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        // Migración legado: incubación global única -> clave "clasica".
+        if (datos.incubaciones.isEmpty() && incubaHuevoId != null && !incubaHuevoId.isEmpty()) {
+            com.digitale.datos.AlmacenJugadores.DatosJugador.IncubacionMesa im =
+                new com.digitale.datos.AlmacenJugadores.DatosJugador.IncubacionMesa();
+            im.huevoId = incubaHuevoId;
+            im.especie = incubaEspecie != null ? incubaEspecie : "";
+            im.exitoPct = incubaExitoPct != 0 ? incubaExitoPct : 100;
+            im.inicioSeg = incubaInicioSeg;
+            im.ciclos = incubaCiclos;
+            im.energia = incubaEnergia != 0 ? incubaEnergia : 5;
+            im.notificado = incubaNotificado;
+            datos.incubaciones.put("clasica", im);
+        }
         if (!tieneEquipo) return;
 
         datos.tieneEquipo = true;
@@ -554,6 +678,7 @@ public class PetProgressComponent implements Component<EntityStore> {
         d.hambre = pickInt(idx, hambreA, hambreB, hambreC, hambreD, hambreE, hambreF);
         d.energia = pickInt(idx, energiaA, energiaB, energiaC, energiaD, energiaE, energiaF);
         d.abi = pickInt(idx, abiA, abiB, abiC, abiD, abiE, abiF);
+        d.crecimiento = pickDouble(idx, crecimientoA, crecimientoB, crecimientoC, crecimientoD, crecimientoE, crecimientoF);
         d.hpCombate = d.hp;
         return d;
     }
@@ -567,6 +692,10 @@ public class PetProgressComponent implements Component<EntityStore> {
     }
 
     private static boolean pickBool(int idx, boolean a, boolean b, boolean c, boolean d, boolean e, boolean f) {
+        return switch (idx) { case 0 -> a; case 1 -> b; case 2 -> c; case 3 -> d; case 4 -> e; default -> f; };
+    }
+
+    private static double pickDouble(int idx, double a, double b, double c, double d, double e, double f) {
         return switch (idx) { case 0 -> a; case 1 -> b; case 2 -> c; case 3 -> d; case 4 -> e; default -> f; };
     }
 

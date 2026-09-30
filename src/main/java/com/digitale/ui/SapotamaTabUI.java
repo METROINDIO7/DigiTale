@@ -184,7 +184,7 @@ public class SapotamaTabUI extends CustomUIPage {
             sb.append("    Anchor: (Height: 40);\n");
             sb.append("    AssetImage #SlotImg").append(i).append(" {\n");
             sb.append("        Anchor: (Width: 36, Height: 36);\n");
-            sb.append("        AssetPath: \"UI/Custom/png_Digis/botamon.png\";\n");
+            sb.append("        AssetPath: \"UI/Custom/png_Digis/Botamon.png\";\n");
             sb.append("    }\n");
             sb.append("    Group { Anchor: (Width: 6); }\n");
             sb.append("    Group {\n");
@@ -321,7 +321,7 @@ public class SapotamaTabUI extends CustomUIPage {
                             Anchor: (Height: 40);
                             AssetImage #SlotImg0 {
                                 Anchor: (Width: 36, Height: 36);
-                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                AssetPath: "UI/Custom/png_Digis/Botamon.png";
                             }
                             Group { Anchor: (Width: 6); }
                             Group {
@@ -342,7 +342,7 @@ public class SapotamaTabUI extends CustomUIPage {
                             Anchor: (Height: 40);
                             AssetImage #SlotImg1 {
                                 Anchor: (Width: 36, Height: 36);
-                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                AssetPath: "UI/Custom/png_Digis/Botamon.png";
                             }
                             Group { Anchor: (Width: 6); }
                             Group {
@@ -363,7 +363,7 @@ public class SapotamaTabUI extends CustomUIPage {
                             Anchor: (Height: 40);
                             AssetImage #SlotImg2 {
                                 Anchor: (Width: 36, Height: 36);
-                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                AssetPath: "UI/Custom/png_Digis/Botamon.png";
                             }
                             Group { Anchor: (Width: 6); }
                             Group {
@@ -384,7 +384,7 @@ public class SapotamaTabUI extends CustomUIPage {
                             Anchor: (Height: 40);
                             AssetImage #SlotImg3 {
                                 Anchor: (Width: 36, Height: 36);
-                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                AssetPath: "UI/Custom/png_Digis/Botamon.png";
                             }
                             Group { Anchor: (Width: 6); }
                             Group {
@@ -405,7 +405,7 @@ public class SapotamaTabUI extends CustomUIPage {
                             Anchor: (Height: 40);
                             AssetImage #SlotImg4 {
                                 Anchor: (Width: 36, Height: 36);
-                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                AssetPath: "UI/Custom/png_Digis/Botamon.png";
                             }
                             Group { Anchor: (Width: 6); }
                             Group {
@@ -426,7 +426,7 @@ public class SapotamaTabUI extends CustomUIPage {
                             Anchor: (Height: 40);
                             AssetImage #SlotImg5 {
                                 Anchor: (Width: 36, Height: 36);
-                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                AssetPath: "UI/Custom/png_Digis/Botamon.png";
                             }
                             Group { Anchor: (Width: 6); }
                             Group {

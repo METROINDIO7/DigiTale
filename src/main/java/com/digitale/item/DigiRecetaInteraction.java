@@ -66,8 +66,13 @@ public class DigiRecetaInteraction extends SimpleInstantInteraction {
             if (playerEntity == null || !playerEntity.isValid()) return;
             Store<EntityStore> store = playerEntity.getStore();
             DigitamaDef finalDef = def;
+            String finalBebe = bebe;
             store.getExternalData().getWorld().execute(() -> {
                 try {
+                    // Examinar MUESTRA la receta pero NO desbloquea ni consume:
+                    // se desbloquea en la Mesa con el dato.
+                    playerRef.sendMessage(com.digitale.util.DigiMsg.parse(
+                        "§eReceta de " + finalBebe + ": llevala a la §fMesa de Crianza §epara desbloquearla."));
                     DigiRecetaUI.open(playerRef, playerEntity, store, finalDef);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "No se pudo abrir receta: " + e.getMessage());

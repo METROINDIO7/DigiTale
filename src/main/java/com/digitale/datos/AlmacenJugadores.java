@@ -88,11 +88,61 @@ public class AlmacenJugadores {
         public UUID desafioDeUuid = null;
         public String desafioDeNombre = "";
 
+        // ── Recetas desbloqueadas (Dato Incubación examinados, por bebé) ──
+        public final java.util.Set<String> recetas = new java.util.HashSet<>();
+
+        public boolean tieneReceta(String bebe) {
+            return bebe != null && recetas.contains(bebe);
+        }
+
+        /** Retorna true si la desbloqueó ahora (era nueva). */
+        public boolean desbloquearReceta(String bebe) {
+            if (bebe == null || bebe.isEmpty()) return false;
+            return recetas.add(bebe);
+        }
+
         // ── Incubación activa en la Mesa (1 a la vez, con timestamp) ──
+        // LEGADO (una sola incubación global; se migra a incubaciones por mesa).
         public String incubaHuevoId = "";
         public int incubaInicioSeg = 0;
         public int incubaCiclos = 0;
         public int incubaEnergia = 5;
+        /** Especie objetivo fijada al combinar ("" = sorteo del pool al eclosionar). */
+        public String incubaEspecie = "";
+        /** % de éxito fijado al combinar (100 = receta completa). */
+        public int incubaExitoPct = 100;
+        /** ¿Ya se avisó de que está listo? (para no repetir). */
+        public boolean incubaNotificado = false;
+        /** Sobrealimentaciones seguidas del huevo en mesa (RAM; 3 = Burpmon). */
+        public int sobrealimentacionCount = 0;
+
+        /** Una incubación ligada a una mesa concreta (clave "x,y,z"). */
+        public static class IncubacionMesa {
+            public String huevoId = "";
+            public String especie = "";
+            public int exitoPct = 100;
+            public int inicioSeg = 0;
+            public int ciclos = 1;
+            public int segCiclo = 60;
+            public int energia = 5;
+            public boolean notificado = false;
+            public int sobrealim = 0;
+        }
+
+        /** Incubaciones por mesa (varias mesas en paralelo). */
+        public final java.util.Map<String, IncubacionMesa> incubaciones = new java.util.LinkedHashMap<>();
+
+        /** Banco de datos PC (crias reclamadas fuera del equipo). */
+        public static final int BANCO_MAX = 100;
+        public final java.util.List<DatoDigimon> banco = new java.util.ArrayList<>();
+
+        public static String claveMesa(int x, int y, int z) {
+            return x + "," + y + "," + z;
+        }
+
+        public void resetSobrealimentacion() {
+            this.sobrealimentacionCount = 0;
+        }
 
         /** ¿Hay una incubación en curso? */
         public boolean incubando() {
@@ -104,6 +154,8 @@ public class AlmacenJugadores {
             incubaInicioSeg = 0;
             incubaCiclos = 0;
             incubaEnergia = 5;
+            incubaEspecie = "";
+            incubaExitoPct = 100;
         }
 
         // ── Menú de combate por teclado (HUD, sin Page) ────────────
@@ -122,6 +174,8 @@ public class AlmacenJugadores {
 
         // Sistema de batalla nuevo (UI-driven)
         public com.digitale.datos.EstadoCombate combate = null;
+        /** Cámara de combate activa (RAM; no persiste). */
+        public boolean camaraCombate = false;
 
         public boolean enCombateUI() {
             return combate != null && combate.activa;

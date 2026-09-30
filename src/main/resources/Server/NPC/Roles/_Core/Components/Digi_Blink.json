@@ -1,0 +1,46 @@
+{
+  "$Comment": "DigiTale: parpadeo aleatorio reutilizable. Un solo Blink por ciclo de timer.",
+  "Class": "Instruction",
+  "Parameters": {},
+  "Content": {
+    "Instructions": [
+      {
+        "$Comment": "Inicia el temporizador una sola vez",
+        "Continue": true,
+        "Sensor": {
+          "Type": "Any",
+          "Once": true
+        },
+        "Actions": [
+          {
+            "Type": "TimerStart",
+            "Name": "DigiBlinkTimer",
+            "StartValueRange": [3, 5],
+            "RestartValueRange": [5, 11]
+          }
+        ]
+      },
+      {
+        "$Comment": "Un solo Blink por ciclo de timer",
+        "Continue": true,
+        "Sensor": {
+          "Type": "Timer",
+          "Name": "DigiBlinkTimer",
+          "State": "Stopped"
+        },
+        "Actions": [
+          {
+            "Type": "PlayAnimation",
+            "Slot": "Face",
+            "Animation": "Blink"
+          },
+          {
+            "Type": "TimerRestart",
+            "Name": "DigiBlinkTimer"
+          }
+        ]
+      }
+    ]
+  },
+  "Type": "Component"
+}

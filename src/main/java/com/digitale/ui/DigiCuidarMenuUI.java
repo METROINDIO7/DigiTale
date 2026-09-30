@@ -87,60 +87,44 @@ public class DigiCuidarMenuUI extends CustomUIPage {
         java.util.List<ComidaEntry> out = new java.util.ArrayList<>();
         java.util.Set<String> vistas = new java.util.HashSet<>();
         try {
-            for (int seccion = 0; seccion < 32 && out.size() < 6; seccion++) {
-                com.hypixel.hytale.server.core.inventory.container.ItemContainer cont;
+            java.util.List<com.digitale.util.Inventarios.Hallazgo> hallados =
+                com.digitale.util.Inventarios.recorrer(ref, store);
+            // Agregar cantidades por id antes de filtrar por comida.
+            java.util.Map<String, Integer> cant = new java.util.HashMap<>();
+            java.util.Map<String, com.digitale.util.Inventarios.Hallazgo> primero = new java.util.HashMap<>();
+            for (com.digitale.util.Inventarios.Hallazgo h : hallados) {
+                if (h.id == null) continue;
+                int c = 1;
                 try {
-                    cont = com.hypixel.hytale.server.core.inventory.InventoryUtils.getSectionById(ref, seccion, store);
+                    c = Math.max(1, h.stack.getQuantity());
+                } catch (Exception ignored) {
+                }
+                cant.merge(h.id, c, Integer::sum);
+                primero.putIfAbsent(h.id, h);
+            }
+            for (java.util.Map.Entry<String, com.digitale.util.Inventarios.Hallazgo> en : primero.entrySet()) {
+                if (out.size() >= 6) break;
+                String id = en.getKey();
+                com.digitale.util.Inventarios.Hallazgo h = en.getValue();
+                boolean comida = false;
+                try {
+                    comida = esComida(h.stack.getItem());
                 } catch (Exception e) {
                     continue;
                 }
-                if (cont == null) continue;
-                short cap;
-                try {
-                    cap = cont.getCapacity();
-                } catch (Exception e) {
-                    continue;
-                }
-                for (short i = 0; i < cap && out.size() < 6; i++) {
-                    com.hypixel.hytale.server.core.inventory.ItemStack stack;
-                    try {
-                        stack = cont.getItemStack(i);
-                    } catch (Exception e) {
-                        continue;
-                    }
-                    if (stack == null) continue;
-                    String id;
-                    try {
-                        id = stack.getItemId();
-                    } catch (Exception e) {
-                        continue;
-                    }
-                    if (id == null || vistas.contains(id)) continue;
-                    boolean comida = false;
-                    try {
-                        comida = esComida(stack.getItem());
-                    } catch (Exception e) {
-                        continue;
-                    }
-                    if (!comida) continue;
-                    vistas.add(id);
-                    int cantidad = 1;
-                    try {
-                        cantidad = Math.max(1, stack.getQuantity());
-                    } catch (Exception ignored) {
-                    }
-                    int[] v = valorComida(id);
-                    ComidaEntry ce = new ComidaEntry();
-                    ce.seccion = seccion;
-                    ce.slot = i;
-                    ce.id = id;
-                    ce.nombre = nombreBonito(id);
-                    ce.cantidad = cantidad;
-                    ce.h = v[0];
-                    ce.e = v[1];
-                    ce.hpPct = v[2];
-                    out.add(ce);
-                }
+                if (!comida || vistas.contains(id)) continue;
+                vistas.add(id);
+                int[] v = valorComida(id);
+                ComidaEntry ce = new ComidaEntry();
+                ce.seccion = h.seccion;
+                ce.slot = h.slot;
+                ce.id = id;
+                ce.nombre = nombreBonito(id);
+                ce.cantidad = cant.getOrDefault(id, 1);
+                ce.h = v[0];
+                ce.e = v[1];
+                ce.hpPct = v[2];
+                out.add(ce);
             }
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "listarComidas: " + e.getMessage());
@@ -199,6 +183,8 @@ public class DigiCuidarMenuUI extends CustomUIPage {
                 EventData.of("action", "dormir").append("slot", String.valueOf(i)), false);
             event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnJugar" + i,
                 EventData.of("action", "jugar").append("slot", String.valueOf(i)), false);
+            event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnBanc" + i,
+                EventData.of("action", "banco").append("slot", String.valueOf(i)), false);
         }
         event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnVolver",
             EventData.of("action", "volver"), false);
@@ -344,7 +330,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnAlim0 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -352,7 +338,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnDorm0 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -360,8 +346,16 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnJugar0 {
                                     Text: "Pasear";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnBanc0 {
+                                    Text: "Banco";
+                                    Anchor: (Width: 55, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
                         }
@@ -391,7 +385,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnAlim1 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -399,7 +393,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnDorm1 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -407,8 +401,16 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnJugar1 {
                                     Text: "Pasear";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnBanc1 {
+                                    Text: "Banco";
+                                    Anchor: (Width: 55, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
                         }
@@ -441,7 +443,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnAlim2 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -449,7 +451,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnDorm2 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -457,8 +459,16 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnJugar2 {
                                     Text: "Pasear";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnBanc2 {
+                                    Text: "Banco";
+                                    Anchor: (Width: 55, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
                         }
@@ -488,7 +498,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnAlim3 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -496,7 +506,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnDorm3 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -504,8 +514,16 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnJugar3 {
                                     Text: "Pasear";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnBanc3 {
+                                    Text: "Banco";
+                                    Anchor: (Width: 55, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
                         }
@@ -538,7 +556,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnAlim4 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -546,7 +564,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnDorm4 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -554,8 +572,16 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnJugar4 {
                                     Text: "Pasear";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnBanc4 {
+                                    Text: "Banco";
+                                    Anchor: (Width: 55, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
                         }
@@ -585,7 +611,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnAlim5 {
                                     Text: "Alimentar";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -593,7 +619,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnDorm5 {
                                     Text: "Dormir";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
 
@@ -601,8 +627,16 @@ public class DigiCuidarMenuUI extends CustomUIPage {
 
                                 TextButton #BtnJugar5 {
                                     Text: "Pasear";
-                                    Anchor: (Width: 70, Height: 28);
+                                    Anchor: (Width: 55, Height: 28);
                                     Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #e0e8f0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
+                                }
+
+                                Group { Anchor: (Width: 6); }
+
+                                TextButton #BtnBanc5 {
+                                    Text: "Banco";
+                                    Anchor: (Width: 55, Height: 28);
+                                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 10, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 10, TextColor: #ffffff, HorizontalAlignment: Center)));
                                 }
                             }
                         }
@@ -680,6 +714,7 @@ public class DigiCuidarMenuUI extends CustomUIPage {
                 if (hambriento != null && cual >= 0 && cual < comidas.size()) {
                     ComidaEntry ce = comidas.get(cual);
                     boolean gastado = gastarComida(ref, store, ce);
+                    double tamAntes = hambriento.crecimiento;
                     // Sobre-alimentar a tope 3 veces seguidas = Burpmon (reinicio).
                     if (hambriento.hambre >= 100) {
                         hambriento.vecesLleno++;
@@ -699,6 +734,9 @@ public class DigiCuidarMenuUI extends CustomUIPage {
                         guardarProgreso(ref, store, datos);
                         msgPendiente = hambriento.nombre + " comio " + ce.nombre
                             + " (H+" + ce.h + " E+" + ce.e + ")" + (gastado ? "" : " [no se pudo gastar]");
+                        if ("Burpmon".equals(hambriento.especie) && tamAntes < 3.0 && hambriento.esGrande()) {
+                            msgPendiente += " ¡Supero 3x! Ahora es GRANDE (repasealo para verlo).";
+                        }
                     }
                 } else {
                     msgPendiente = "No se pudo dar de comer.";
@@ -744,6 +782,33 @@ public class DigiCuidarMenuUI extends CustomUIPage {
                 sendUpdate(cmd);
             }
             case "volver" -> SapotamaTabUI.open(playerRef, ref, store);
+            case "banco" -> {
+                UICommandBuilder cmd = new UICommandBuilder();
+                DatoDigimon sale = (datos != null) ? datos.getSlot(slot) : null;
+                if (sale == null) {
+                    cmd.set("#LblInfo.Text", "Slot vacio.");
+                } else if (datos.banco.size() >= AlmacenJugadores.DatosJugador.BANCO_MAX) {
+                    cmd.set("#LblInfo.Text", "Banco lleno (100/100).");
+                } else {
+                    if (datos.paseoEn(slot)) {
+                        SistemaPaseo.despawnearUno(store, datos.refsPaseo[slot]);
+                        datos.setRefPaseo(slot, null);
+                        datos.paseoActivo = datos.algunPaseo();
+                    }
+                    datos.setSlot(slot, null);
+                    if (datos.activoA == slot) datos.activoA = 0;
+                    if (datos.activoB == slot) datos.activoB = 1;
+                    sale.dormido = false;
+                    sale.dormidoEnSeg = 0;
+                    datos.banco.add(sale);
+                    if (datos.contarEquipo() == 0) datos.tieneEquipo = false;
+                    guardarProgreso(ref, store, datos);
+                    cmd.set("#LblInfo.Text", sale.nombre + " al Banco PC (" + datos.banco.size() + "/100).");
+                    LOGGER.log(Level.INFO, "Slot " + slot + " al banco (" + sale.nombre + ")");
+                }
+                actualizarEstado(cmd, store);
+                sendUpdate(cmd);
+            }
             default -> {
                 UICommandBuilder cmd = new UICommandBuilder();
                 sendUpdate(cmd);
@@ -787,14 +852,19 @@ public class DigiCuidarMenuUI extends CustomUIPage {
             cmd.set("#BtnAlim" + i + ".Visible", ocupado && !digi.dormido);
             cmd.set("#BtnDorm" + i + ".Visible", ocupado);
             cmd.set("#BtnJugar" + i + ".Visible", ocupado);
+            cmd.set("#BtnBanc" + i + ".Visible", ocupado);
         }
     }
 
     /** Gasta 1 unidad de la comida indicada. Retorna false si no pudo. */
     private static boolean gastarComida(Ref<EntityStore> ref, Store<EntityStore> store, ComidaEntry ce) {
         try {
+            com.digitale.util.Inventarios.Hallazgo h = new com.digitale.util.Inventarios.Hallazgo();
+            h.seccion = ce.seccion;
+            h.slot = ce.slot;
+            h.id = ce.id;
             com.hypixel.hytale.server.core.inventory.container.ItemContainer cont =
-                com.hypixel.hytale.server.core.inventory.InventoryUtils.getSectionById(ref, ce.seccion, store);
+                com.digitale.util.Inventarios.contenedorDe(ref, store, h);
             if (cont == null) return false;
             cont.removeItemStackFromSlot(ce.slot, 1);
             return true;

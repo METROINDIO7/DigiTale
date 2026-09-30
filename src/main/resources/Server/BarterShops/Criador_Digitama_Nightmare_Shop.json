@@ -1,0 +1,217 @@
+{
+  "DisplayNameKey": "server.barter.criador_digitama_nightmare.title",
+  "RefreshInterval": {
+    "Days": 2
+  },
+  "RestockHour": 8,
+  "TradeSlots": [
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Bowmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Bowmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Chicchimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Chicchimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_DemiMeramon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_DemiMeramon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Kakkinmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Kakkinmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Kokomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Kokomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Kyaromon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Kyaromon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Onibimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Onibimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Pagumon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Pagumon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Poromon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Poromon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Pusurimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Pusurimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Xiaomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Xiaomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Yokomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Yokomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_YukimiBotamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_YukimiBotamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    }
+  ]
+}

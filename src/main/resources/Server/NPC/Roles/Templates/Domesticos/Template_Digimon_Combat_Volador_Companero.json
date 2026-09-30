@@ -39,6 +39,14 @@
       "Value": 8,
       "Description": "Distancia a la que empieza a frenar. Debe ser mayor que FollowStopDistance."
     },
+    "MaxSpeed": {
+      "Value": 14,
+      "Description": "Velocidad horizontal de vuelo. Alta: rapido en el aire."
+    },
+    "LandMaxSpeed": {
+      "Value": 2.5,
+      "Description": "Velocidad en tierra. Baja: torpe fuera del aire."
+    },
     "MinHeightOverGround": {
       "Value": 3,
       "Description": "Altura minima de vuelo sobre el suelo"
@@ -194,8 +202,20 @@
   "$Comment_MotionController": "Valores exactos del Curioso Volador funcional. MinAirSpeed 3 y MaxRollAngle 180 son criticos.",
   "MotionControllerList": [
     {
+      "Type": "Walk",
+      "MaxWalkSpeed": {
+        "Compute": "LandMaxSpeed"
+      },
+      "Gravity": 10,
+      "MaxFallSpeed": 8,
+      "Acceleration": 5,
+      "MaxRotationSpeed": 270
+    },
+    {
       "Type": "Fly",
-      "MaxHorizontalSpeed": 14,
+      "MaxHorizontalSpeed": {
+        "Compute": "MaxSpeed"
+      },
       "MaxSinkSpeed": 3,
       "MaxClimbSpeed": 8,
       "MinAirSpeed": 3,

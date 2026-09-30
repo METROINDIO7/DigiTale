@@ -1,0 +1,25 @@
+{
+  "Input": [
+    {
+      "ItemId": "Digitama_Gris",
+      "Quantity": 2
+    }
+  ],
+  "PrimaryOutput": {
+    "ItemId": "Digitama_Roto",
+    "Quantity": 2
+  },
+  "Output": [
+    {
+      "ItemId": "Digitama_Roto",
+      "Quantity": 2
+    }
+  ],
+  "BenchRequirement": [
+    {
+      "Type": "Processing",
+      "Id": "DigiTale_Mesa"
+    }
+  ],
+  "TimeSeconds": 10
+}

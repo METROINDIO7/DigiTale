@@ -1,0 +1,10 @@
+{
+  "TranslationProperties": {
+    "Name": "items.Digi_Memory_Esperanza.name",
+    "Description": "items.Digi_Memory_Esperanza.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Sapotama_icon.png",
+  "Quality": "Epic",
+  "PlayerAnimationsId": "Item",
+  "MaxStack": 1
+}

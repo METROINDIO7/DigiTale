@@ -1,0 +1,10 @@
+{
+  "TranslationProperties": {
+    "Name": "items.Digi_Memory_Pureza.name",
+    "Description": "items.Digi_Memory_Pureza.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Sapotama_icon.png",
+  "Quality": "Epic",
+  "PlayerAnimationsId": "Item",
+  "MaxStack": 1
+}

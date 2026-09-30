@@ -1,0 +1,21 @@
+{
+  "$Comment": "TEST — Compañero semi-acuatico montable con modelo Veemon (placeholder visual). Testea Template_Digimon_Combat_Nadador_Companero + bloque Mount.",
+  "Type": "Variant",
+  "Reference": "Template_Digimon_Combat_Nadador_Companero",
+  "Modify": {
+    "Appearance": "Veemon_Model",
+    "MaxHealth": 100,
+    "MaxSpeed": 9,
+    "IsMountable": true,
+    "MountAnchorY": 1.2,
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Veemon_Nadador_Montable.name",
+      "Description": "Test: Veemon como compañero semi-acuatico montable"
+    }
+  }
+}

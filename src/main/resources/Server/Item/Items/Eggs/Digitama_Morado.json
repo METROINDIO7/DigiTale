@@ -25,5 +25,6 @@
   },
   "Model": "NPC/Models/Digitama/Digitama.blockymodel",
   "Texture": "NPC/Textures/Digitama/Digitama_Morado.png",
-  "Icon": "Icons/ItemsGenerated/Digitamas/Icon_Digitama_Morado.png"
+  "Icon": "Icons/ItemsGenerated/Digitamas/Icon_Digitama_Morado.png",
+  "MaxStack": 1
 }

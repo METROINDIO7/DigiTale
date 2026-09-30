@@ -1,0 +1,53 @@
+{
+  "TranslationProperties": {
+    "Name": "items.Huevo_Incubando_Verde_Gummymon_X.name",
+    "Description": "items.Huevo_Incubando_Verde_Gummymon_X.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Digitamas/Icon_Digitama_Incuvado.png",
+  "Model": "NPC/Models/Digitama/Digitama.blockymodel",
+  "Texture": "NPC/Textures/Digitama/Digitama_Incuvado.png",
+  "Quality": "Uncommon",
+  "PlayerAnimationsId": "Item",
+  "MaxStack": 1,
+  "Interactions": {
+    "Use": {
+      "Interactions": [
+        {
+          "Type": "DigiTale_Huevo_Incubando"
+        }
+      ]
+    }
+  },
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Digitama_Verde",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Dato_Incubacion_Gummymon",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Esencia_Yuramon",
+        "Quantity": 10
+      },
+      {
+        "ItemId": "Food_Pie_Apple",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Processing",
+        "Id": "DigiTale_Mesa"
+      }
+    ],
+    "TimeSeconds": 60,
+    "OutputQuantity": 1
+  },
+  "Light": {
+    "Color": "#fc3",
+    "Radius": 1
+  }
+}

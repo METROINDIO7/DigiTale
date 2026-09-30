@@ -42,6 +42,10 @@
       "Value": 2.5,
       "Description": "Velocidad en tierra. Baja: se arrastra."
     },
+    "MaxSpeed": {
+      "Value": 10,
+      "Description": "Velocidad de nado. Alta: rapido en el agua."
+    },
     "ParticleOffset": {
       "Value": [
         0,
@@ -208,7 +212,9 @@
     },
     {
       "Type": "Dive",
-      "MaxSwimSpeed": 10,
+      "MaxSwimSpeed": {
+        "Compute": "MaxSpeed"
+      },
       "Acceleration": 12,
       "MaxDiveSpeed": 8,
       "SwimDepth": 0.6,

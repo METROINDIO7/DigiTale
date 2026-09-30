@@ -8,26 +8,30 @@ package com.digitale.crianza;
 public class DigitamaDef {
 
     /** Id del item (Items/Eggs/<id>.json sin extensión). */
-    public final String idItem;
-    public final String nombre;
+    public String idItem;
+    public String nombre;
     /** Dragon's Roar, Deep Savers, Nightmare Soldiers, Metal Empire, Nature Spirits, Virus Busters, Desconocido. */
-    public final String familia;
+    public String familia;
     /** Data, Vaccine, Virus, Desconocido. */
-    public final String atributo;
+    public String atributo;
     /** Basico, Medio, Avanzado, Legendario. */
-    public final String tier;
-    public final String[] ingredientes;
-    public final String entorno;
+    public String tier;
+    public String[] ingredientes;
+    public String entorno;
     /** Energía requerida 1-10. */
-    public final int energia;
+    public int energia;
     /** Ciclos de incubación. */
-    public final int ciclos;
+    public int ciclos;
+    /** Segundos reales por ciclo (1 ciclo por defecto; varía por tier). */
+    public int segPorCiclo = 60;
     /** Especie al nacer. */
-    public final String especie;
+    public String especie;
     /** Nivel evolutivo al nacer (1 baby, 2 in-training, 3 rookie). */
-    public final int nivelRes;
+    public int nivelRes;
+    /** Pool de especies (la principal primero). Si falta, se usa especie. */
+    public String[] especies;
     /** Apariencia para huevos salvajes (modelos Digitame_* existentes). */
-    public final String modeloNpc;
+    public String modeloNpc;
 
     public DigitamaDef(String idItem, String nombre, String familia, String atributo, String tier,
                        String[] ingredientes, String entorno, int energia, int ciclos,
@@ -95,6 +99,26 @@ public class DigitamaDef {
     };
 
     public static DigitamaDef porItem(String idItem) {
+        DigitamaDef d = SistemaIncubacion.porItem(idItem);
+        return (d != null) ? d : porItemBase(idItem);
+    }
+
+    /** Pool efectivo (nunca vacío si hay especie). */
+    public java.util.List<String> pool() {
+        java.util.List<String> out = new java.util.ArrayList<>();
+        if (especies != null) {
+            for (String e : especies) if (e != null && !e.isEmpty() && !out.contains(e)) out.add(e);
+        }
+        if (out.isEmpty() && especie != null && !especie.isEmpty()) out.add(especie);
+        return out;
+    }
+
+    public static DigitamaDef porBebe(String especie) {
+        DigitamaDef d = SistemaIncubacion.porBebe(especie);
+        return (d != null) ? d : porBebeBase(especie);
+    }
+
+    static DigitamaDef porItemBase(String idItem) {
         if (idItem == null) return null;
         for (DigitamaDef d : TODOS) {
             if (d.idItem.equals(idItem)) return d;
@@ -102,7 +126,7 @@ public class DigitamaDef {
         return null;
     }
 
-    public static DigitamaDef porBebe(String especie) {
+    static DigitamaDef porBebeBase(String especie) {
         if (especie == null) return null;
         for (DigitamaDef d : TODOS) {
             if (d.especie.equals(especie)) return d;

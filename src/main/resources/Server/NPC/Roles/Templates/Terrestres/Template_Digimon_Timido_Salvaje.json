@@ -189,6 +189,42 @@
           },
           "Instructions": [
             {
+              "$Comment": "Parpadeo: inicia temporizador una sola vez",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "TimerStart",
+                  "Name": "DigiBlinkTimer",
+                  "StartValueRange": [3, 5],
+                  "RestartValueRange": [5, 11]
+                }
+              ]
+            },
+            {
+              "$Comment": "Parpadeo: un solo Blink por ciclo de timer",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Timer",
+                "Name": "DigiBlinkTimer",
+                "State": "Stopped"
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Face",
+                  "Animation": "Blink"
+                },
+                {
+                  "Type": "TimerRestart",
+                  "Name": "DigiBlinkTimer"
+                }
+              ]
+            },
+            {
               "Reference": "Component_Instruction_Damage_Check",
               "Modify": {
                 "_ExportStates": [
@@ -260,6 +296,7 @@
                 ]
               }
             }
+          
           ]
         },
         {

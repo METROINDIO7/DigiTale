@@ -1,0 +1,310 @@
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 860, Width: 560);
+
+    Group {
+        LayoutMode: Top;
+        Background: (Color: #06121f);
+        Padding: (Full: 15);
+
+        Label {
+            Text: "PC DIGITAL - CAJA DE DATOS";
+            Style: (TextColor: #00e5ff, FontSize: 17, RenderBold: true, HorizontalAlignment: Center);
+            Anchor: (Height: 26);
+        }
+        Label #LblPCCount {
+            Text: "";
+            Style: (TextColor: #7fd4ff, FontSize: 12, HorizontalAlignment: Center);
+            Anchor: (Height: 20);
+        }
+        Label {
+            Text: "EQUIPO (Depositar = guardar en PC)";
+            Style: (TextColor: #00e5ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center);
+            Anchor: (Height: 20);
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPEq0 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPEq0 {
+                Text: "";
+                Style: (TextColor: #e0f4ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPDep0 {
+                Text: "Guardar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a3d5c), LabelStyle: (FontSize: 11, TextColor: #00e5ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e5a87), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPEq1 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPEq1 {
+                Text: "";
+                Style: (TextColor: #e0f4ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPDep1 {
+                Text: "Guardar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a3d5c), LabelStyle: (FontSize: 11, TextColor: #00e5ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e5a87), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPEq2 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPEq2 {
+                Text: "";
+                Style: (TextColor: #e0f4ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPDep2 {
+                Text: "Guardar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a3d5c), LabelStyle: (FontSize: 11, TextColor: #00e5ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e5a87), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPEq3 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPEq3 {
+                Text: "";
+                Style: (TextColor: #e0e8f0, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPDep3 {
+                Text: "Guardar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a3d5c), LabelStyle: (FontSize: 11, TextColor: #00e5ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e5a87), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPEq4 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPEq4 {
+                Text: "";
+                Style: (TextColor: #e0f4ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPDep4 {
+                Text: "Guardar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a3d5c), LabelStyle: (FontSize: 11, TextColor: #00e5ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e5a87), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPEq5 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPEq5 {
+                Text: "";
+                Style: (TextColor: #e0f4ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPDep5 {
+                Text: "Guardar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a3d5c), LabelStyle: (FontSize: 11, TextColor: #00e5ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e5a87), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group { Anchor: (Height: 2); Background: (Color: #00e5ff); }
+        Group { Anchor: (Height: 4); }
+        Label {
+            Text: "CAJA PC (Retirar = al equipo)";
+            Style: (TextColor: #00e5ff, FontSize: 12, RenderBold: true, HorizontalAlignment: Center);
+            Anchor: (Height: 20);
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB0 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB0 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet0 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB1 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB1 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet1 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB2 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB2 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet2 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB3 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB3 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet3 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB4 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB4 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet4 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB5 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB5 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet5 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB6 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB6 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet6 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 28);
+            AssetImage #ImgPB7 {
+                Anchor: (Width: 26, Height: 26);
+                AssetPath: "UI/Custom/png_Digis/Botamon.png";
+            }
+            Group { Anchor: (Width: 6); }
+            Label #LblPB7 {
+                Text: "";
+                Style: (TextColor: #c0e8ff, FontSize: 12);
+                Anchor: (Width: 300, Height: 28);
+            }
+            TextButton #BtnPRet7 {
+                Text: "Retirar";
+                Anchor: (Width: 120, Height: 26);
+                Style: (Default: (Background: (Color: #0a5c3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0e8757), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group { Anchor: (Height: 4); }
+        Label #LblPCMsg {
+            Text: "";
+            Style: (TextColor: #ffcc00, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
+            Anchor: (Height: 28);
+        }
+        TextButton #BtnPCCerrar {
+            Text: "Cerrar";
+            Anchor: (Width: 200, Height: 32);
+            Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 12, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+        }
+    }
+}

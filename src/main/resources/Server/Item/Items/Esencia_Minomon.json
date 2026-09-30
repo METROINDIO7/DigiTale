@@ -1,0 +1,41 @@
+{
+  "TranslationProperties": {
+    "Name": "items.Esencia_Minomon.name"
+  },
+  "Icon": "Icons/ItemsGenerated/Ingredient_datos_escencias/Icon_Escencia_dato_Amarilla.png",
+  "Quality": "Uncommon",
+  "Categories": [
+    "Items.Ingredients"
+  ],
+  "Model": "NPC/Models/Items/Escencia_Datos.blockymodel",
+  "Texture": "NPC/Textures/Items/Ingredient_datos_escencias/Escencia_dato_Amarilla.png",
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [
+      0,
+      0,
+      0
+    ],
+    "Translation": [
+      0,
+      -13
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Ingredient"
+    ]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": null
+  },
+  "Scale": 0.8,
+  "Light": {
+    "Color": "#999",
+    "Radius": 1
+  },
+  "ItemSoundSetId": "ISS_Items_Gems",
+  "DropOnDeath": true,
+  "MaxStack": 64
+}

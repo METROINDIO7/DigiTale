@@ -5,7 +5,7 @@
   "Scale": 1,
   "PlayerAnimationsId": "Item",
   "TranslationProperties": {
-    "Name": "Sapotama"
+    "Name": "items.Sapotama.name"
   },
   "Interactions": {
     "Primary": {

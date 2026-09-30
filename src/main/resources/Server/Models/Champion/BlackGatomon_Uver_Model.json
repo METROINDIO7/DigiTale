@@ -1,0 +1,97 @@
+{
+  "Model": "NPC/Models/Champion/BlackGatomon_Uver.blockymodel",
+  "Texture": "NPC/Textures/Champion/BlackGatomon_Uver.png",
+  "EyeHeight": 0.9,
+  "CrouchOffset": -0.3,
+  "HitBox": {
+    "Max": {
+      "X": 0.2,
+      "Y": 0.9,
+      "Z": 0.2
+    },
+    "Min": {
+      "X": -0.2,
+      "Y": 0,
+      "Z": -0.2
+    }
+  },
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon/Idle.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Walk": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon/Walk.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Hurt": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/BlackGatomon_Uver/Hurt.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Death": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/BlackGatomon_Uver/Die.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Sleep": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/BlackGatomon_Uver/Sleep.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Blink": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/BlackGatomon_Uver/Blink.blockyanim"
+        }
+      ]
+    },
+    "Surprised": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/BlackGatomon_Uver/surprised.blockyanim"
+        }
+      ]
+    },
+    "Interaction": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon/Interaction.blockyanim"
+        }
+      ]
+    },
+    "Attack": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon/Attack.blockyanim"
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/BlackGatomon_Uver/Run.blockyanim"
+        }
+      ]
+    }
+  },
+  "MinScale": 1,
+  "MaxScale": 1
+}

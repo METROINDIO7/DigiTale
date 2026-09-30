@@ -36,7 +36,8 @@ public class DigiBattleHud extends CustomUIHud {
         cmd.appendInline(null, """
             Group {
                 Group {
-                    Anchor: (Top: 10, Left: 10, Width: 230);
+                    LayoutMode: Top;
+                    Anchor: (Top: 10, Left: 10, Width: 230, Height: 124);
                     Background: (Color: #0b1220);
                     Padding: (Full: 8);
 
@@ -45,7 +46,7 @@ public class DigiBattleHud extends CustomUIHud {
                         Anchor: (Height: 34);
                         AssetImage #HudAImg {
                             Anchor: (Width: 30, Height: 30);
-                            AssetPath: "UI/Custom/png_Digis/botamon.png";
+                            AssetPath: "UI/Custom/png_Digis/Botamon.png";
                         }
                         Group { Anchor: (Width: 6); }
                         Group {
@@ -68,7 +69,7 @@ public class DigiBattleHud extends CustomUIHud {
                         Anchor: (Height: 34);
                         AssetImage #HudBImg {
                             Anchor: (Width: 30, Height: 30);
-                            AssetPath: "UI/Custom/png_Digis/botamon.png";
+                            AssetPath: "UI/Custom/png_Digis/Botamon.png";
                         }
                         Group { Anchor: (Width: 6); }
                         Group {
@@ -91,7 +92,7 @@ public class DigiBattleHud extends CustomUIHud {
                         Anchor: (Height: 34);
                         AssetImage #HudCImg {
                             Anchor: (Width: 30, Height: 30);
-                            AssetPath: "UI/Custom/png_Digis/botamon.png";
+                            AssetPath: "UI/Custom/png_Digis/Botamon.png";
                         }
                         Group { Anchor: (Width: 6); }
                         Group {
@@ -111,7 +112,8 @@ public class DigiBattleHud extends CustomUIHud {
                     }
                 }
                 Group {
-                    Anchor: (Top: 10, Right: 10, Width: 250);
+                    LayoutMode: Top;
+                    Anchor: (Top: 10, Right: 10, Width: 250, Height: 100);
                     Background: (Color: #1a0f1a);
                     Padding: (Full: 8);
 
@@ -132,7 +134,8 @@ public class DigiBattleHud extends CustomUIHud {
                     }
                 }
                 Group {
-                    Anchor: (Left: 10, Bottom: 10, Width: 250);
+                    LayoutMode: Top;
+                    Anchor: (Left: 10, Bottom: 10, Width: 250, Height: 180);
                     Background: (Color: #0b1220);
                     Padding: (Full: 8);
 
@@ -156,7 +159,8 @@ public class DigiBattleHud extends CustomUIHud {
                     }
                 }
                 Group {
-                    Anchor: (Right: 10, Bottom: 10, Width: 300);
+                    LayoutMode: Top;
+                    Anchor: (Right: 10, Bottom: 10, Width: 300, Height: 98);
                     Background: (Color: #0b1220);
                     Padding: (Full: 8);
 

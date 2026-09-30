@@ -1,0 +1,10 @@
+{
+  "TranslationProperties": {
+    "Name": "items.Gema_NEO.name",
+    "Description": "items.Gema_NEO.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Sapotama_icon.png",
+  "Quality": "Epic",
+  "PlayerAnimationsId": "Item",
+  "MaxStack": 1
+}

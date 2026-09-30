@@ -1,0 +1,97 @@
+{
+  "Model": "NPC/Models/Unknown/Burpmon_Grande.blockymodel",
+  "Texture": "NPC/Textures/Unknown/Brupmon_Grande.png",
+  "EyeHeight": 0.9,
+  "CrouchOffset": -0.3,
+  "HitBox": {
+    "Max": {
+      "X": 1.1,
+      "Y": 2.5,
+      "Z": 1.1
+    },
+    "Min": {
+      "X": -1.1,
+      "Y": 0,
+      "Z": -1.1
+    }
+  },
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Idle.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Walk": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Walk.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Hurt": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Hurt.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Death": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Die.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Sleep": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Sleep.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Blink": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Blink.blockyanim"
+        }
+      ]
+    },
+    "Surprised": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/surprised.blockyanim"
+        }
+      ]
+    },
+    "Interaction": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Interaction.blockyanim"
+        }
+      ]
+    },
+    "Attack": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Attack.blockyanim"
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Unknown/Burpmon_Grande/Run.blockyanim"
+        }
+      ]
+    }
+  },
+  "MinScale": 1,
+  "MaxScale": 1
+}

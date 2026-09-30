@@ -1,0 +1,97 @@
+{
+  "$Comment": "Vendedor misterioso BlackGatomon Uver. NO spawnea salvaje. Mismo nombre en rol y tienda para mantener el misterio. Vende datos evolutivos, X-Antibody, cosmeticos y equipo (stock inicial minimo, ampliar).",
+  "Type": "Generic",
+  "StartState": "Idle",
+  "DisplayNames": [
+    "???",
+    "???"
+  ],
+  "DefaultNPCAttitude": "Ignore",
+  "DefaultPlayerAttitude": "Neutral",
+  "Appearance": "BlackGatomon_Uver_Model",
+  "DropList": "Empty",
+  "MaxHealth": 200,
+  "DisableDamageGroups": [
+    "Self"
+  ],
+  "BusyStates": [
+    "$Interaction"
+  ],
+  "Invulnerable": true,
+  "KnockbackScale": 0,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": 0,
+      "Gravity": 10,
+      "RunThreshold": 0.3,
+      "MaxFallSpeed": 15,
+      "MaxRotationSpeed": 0,
+      "Acceleration": 10
+    }
+  ],
+  "Instructions": [
+    {
+      "Sensor": {
+        "Type": "State",
+        "State": "Idle"
+      },
+      "BodyMotion": {
+        "Type": "Nothing"
+      }
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Sensor": {
+          "Type": "CanInteract",
+          "ViewSector": 180
+        }
+      },
+      {
+        "Continue": true,
+        "Sensor": {
+          "Type": "Any"
+        },
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": true,
+            "Hint": "server.interactionHints.trade"
+          }
+        ]
+      },
+      {
+        "Sensor": {
+          "Type": "HasInteracted"
+        },
+        "Instructions": [
+          {
+            "Sensor": {
+              "Type": "Not",
+              "Sensor": {
+                "Type": "State",
+                "State": "$Interaction"
+              }
+            },
+            "Actions": [
+              {
+                "Type": "LockOnInteractionTarget"
+              },
+              {
+                "Type": "OpenBarterShop",
+                "Shop": "Vendedor_Uver_Shop"
+              },
+              {
+                "Type": "State",
+                "State": "$Interaction"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "NameTranslationKey": "server.npcRoles.Vendedor_Uver.name"
+}

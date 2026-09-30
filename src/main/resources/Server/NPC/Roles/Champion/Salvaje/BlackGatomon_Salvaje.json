@@ -2,7 +2,7 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Botamon_Model",
+    "Appearance": "BlackGatomon_Model",
     "MaxHealth": 42,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"

@@ -1,0 +1,169 @@
+{
+  "DisplayNameKey": "server.barter.criador_digitama_deep.title",
+  "RefreshInterval": {
+    "Days": 2
+  },
+  "RestockHour": 8,
+  "TradeSlots": [
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Bosamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Bosamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Bukamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Bukamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Chapmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Chapmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Hopmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Hopmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Kekkomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Kekkomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Nyaromon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Nyaromon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Pichimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Pichimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Pinamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Pinamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Tokomon_XAntibody",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Tokomon_XAntibody",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Wanyamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Wanyamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,371 @@
+Group {
+    LayoutMode: Top;
+    Anchor: (Height: 760, Width: 560);
+
+    Group {
+        LayoutMode: Top;
+        Background: (Color: #0b1220);
+        Padding: (Full: 15);
+
+        Label {
+            Text: "RECLAMO DE CRIAS";
+            Style: (TextColor: #ffcc00, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
+            Anchor: (Height: 26);
+        }
+        Group {
+            LayoutMode: Left;
+            Anchor: (Height: 32);
+            TextButton #BtnTabListas {
+                Text: "Reclamar";
+                Anchor: (Width: 200, Height: 30);
+                Style: (Default: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+            Group { Anchor: (Width: 8); }
+            TextButton #BtnTabBanco {
+                Text: "Banco PC";
+                Anchor: (Width: 200, Height: 30);
+                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #ffcc00, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+            }
+        }
+        Group #TabListas {
+            LayoutMode: Top;
+            Label #LblR0 {
+                Text: "";
+                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Anchor: (Height: 30);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 30);
+                AssetImage #ImgR0 {
+                    Anchor: (Width: 28, Height: 28);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnEq0 {
+                    Text: "Equipo";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBk0 {
+                    Text: "Banco";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnRel0 {
+                    Text: "Liberar";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblR1 {
+                Text: "";
+                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Anchor: (Height: 30);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 30);
+                AssetImage #ImgR1 {
+                    Anchor: (Width: 28, Height: 28);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnEq1 {
+                    Text: "Equipo";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBk1 {
+                    Text: "Banco";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnRel1 {
+                    Text: "Liberar";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblR2 {
+                Text: "";
+                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Anchor: (Height: 30);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 30);
+                AssetImage #ImgR2 {
+                    Anchor: (Width: 28, Height: 28);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnEq2 {
+                    Text: "Equipo";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBk2 {
+                    Text: "Banco";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnRel2 {
+                    Text: "Liberar";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblR3 {
+                Text: "";
+                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Anchor: (Height: 30);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 30);
+                AssetImage #ImgR3 {
+                    Anchor: (Width: 28, Height: 28);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnEq3 {
+                    Text: "Equipo";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBk3 {
+                    Text: "Banco";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnRel3 {
+                    Text: "Liberar";
+                    Anchor: (Width: 120, Height: 28);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+        }
+        Group #TabBanco {
+            LayoutMode: Top;
+            Label #LblB0 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB0 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq0 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel0 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblB1 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB1 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq1 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel1 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblB2 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB2 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq2 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel2 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblB3 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB3 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq3 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel3 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblB4 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB4 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq4 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel4 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblB5 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB5 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq5 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel5 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblB6 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB6 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq6 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel6 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+            Label #LblB7 {
+                Text: "";
+                Style: (TextColor: #c0ccd8, FontSize: 12, Wrap: true);
+                Anchor: (Height: 28);
+            }
+            Group {
+                LayoutMode: Left;
+                Anchor: (Height: 28);
+                AssetImage #ImgB7 {
+                    Anchor: (Width: 26, Height: 26);
+                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBEq7 {
+                    Text: "Al equipo";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+                Group { Anchor: (Width: 6); }
+                TextButton #BtnBRel7 {
+                    Text: "Liberar";
+                    Anchor: (Width: 140, Height: 26);
+                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                }
+            }
+        }
+        Label #LblMsg {
+            Text: "";
+            Style: (TextColor: #ffcc00, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
+            Anchor: (Height: 30);
+        }
+        TextButton #BtnCerrar {
+            Text: "Cerrar";
+            Anchor: (Width: 200, Height: 32);
+            Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 12, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+        }
+    }
+}

@@ -25,5 +25,6 @@
   },
   "Model": "NPC/Models/Digitama/Digitama.blockymodel",
   "Texture": "NPC/Textures/Digitama/Digitama_Rosa.png",
-  "Icon": "Icons/ItemsGenerated/Digitamas/Icon_Digitama_Rosa.png"
+  "Icon": "Icons/ItemsGenerated/Digitamas/Icon_Digitama_Rosa.png",
+  "MaxStack": 1
 }

@@ -44,8 +44,12 @@ public class EstadoCombate {
     public int     enemigoDef      = 0;
     public int     enemigoSpd      = 0;
     public int     enemigoWis      = 0;
-    public int     enemigoExp      = 0;
+    public int     enemigoExp = 0;
     public boolean enemigoCargando = false;
+    /** Calumon vivo en el equipo: duplica atk/def/spd/wis aliados. */
+    public boolean calumonDobla = false;
+    /** PvP entre jugadores: sin penalización de derrota. */
+    public boolean esPvP = false;
     public Set<EstadoAlterado> enemigosEstados = EnumSet.noneOf(EstadoAlterado.class);
     public int     turnosQuemado  = 0;
     public int     turnosVeneno   = 0;

@@ -81,6 +81,11 @@ public class EnemigoCombate {
      * Escala ligeramente los stats para variedad.
      */
     public static EstadoCombate generarCombate(int nivelEquipo) {
+        return generarCombatePara(nivelEquipo, null);
+    }
+
+    /** Como generarCombate, pero prefiere la especie golpeada si está en tabla. */
+    public static EstadoCombate generarCombatePara(int nivelEquipo, String especie) {
         // Filtrar enemigos apropiados (nivel ± 1)
         List<EnemigoCombate> pool = new ArrayList<>();
         for (EnemigoCombate e : TABLA) {
@@ -96,7 +101,17 @@ public class EnemigoCombate {
         }
         if (pool.isEmpty()) pool.add(TABLA[3]); // Agumon como último recurso
 
-        EnemigoCombate tmpl = pool.get(RNG.nextInt(pool.size()));
+        EnemigoCombate tmpl = null;
+        if (especie != null && !especie.isEmpty()) {
+            for (EnemigoCombate e : pool) {
+                if (e.nombre != null && e.nombre.toLowerCase(java.util.Locale.ROOT)
+                        .startsWith(especie.toLowerCase(java.util.Locale.ROOT))) {
+                    tmpl = e;
+                    break;
+                }
+            }
+        }
+        if (tmpl == null) tmpl = pool.get(RNG.nextInt(pool.size()));
 
         // Escala aleatoria ±10% para variedad
         double escala = 0.9 + RNG.nextDouble() * 0.2;

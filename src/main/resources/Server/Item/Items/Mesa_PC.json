@@ -1,0 +1,70 @@
+{
+  "TranslationProperties": {
+    "Name": "PC Digital",
+    "Description": ""
+  },
+  "Categories": [
+    "Furniture.Benches"
+  ],
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "NPC/Models/Items/Mesa_PC.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "NPC/Textures/Items/Mesa_PC.png",
+        "Weight": 1
+      }
+    ],
+    "HitboxType": "Mesa_PC",
+    "VariantRotation": "NESW",
+    "State": {
+      "Id": "crafting",
+      "Definitions": {
+        "CraftCompleted": {}
+      }
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Benches"
+      }
+    },
+    "BlockParticleSetId": "Wood",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "ParticleColor": "#9e652f",
+    "BlockSoundSetId": "Wood",
+    "CustomModelScale": 1,
+    "InteractionHitboxType": "Mesa_PC",
+    "Interactions": {
+      "Use": "Mesa_PC_Base"
+    }
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.3,
+    "Rotation": [
+      15,
+      42,
+      15
+    ],
+    "Translation": [
+      3,
+      -25
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Mesa_PC.png",
+  "Tags": {
+    "Type": [
+      "Bench"
+    ]
+  },
+  "MaxStack": 1,
+  "ItemSoundSetId": "ISS_Blocks_Wood"
+}

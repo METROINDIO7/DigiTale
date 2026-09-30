@@ -20,6 +20,81 @@ public final class SistemaIncubacion {
 
     private static final Random RNG = new Random();
 
+    /**
+     * Registro editable: arranca con DigitamaDef.TODOS y se puede sobrescribir
+     * con Server/Crianza/Recetas.json (sin tocar código).
+     */
+    private static final java.util.Map<String, DigitamaDef> POR_ITEM = new java.util.LinkedHashMap<>();
+
+    static {
+        for (DigitamaDef d : DigitamaDef.TODOS) {
+            POR_ITEM.put(d.idItem, d);
+        }
+        repartirPools();
+    }
+
+    /** Reparte especies extra (con stats pero sin huevo propio) en los 16 huevos. */
+    static void repartirPools() {
+        String[] extras = {
+            "Argomon","Bebydomon","Bibimon","Bosamon","Bowmon","Budmon","Chapmon",
+            "Chicchimon","Cupimon","DemiMeramon","DemiVeemon","Dorimon","Fluffymon",
+            "Frimon","Gigimon","Gummymon","Gurimon","Hiyarimon","Hopmon","Kakkinmon",
+            "Kapurimon","Kekkomon","Kokomon","Kozenimon","Kyaromon","Kyokyomon",
+            "Minomon","Missimon","Mococomon","Monimon","Moonmon","Motimon","Negamon",
+            "Nyaromon","Onibimon","Pickmon","Pinamon","Poromon","Puroromon","Pusurimon",
+            "Puyoyomon","Sakuttomon","Sunmon","TorikaraBallmon","Tsumemon","Tumblemon",
+            "Upamon","Viximon","Wanyamon","Xiaomon","Yaamon","Tokomon_XAntibody"
+        };
+        DigitamaDef[] huevos = DigitamaDef.TODOS;
+        for (int i = 0; i < extras.length; i++) {
+            DigitamaDef d = huevos[i % huevos.length];
+            java.util.List<String> pool = new java.util.ArrayList<>(d.pool());
+            if (!pool.contains(extras[i])) pool.add(extras[i]);
+            d.especies = pool.toArray(new String[0]);
+        }
+    }
+
+    /** Carga recetas desde JSON (reemplaza por idItem, añade nuevas). Retorna cuántas. */
+    public static int cargarDesdeJson(java.io.InputStream in) throws Exception {
+        com.google.gson.Gson gson = new com.google.gson.Gson();
+        java.io.Reader r = new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8);
+        DigitamaDef[] defs = gson.fromJson(r, DigitamaDef[].class);
+        if (defs == null) return 0;
+        int n = 0;
+        for (DigitamaDef d : defs) {
+            if (d == null || d.idItem == null || d.idItem.isEmpty()) continue;
+            POR_ITEM.put(d.idItem, d);
+            n++;
+        }
+        return n;
+    }
+
+    public static DigitamaDef porItem(String idItem) {
+        if (idItem == null) return null;
+        DigitamaDef d = POR_ITEM.get(idItem);
+        if (d != null) return d;
+        d = POR_ITEM.get(FALLBACK_ID);
+        if (d != null) return d;
+        return DigitamaDef.porItemBase(idItem);
+    }
+
+    public static DigitamaDef porBebe(String especie) {
+        if (especie == null) return null;
+        for (DigitamaDef d : POR_ITEM.values()) {
+            if (FALLBACK_ID.equals(d.idItem)) continue;
+            if (d.pool().contains(especie)) return d;
+        }
+        return DigitamaDef.porBebeBase(especie);
+    }
+
+    /** ¿Esta definición es el fallback genérico? (siempre permitido). */
+    public static boolean esFallback(DigitamaDef def) {
+        return def != null && FALLBACK_ID.equals(def.idItem);
+    }
+
+    /** Id especial: receta fallback para huevos sin entrada propia. */
+    public static final String FALLBACK_ID = "TODOS";
+
     /** Combustible del huevo desconocido: basura, puro, completo o nada. */
     public enum FuelDesconocido {
         NADA, BASURA, PURO, COMPLETO
@@ -124,12 +199,10 @@ public final class SistemaIncubacion {
      */
     public static int eclosionar(AlmacenJugadores.DatosJugador datos, DigitamaDef def) {
         if (datos == null || def == null) return -1;
-        DatoDigimon bebe = DatoDigimon.crearInicial(def.especie);
-        if (def.nivelRes > 1) {
-            // Eclosión avanzada: stats base de su etapa (crearInicial ya escala por especie).
-            bebe.nivel = def.nivelRes;
-            bebe.vivo = true;
-        }
+        java.util.List<String> pool = def.pool();
+        if (pool.isEmpty()) return -1;
+        String pick = pool.get(RNG.nextInt(pool.size()));
+        DatoDigimon bebe = DatoDigimon.crearInicial(pick);
         bebe.vivo = true;
         return datos.agregarAlEquipo(bebe);
     }
@@ -148,7 +221,7 @@ public final class SistemaIncubacion {
         mapa.put("Pichimon", "Pichimon");
         mapa.put("Nyokimon", "Nyokimon");
         mapa.put("Kuramon", "Kuramon");
-        mapa.put("Chibimon", "Chibimon");
+        mapa.put("Chibomon", "Chibomon");
         mapa.put("Jyarimon", "Jyarimon");
         mapa.put("YukimiBotamon", "YukimiBotamon");
         mapa.put("Koromon", "Botamon");

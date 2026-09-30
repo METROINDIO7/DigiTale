@@ -501,6 +501,42 @@
           },
           "Instructions": [
             {
+              "$Comment": "Parpadeo: inicia temporizador una sola vez",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "TimerStart",
+                  "Name": "DigiBlinkTimer",
+                  "StartValueRange": [3, 5],
+                  "RestartValueRange": [5, 11]
+                }
+              ]
+            },
+            {
+              "$Comment": "Parpadeo: un solo Blink por ciclo de timer",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Timer",
+                "Name": "DigiBlinkTimer",
+                "State": "Stopped"
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Face",
+                  "Animation": "Blink"
+                },
+                {
+                  "Type": "TimerRestart",
+                  "Name": "DigiBlinkTimer"
+                }
+              ]
+            },
+            {
               "Enabled": {
                 "Compute": "!isEmptyStringArray(FlockArray)"
               },
@@ -620,11 +656,39 @@
               ]
             },
             {
+              "$Comment": "Detecta amenaza (vista/oido) -> Alerted",
+              "Sensor": {
+                "Reference": "Component_Sensor_Standard_Detection",
+                "Modify": {
+                  "ViewRange": {
+                    "Compute": "ViewRange"
+                  },
+                  "ViewSector": {
+                    "Compute": "ViewSector"
+                  },
+                  "HearingRange": {
+                    "Compute": "HearingRange"
+                  },
+                  "AbsoluteDetectionRange": {
+                    "Compute": "AbsoluteDetectionRange"
+                  },
+                  "Attitudes": [
+                    "Hostile"
+                  ]
+                }
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Alerted"
+                }
+              ]
+            },
+            {
               "Type": "Random",
               "ExecuteFor": [
                 15,
-                20
-              ],
+                20              ],
               "Sensor": {
                 "Type": "Time",
                 "Period": {
@@ -706,6 +770,17 @@
             {
               "Enabled": {
                 "Compute": "AlwaysSleepAtNight"
+              },
+              "$Comment": "Solo de noche: sensor Not(Time de dia)",
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Time",
+                  "Period": {
+                    "Compute": "DayTimePeriod"
+                  },
+                  "CheckDay": true
+                }
               },
               "Actions": [
                 {

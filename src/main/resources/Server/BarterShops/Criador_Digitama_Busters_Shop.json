@@ -1,0 +1,201 @@
+{
+  "DisplayNameKey": "server.barter.criador_digitama_busters.title",
+  "RefreshInterval": {
+    "Days": 2
+  },
+  "RestockHour": 8,
+  "TradeSlots": [
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Chibimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Chibimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_DemiVeemon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_DemiVeemon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Fluffymon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Fluffymon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Gigimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Gigimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Kyokyomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Kyokyomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Missimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Missimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Monimon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Monimon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Patamon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Patamon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Poyomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Poyomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Puyoyomon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Puyoyomon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Sunmon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Sunmon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    },
+    {
+      "Type": "Fixed",
+      "Trade": {
+        "Output": {
+          "ItemId": "Dato_Incubacion_Tsumemon",
+          "Quantity": 1
+        },
+        "Input": [
+          {
+            "ItemId": "Esencia_Tsumemon",
+            "Quantity": 3
+          }
+        ],
+        "Stock": 2
+      }
+    }
+  ]
+}

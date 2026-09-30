@@ -1,0 +1,66 @@
+{
+  "$Comment": "TEST experimento: rol minimo que solo referencia al componente propio Digi_Blink. Si carga, el NPC deambula y parpadea; si el componente falla, solo este rol cae.",
+  "Type": "Generic",
+  "Appearance": "Botamon_Model",
+  "MaxHealth": 10,
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.Test_Digi_Blink.name",
+      "Description": "TEST experimento componente Digi_Blink"
+    }
+  },
+  "NameTranslationKey": {
+    "Compute": "NameTranslationKey"
+  },
+  "StartState": "Idle",
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": 3,
+      "Gravity": 10,
+      "RunThreshold": 0.4,
+      "MaxFallSpeed": 15,
+      "MaxRotationSpeed": 180,
+      "Acceleration": 10,
+      "MaxClimbHeight": 1
+    }
+  ],
+  "Instructions": [
+    {
+      "Sensor": {
+        "Type": "State",
+        "State": "Idle"
+      },
+      "Instructions": [
+        {
+          "Reference": "Digi_Blink"
+        },
+        {
+          "BodyMotion": {
+            "Type": "Sequence",
+            "Looped": true,
+            "Motions": [
+              {
+                "Type": "Timer",
+                "Time": [1, 5],
+                "Motion": {
+                  "Type": "WanderInCircle",
+                  "Radius": 5,
+                  "MaxHeadingChange": 60,
+                  "RelativeSpeed": 0.2
+                }
+              },
+              {
+                "Type": "Timer",
+                "Time": [2, 5],
+                "Motion": {
+                  "Type": "Nothing"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

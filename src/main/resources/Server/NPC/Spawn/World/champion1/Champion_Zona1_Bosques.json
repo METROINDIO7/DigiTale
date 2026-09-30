@@ -1,0 +1,25 @@
+{
+  "Id": "DigiTale_Champion_Zona1_Bosques",
+  "Environments": [
+    "Env_Zone1_Forests",
+    "Env_Zone1_Caves_Forests"
+  ],
+  "NPCs": [
+    {
+      "Weight": 14,
+      "Id": "Gatomon_Salvaje"
+    },
+    {
+      "Weight": 14,
+      "Id": "BlackGatomon_Salvaje"
+    },
+    {
+      "Weight": 2,
+      "Id": "Gatomon_XAntibody_Salvaje"
+    }
+  ],
+  "DayTimeRange": [
+    6,
+    20
+  ]
+}

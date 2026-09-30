@@ -125,7 +125,7 @@ public class SapotamaHitInteraction extends SimpleInstantInteraction {
         for (com.digitale.datos.DatoDigimon d : datos.equipoCombate()) {
             if (d != null && d.nivel > nivelParty) nivelParty = d.nivel;
         }
-        var combate = SistemaBatalla.iniciarEncuentroSalvaje(datos, nivelParty, objetivo);
+        var combate = SistemaBatalla.iniciarEncuentroSalvaje(datos, nivelParty, objetivo, especie);
         if (combate == null) {
             atacante.sendMessage(DigiMsg.parse("§cNo pudiste iniciar el combate."));
             return;
@@ -169,6 +169,7 @@ public class SapotamaHitInteraction extends SimpleInstantInteraction {
                     // Puesta en escena + menú HUD por teclado (sin Page).
                     SistemaPaseo.prepararBatalla(atacante, entityRef, store);
                     MenuBatalla.abrir(atacante, entityRef, store);
+                    com.digitale.sistema.CamaraCombate.entrar(atacante);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "No se pudo abrir batalla: " + e.getMessage());
                 }

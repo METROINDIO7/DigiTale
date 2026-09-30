@@ -1,0 +1,24 @@
+{
+  "Id": "DigiTale_Champion_Zona1_Volcanica",
+  "Environments": [
+    "Env_Zone1_Caves_Volcanic_T1"
+  ],
+  "NPCs": [
+    {
+      "Weight": 14,
+      "Id": "Gatomon_Salvaje"
+    },
+    {
+      "Weight": 14,
+      "Id": "BlackGatomon_Salvaje"
+    },
+    {
+      "Weight": 2,
+      "Id": "Gatomon_XAntibody_Salvaje"
+    }
+  ],
+  "DayTimeRange": [
+    0,
+    24
+  ]
+}

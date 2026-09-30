@@ -45,8 +45,8 @@ public class SistemaPaseo {
 
         world.execute(() -> {
             try {
-                if (datos.getA() != null) {
-                    String rolA = datos.getA().especie + "_Companero";
+                if (datos.getA() != null && !datos.getA().noCombate) {
+                    String rolA = rolPara(datos.getA());
                     Vector3d posA = new Vector3d(posJugador).add(2.5, 1.0, 0.0);
                     Ref<?> refA = registrarSpawnearNpc(world, playerRef, datos.getA(), rolA, posA, store, true);
                     if (refA != null) {
@@ -59,7 +59,7 @@ public class SistemaPaseo {
                 }
 
                 if (datos.getB() != null) {
-                    String rolB = datos.getB().especie + "_Companero";
+                    String rolB = rolPara(datos.getB());
                     Vector3d posB = new Vector3d(posJugador).add(-2.5, 1.0, 0.0);
                     Ref<?> refB = registrarSpawnearNpc(world, playerRef, datos.getB(), rolB, posB, store, false);
                     if (refB != null) {
@@ -156,6 +156,7 @@ public class SistemaPaseo {
         if (datos == null) return null;
         DatoDigimon digimon = datos.getSlot(slot);
         if (digimon == null) return null;
+        if (digimon.noCombate) return digimon.nombre + " es soporte y no pasea.";
 
         World world = store.getExternalData().getWorld();
         if (world == null) return null;
@@ -183,7 +184,7 @@ public class SistemaPaseo {
         Vector3d posJugador = transform.getPosition();
         // Pequeño desplazamiento lateral según slot para que no se apilen.
         Vector3d pos = new Vector3d(posJugador).add(2.0 + (slot % 3), 1.0, (slot / 3) * 2.0 - 1.0);
-        String rol = rolPara(digimon.especie);
+        String rol = rolPara(digimon);
         if (rol == null) {
             LOGGER.log(Level.WARNING, "[SistemaPaseo] Sin rol de paseo para especie: " + digimon.especie);
             return digimon.nombre + " aun no tiene rol de paseo (falta " + digimon.especie + "_Companero).";
@@ -211,6 +212,13 @@ public class SistemaPaseo {
         // Los roles se resuelven en el spawn; aquí solo construimos candidatos.
         // registrarSpawnearNpc devuelve null si el rol no existe.
         return especie + "_Companero";
+    }
+
+    /** Rol según tamaño: Burpmon >=3x usa el modelo Grande. */
+    static String rolPara(com.digitale.datos.DatoDigimon digimon) {
+        if (digimon != null && digimon.esGrande()) return "Burpmon_Grande_Companero";
+        if (digimon == null) return null;
+        return rolPara(digimon.especie);
     }
 
     /**
@@ -269,7 +277,7 @@ public class SistemaPaseo {
                 Ref<?> npcRef = (i < datos.refsBatalla.length) ? datos.refsBatalla[i] : null;
                 if (npcRef == null || !npcRef.isValid()) {
                     npcRef = registrarSpawnearNpc(world, playerRef, d,
-                        d.especie + "_Companero", pos, store, i == 0);
+                        rolPara(d), pos, store, i == 0);
                     if (npcRef != null && i < datos.refsBatalla.length) {
                         datos.refsBatalla[i] = npcRef;
                     } else if (npcRef == null) {

@@ -231,7 +231,7 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
                     Padding: (Full: 5);
                     AssetImage #DigiPortrait {
                         Anchor: (Width: 60, Height: 60);
-                        AssetPath: "UI/Custom/png_Digis/botamon.png";
+                        AssetPath: "UI/Custom/png_Digis/Botamon.png";
                     }
                 }
 
@@ -706,7 +706,7 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
                                 Padding: (Full: 5);
                                 AssetImage #DigiPortrait {
                                     Anchor: (Width: 60, Height: 60);
-                                    AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
                                 }
                             }
 

@@ -1,0 +1,90 @@
+{
+  "Model": "NPC/Models/In_Training_I/Kuramon.blockymodel",
+  "Texture": "NPC/Textures/In_Training_I/Kuramon.png",
+  "EyeHeight": 0.9,
+  "CrouchOffset": -0.3,
+  "HitBox": {
+    "Max": {
+      "X": 0.1,
+      "Y": 0.25,
+      "Z": 0.1
+    },
+    "Min": {
+      "X": -0.1,
+      "Y": 0,
+      "Z": -0.1
+    }
+  },
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Idle.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Walk": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Walk.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Hurt": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Hurt.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Death": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Die.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Sleep": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Sleep.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Surprised": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/surprised.blockyanim"
+        }
+      ]
+    },
+    "Interaction": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Interaction.blockyanim"
+        }
+      ]
+    },
+    "Attack": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Attack.blockyanim"
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/In_Training_I/Animation_Kuramon/Run.blockyanim"
+        }
+      ]
+    }
+  },
+  "MinScale": 1,
+  "MaxScale": 1
+}

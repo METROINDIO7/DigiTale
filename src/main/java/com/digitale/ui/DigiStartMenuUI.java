@@ -62,7 +62,7 @@ public class DigiStartMenuUI extends CustomUIPage {
                         Anchor: (Height: 44);
                         AssetImage #ImgStartBotamon {
                             Anchor: (Width: 36, Height: 36);
-                            AssetPath: "UI/Custom/png_Digis/botamon.png";
+                            AssetPath: "UI/Custom/png_Digis/Botamon.png";
                         }
                         Group { Anchor: (Width: 6); }
                         TextButton #BtnBotamon { Text: "Botamon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
@@ -84,21 +84,27 @@ public class DigiStartMenuUI extends CustomUIPage {
                         Group { Anchor: (Width: 6); }
                         TextButton #BtnPunimon { Text: "Punimon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
                         Group { Anchor: (Width: 8); }
-                        AssetImage #ImgStartChibimon {
+                        AssetImage #ImgStartChibomon {
                             Anchor: (Width: 36, Height: 36);
-                            AssetPath: "UI/Custom/png_Digis/Chibimon.png";
+                            AssetPath: "UI/Custom/png_Digis/Chibomon.png";
                         }
                         Group { Anchor: (Width: 6); }
-                        TextButton #BtnChibimon { Text: "Chibimon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
+                        TextButton #BtnChibomon { Text: "Chibomon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
                     }
                     Group {
                         LayoutMode: Left;
                         Anchor: (Height: 44);
-                        Group { Anchor: (Width: 42); }
+                        AssetImage #ImgStartPoyomon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/Poyomon.png";
+                        }
                         Group { Anchor: (Width: 6); }
                         TextButton #BtnPoyomon { Text: "Poyomon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
                         Group { Anchor: (Width: 8); }
-                        Group { Anchor: (Width: 42); }
+                        AssetImage #ImgStartYuramon {
+                            Anchor: (Width: 36, Height: 36);
+                            AssetPath: "UI/Custom/png_Digis/Yuramon.png";
+                        }
                         Group { Anchor: (Width: 6); }
                         TextButton #BtnYuramon { Text: "Yuramon"; Anchor: (Width: 160, Height: 40); Style: (Default: (Background: (Color: #0f3460), LabelStyle: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (TextColor: #ffffff, FontSize: 13, HorizontalAlignment: Center))); }
                     }
@@ -132,7 +138,7 @@ public class DigiStartMenuUI extends CustomUIPage {
             """;
         cmd.appendInline(null, ui);
 
-        String[] starters = {"Botamon", "Kuramon", "Punimon", "Chibimon", "Poyomon", "Yuramon", "Pichimon", "Nyokimon"};
+        String[] starters = {"Botamon", "Kuramon", "Punimon", "Chibomon", "Poyomon", "Yuramon", "Pichimon", "Nyokimon"};
         for (String s : starters) {
             event.addEventBinding(CustomUIEventBindingType.Activating, "#Btn" + s,
                 EventData.of("action", "seleccion").append("value", s), false);

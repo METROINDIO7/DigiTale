@@ -1,77 +1,41 @@
 {
   "Model": "NPC/Models/Rokies/Veemon.blockymodel",
-  "Texture": "NPC/Textures/Rokies/Texturaveemon.png",
+  "Texture": "NPC/Textures/Rokies/Veemon.png",
   "EyeHeight": 1,
   "CrouchOffset": -0.4,
   "HitBox": {
     "Max": {
-      "X": 0.3,
-      "Y": 0.8,
-      "Z": 0.3
+      "X": 0.2,
+      "Y": 1,
+      "Z": 0.2
     },
     "Min": {
-      "X": -0.3,
+      "X": -0.2,
       "Y": 0,
-      "Z": -0.3
+      "Z": -0.2
     }
   },
   "AnimationSets": {
     "Idle": {
       "Animations": [
         {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Idle.blockyanim"
+          "Animation": "NPC/Models/Rokies/Veemon/Idle.blockyanim",
+          "Looping": true
         }
       ]
     },
     "Walk": {
       "Animations": [
         {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Walk.blockyanim"
-        }
-      ]
-    },
-    "Run": {
-      "Animations": [
-        {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Run.blockyanim"
-        }
-      ]
-    },
-    "Jump": {
-      "Animations": [
-        {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Jump.blockyanim",
-          "Looping": false
-        }
-      ]
-    },
-    "Fall": {
-      "Animations": [
-        {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Fall.blockyanim"
-        }
-      ]
-    },
-    "Alerted": {
-      "Animations": [
-        {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Alerted.blockyanim",
-          "Looping": false
-        }
-      ]
-    },
-    "Attack": {
-      "Animations": [
-        {
-          "Animation": "NPC/Intelligent/Feran/Animations/Attacks/Bite.blockyanim",
-          "Looping": false
+          "Animation": "NPC/Models/Rokies/Veemon/Walk.blockyanim",
+          "Looping": true
         }
       ]
     },
     "Hurt": {
       "Animations": [
         {
-          "Animation": "NPC/Intelligent/Feran/Animations/Damage/Hurt.blockyanim",
+          "Animation": "NPC/Models/Rokies/Veemon/Hurt.blockyanim",
           "Looping": false
         }
       ]
@@ -79,27 +43,55 @@
     "Death": {
       "Animations": [
         {
-          "Animation": "NPC/Intelligent/Feran/Animations/Damage/Death.blockyanim",
+          "Animation": "NPC/Models/Rokies/Veemon/Die.blockyanim",
           "Looping": false
         }
       ]
     },
-    "Eat": {
+    "Sleep": {
       "Animations": [
         {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Idle.blockyanim",
-          "Speed": 0.6
+          "Animation": "NPC/Models/Rokies/Veemon/Sleep.blockyanim",
+          "Looping": true
         }
       ]
     },
-    "Laydown": {
+    "Blink": {
       "Animations": [
         {
-          "Animation": "NPC/Intelligent/Feran/Animations/Default/Idle.blockyanim"
+          "Animation": "NPC/Models/Rokies/Veemon/Blink.blockyanim"
+        }
+      ]
+    },
+    "Surprised": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Rokies/Veemon/surprised.blockyanim"
+        }
+      ]
+    },
+    "Interaction": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Rokies/Veemon/Interaction.blockyanim"
+        }
+      ]
+    },
+    "Attack": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Rokies/Veemon/Attack.blockyanim"
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Rokies/Veemon/Run.blockyanim"
         }
       ]
     }
   },
-  "MinScale": 0.85,
-  "MaxScale": 0.95
+  "MinScale": 1,
+  "MaxScale": 1
 }

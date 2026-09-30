@@ -99,7 +99,7 @@ public class DigiBatallaMenuUI extends CustomUIPage {
                             Anchor: (Height: 40);
                             AssetImage #ImgEnem {
                                 Anchor: (Width: 40, Height: 40);
-                                AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                AssetPath: "UI/Custom/png_Digis/Botamon.png";
                             }
                             Group { Anchor: (Width: 8); }
                             Group {
@@ -151,7 +151,7 @@ public class DigiBatallaMenuUI extends CustomUIPage {
                                 Anchor: (Height: 32);
                                 AssetImage #ImgA {
                                     Anchor: (Width: 30, Height: 30);
-                                    AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
                                 }
                                 Group { Anchor: (Width: 6); }
                                 Label #LblNombreA {
@@ -197,7 +197,7 @@ public class DigiBatallaMenuUI extends CustomUIPage {
                                 Anchor: (Height: 32);
                                 AssetImage #ImgB {
                                     Anchor: (Width: 30, Height: 30);
-                                    AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
                                 }
                                 Group { Anchor: (Width: 6); }
                                 Label #LblNombreB {
@@ -243,7 +243,7 @@ public class DigiBatallaMenuUI extends CustomUIPage {
                                 Anchor: (Height: 32);
                                 AssetImage #ImgC {
                                     Anchor: (Width: 30, Height: 30);
-                                    AssetPath: "UI/Custom/png_Digis/botamon.png";
+                                    AssetPath: "UI/Custom/png_Digis/Botamon.png";
                                 }
                                 Group { Anchor: (Width: 6); }
                                 Label #LblNombreC {
@@ -416,6 +416,7 @@ public class DigiBatallaMenuUI extends CustomUIPage {
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, "No se pudo guardar fin de combate: " + e.getMessage());
             }
+            com.digitale.sistema.CamaraCombate.salir(playerRef);
         }
     }
 
@@ -424,6 +425,7 @@ public class DigiBatallaMenuUI extends CustomUIPage {
                           @Nonnull Store<EntityStore> store) {
         // Cerrar la Page recoge la formación y oculta el HUD.
         SistemaPaseo.recogerBatalla(playerRef, ref, store);
+        com.digitale.sistema.CamaraCombate.salir(playerRef);
     }
 
     /** Lados del combate: los fijados al iniciar, o el equipo actual si faltan. */

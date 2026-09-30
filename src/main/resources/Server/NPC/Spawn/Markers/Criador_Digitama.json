@@ -1,0 +1,39 @@
+{
+  "Model": "NPC_Spawn_Marker",
+  "NPCs": [
+    {
+      "Name": "Criador_Digitama_Deep",
+      "Weight": 16,
+      "SpawnAfterGameTime": "P1D"
+    },
+    {
+      "Name": "Criador_Digitama_Dragon",
+      "Weight": 16,
+      "SpawnAfterGameTime": "P1D"
+    },
+    {
+      "Name": "Criador_Digitama_Metal",
+      "Weight": 16,
+      "SpawnAfterGameTime": "P1D"
+    },
+    {
+      "Name": "Criador_Digitama_Nature",
+      "Weight": 16,
+      "SpawnAfterGameTime": "P1D"
+    },
+    {
+      "Name": "Criador_Digitama_Nightmare",
+      "Weight": 16,
+      "SpawnAfterGameTime": "P1D"
+    },
+    {
+      "Name": "Criador_Digitama_Busters",
+      "Weight": 16,
+      "SpawnAfterGameTime": "P1D"
+    }
+  ],
+  "ExclusionRadius": 50,
+  "MaxDropHeight": 4,
+  "RespawnTime": "P3D",
+  "MaxSimultaneousSpawns": 1
+}

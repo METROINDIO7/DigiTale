@@ -1,0 +1,10 @@
+{
+  "TranslationProperties": {
+    "Name": "items.All_Digi_Memories.name",
+    "Description": "items.All_Digi_Memories.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Sapotama_icon.png",
+  "Quality": "Legendary",
+  "PlayerAnimationsId": "Item",
+  "MaxStack": 1
+}

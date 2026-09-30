@@ -110,6 +110,18 @@ public class DigiRecetaUI extends CustomUIPage {
                         Anchor: (Height: 20);
                     }
                     Group { Anchor: (Height: 8); }
+                    TextButton #BtnDesbloquear {
+                        Text: "Desbloquear (gasta dato)";
+                        Anchor: (Width: 220, Height: 36);
+                        Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #ffcc00, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    }
+                    Group { Anchor: (Height: 4); }
+                    Label #LblRecMsg {
+                        Text: "";
+                        Style: (TextColor: #e0e8f0, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
+                        Anchor: (Height: 20);
+                    }
+                    Group { Anchor: (Height: 4); }
                     TextButton #BtnCerrar {
                         Text: "Cerrar";
                         Anchor: (Width: 160, Height: 36);
@@ -120,6 +132,8 @@ public class DigiRecetaUI extends CustomUIPage {
             """);
         cmd.appendInline(null, sb.toString());
 
+        event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnDesbloquear",
+            EventData.of("action", "desbloquear"), false);
         event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnCerrar",
             EventData.of("action", "cerrar"), false);
 
@@ -136,7 +150,7 @@ public class DigiRecetaUI extends CustomUIPage {
         }
         cmd.set("#RecEntorno.Text", "Entorno: " + def.entorno);
         cmd.set("#RecEnergia.Text", "Energia " + def.energia + "/10 | Ciclos: " + def.ciclos);
-        cmd.set("#RecResultado.Text", "Nace: " + def.especie + " (Nv" + def.nivelRes + ")");
+        cmd.set("#RecResultado.Text", "Nace: " + String.join(", ", def.pool()));
     }
 
     @Override
@@ -150,9 +164,88 @@ public class DigiRecetaUI extends CustomUIPage {
         if ("cerrar".equals(action)) {
             player.getPageManager().setPage(ref, store,
                 com.hypixel.hytale.protocol.packets.interface_.Page.None);
+        } else if ("desbloquear".equals(action)) {
+            com.digitale.datos.AlmacenJugadores.DatosJugador datos =
+                com.digitale.datos.AlmacenJugadores.getDatos(playerRef.getUuid());
+            UICommandBuilder cmd = new UICommandBuilder();
+            if (datos == null) {
+                sendUpdate(cmd);
+                return;
+            }
+            // Busca cualquier dato del pool de este huevo y lo gasta.
+            boolean ok = false;
+            String usado = "";
+            for (String esp : def.pool()) {
+                if (gastarDatoDe(ref, store, esp)) {
+                    ok = true;
+                    usado = esp;
+                    break;
+                }
+            }
+            if (!ok) {
+                cmd.set("#LblRecMsg.Text", "Necesitas un Dato Incubacion de este huevo.");
+            } else if (datos.desbloquearReceta(def.especie)) {
+                guardar(store, ref, datos);
+                cmd.set("#LblRecMsg.Text", "¡Receta de " + def.nombre + " desbloqueada! (gasto " + usado + ")");
+            } else {
+                cmd.set("#LblRecMsg.Text", "Ya conocias esta receta.");
+            }
+            sendUpdate(cmd);
         } else {
             UICommandBuilder cmd = new UICommandBuilder();
             sendUpdate(cmd);
         }
+    }
+
+    private void guardar(Store<EntityStore> store, Ref<EntityStore> ref,
+                         com.digitale.datos.AlmacenJugadores.DatosJugador datos) {
+        try {
+            com.digitale.componentes.PetProgressComponent progress =
+                com.digitale.componentes.ComponentRegistry.ensureAndGetProgress(store, ref);
+            if (progress != null) progress.guardarDesde(datos);
+        } catch (Exception ignored) {
+        }
+    }
+
+    /** Gasta 1 Dato_Incubacion_<bebe> de cualquier sección. */
+    private static boolean gastarDatoDe(Ref<EntityStore> ref, Store<EntityStore> store, String bebe) {
+        String quiero = "Dato_Incubacion_" + bebe;
+        try {
+            for (int seccion = 0; seccion < 32; seccion++) {
+                com.hypixel.hytale.server.core.inventory.container.ItemContainer cont;
+                try {
+                    cont = com.hypixel.hytale.server.core.inventory.InventoryUtils.getSectionById(ref, seccion, store);
+                } catch (Exception e) {
+                    continue;
+                }
+                if (cont == null) continue;
+                short cap;
+                try {
+                    cap = cont.getCapacity();
+                } catch (Exception e) {
+                    continue;
+                }
+                for (short i = 0; i < cap; i++) {
+                    com.hypixel.hytale.server.core.inventory.ItemStack stack;
+                    try {
+                        stack = cont.getItemStack(i);
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    if (stack == null || stack.getItemId() == null) continue;
+                    String id = stack.getItemId();
+                    String corto = id.contains(":") ? id.substring(id.indexOf(':') + 1) : id;
+                    if (!corto.equals(quiero)) continue;
+                    try {
+                        cont.removeItemStackFromSlot(i, 1);
+                        return true;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
     }
 }

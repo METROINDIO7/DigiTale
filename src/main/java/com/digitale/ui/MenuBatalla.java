@@ -210,18 +210,32 @@ public final class MenuBatalla {
                 VICTORIAS.computeIfAbsent(playerRef.getUuid(), k -> new java.util.HashMap<>());
             int n = mapa.getOrDefault(bebe, 0) + 1;
             mapa.put(bebe, n);
+            // Cada 2 victorias: esencia (moneda). Cada 5: dato incubación.
+            if (n % 2 == 0) {
+                darItem(playerRef, ref, store, "Esencia_" + bebe,
+                    "§b> Esencia de " + bebe + " (" + n + " victorias).");
+            }
             if (n % VICTORIAS_PARA_DATO != 0) return;
             String itemId = "Dato_Incubacion_" + bebe;
+            darItem(playerRef, ref, store, itemId,
+                "§d> ¡Dato Incubacion de " + bebe + "! (" + n + " victorias) Examinalo con clic derecho.");
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "registrarVictoria: " + e.getMessage());
+        }
+    }
+
+    private static void darItem(PlayerRef playerRef, Ref<EntityStore> ref,
+                                Store<EntityStore> store, String itemId, String mensaje) {
+        try {
             com.hypixel.hytale.server.core.inventory.ItemStack stack =
                 new com.hypixel.hytale.server.core.inventory.ItemStack(itemId, 1);
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player == null) return;
             Player.giveItem(stack, ref, store);
-            playerRef.sendMessage(com.digitale.util.DigiMsg.parse(
-                "§d> ¡Dato Incubacion de " + bebe + "! (" + n + " victorias) Examinalo con clic derecho."));
-            LOGGER.log(Level.INFO, "DatoIncubacion " + bebe + " para " + playerRef.getUsername());
+            playerRef.sendMessage(com.digitale.util.DigiMsg.parse(mensaje));
+            LOGGER.log(Level.INFO, itemId + " para " + playerRef.getUsername());
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "registrarVictoria: " + e.getMessage());
+            LOGGER.log(Level.WARNING, "darItem " + itemId + ": " + e.getMessage());
         }
     }
 

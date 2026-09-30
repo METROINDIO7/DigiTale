@@ -5,7 +5,7 @@
   "Scale": 1,
   "PlayerAnimationsId": "Item",
   "TranslationProperties": {
-    "Name": "Dato Incubacion Jyarimon"
+    "Name": "items.Dato_Incubacion_Jyarimon.name"
   },
   "Interactions": {
     "Secondary": {
@@ -14,14 +14,7 @@
           "Type": "DigiTale_Dato_Receta"
         }
       ]
-    },
-    "Use": {
-      "Interactions": [
-        {
-          "Type": "DigiTale_Dato_Receta"
-        }
-      ]
     }
   },
-  "MaxStack": 16
+  "MaxStack": 1
 }

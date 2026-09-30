@@ -27,6 +27,9 @@ public class BattleInputFilter implements PlayerPacketFilter {
     private static final Logger LOGGER = Logger.getLogger(BattleInputFilter.class.getName());
     private static final long TROTE_MS = 280L;
 
+    private static final java.util.Map<java.util.UUID, String> ESTADO_LOG =
+        new java.util.concurrent.ConcurrentHashMap<>();
+
     @Override
     public boolean test(PlayerRef playerRef, Packet packet) {
         DatosJugador d;
@@ -35,7 +38,23 @@ public class BattleInputFilter implements PlayerPacketFilter {
         } catch (Exception e) {
             return false;
         }
-        if (d == null || !d.menuAbierto) return false;
+        // Diagnóstico de transición (una línea por cambio de estado).
+        try {
+            String est = (d == null) ? "sin-datos"
+                : ((d.menuAbierto ? "menu" : "-") + (d.enCombateUI() ? "+batalla" : ""));
+            String ant = ESTADO_LOG.put(playerRef.getUuid(), est);
+            if (!est.equals(ant)) {
+                LOGGER.log(Level.INFO, "BattleInput estado " + playerRef.getUsername() + ": " + est);
+            }
+        } catch (Exception ignored) {
+        }
+        if (d == null || !d.menuAbierto) {
+            // Sin menú: congelar movimiento si hay batalla nueva activa.
+            if (d != null && d.enCombateUI()) {
+                if (packet instanceof ClientMovement) return true;
+            }
+            return false;
+        }
 
         if (packet instanceof ClientMovement m) {
             manejarMovimiento(playerRef, d, m);

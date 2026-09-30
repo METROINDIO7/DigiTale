@@ -42,6 +42,8 @@ public class DatoDigimon {
     public boolean vivo    = false;
     public int     hambre  = 100;
     public int     energia = 100;
+    /** Crecimiento Burpmon (1.0 base; >=3.0 se intercambia a Grande). */
+    public double crecimiento = 1.0;
     /** Dormido (banco): no come, no pasea, y en combate entra con DORMIDO. */
     public boolean dormido = false;
     /** Soporte (Calumon): no combate, potencia al equipo. */
@@ -69,7 +71,7 @@ public class DatoDigimon {
      *  Pichimon → Bukamon   → Gomamon      (Agua)
      *  Nyokimon → Yokomon   → Biyomon      (Viento)
      *  Kuramon  → Koromon   → Agumon       (Fuego)
-     *  Chibimon → Tanemon   → Palmon       (Naturaleza)
+     *  Chibomon → Tanemon   → Palmon       (Naturaleza)
      */
     public static DatoDigimon crearInicial(String especie) {
         DatoDigimon d = new DatoDigimon();
@@ -86,7 +88,7 @@ public class DatoDigimon {
             case "Pichimon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 38; d.atk = 3; d.def = 3; d.spd = 5; d.wis = 3; }
             case "Nyokimon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 36; d.atk = 2; d.def = 3; d.spd = 6; d.wis = 4; }
             case "Kuramon"  -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 39; d.atk = 3; d.def = 4; d.spd = 3; d.wis = 3; }
-            case "Chibimon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 35; d.atk = 2; d.def = 3; d.spd = 5; d.wis = 5; }
+            case "Chibomon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 35; d.atk = 2; d.def = 3; d.spd = 5; d.wis = 5; }
             case "Jyarimon" -> { d.elemento = "NEUTRO";    d.atributo = "NONE";   d.maxHp = 37; d.atk = 4; d.def = 2; d.spd = 4; d.wis = 3; }
             case "YukimiBotamon" -> { d.elemento = "HIELO"; d.atributo = "NONE";  d.maxHp = 36; d.atk = 2; d.def = 3; d.spd = 4; d.wis = 5; }
             case "Pagumon"  -> { d.elemento = "NEUTRO";    d.atributo = "VIRUS";  d.maxHp = 38; d.atk = 4; d.def = 3; d.spd = 4; d.wis = 2; }
@@ -101,6 +103,58 @@ public class DatoDigimon {
             case "Tanemon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 60; d.atk = 6; d.def = 7; d.spd = 5; d.wis = 7; }
             case "Bukamon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 62; d.atk = 6; d.def = 6; d.spd = 8; d.wis = 5; }
             case "Yokomon"  -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 58; d.atk = 5; d.def = 5; d.spd = 9; d.wis = 7; }
+            case "Argomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 63; d.atk = 5; d.def = 5; d.spd = 5; d.wis = 8; }
+            case "Bebydomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 58; d.atk = 5; d.def = 6; d.spd = 7; d.wis = 7; }
+            case "Bibimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 55; d.atk = 7; d.def = 6; d.spd = 9; d.wis = 8; }
+            case "Bosamon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 59; d.atk = 7; d.def = 9; d.spd = 9; d.wis = 8; }
+            case "Bowmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 65; d.atk = 7; d.def = 6; d.spd = 9; d.wis = 6; }
+            case "Budmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 63; d.atk = 6; d.def = 8; d.spd = 8; d.wis = 6; }
+            case "Chapmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 61; d.atk = 7; d.def = 7; d.spd = 9; d.wis = 8; }
+            case "Chicchimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 56; d.atk = 7; d.def = 8; d.spd = 8; d.wis = 8; }
+            case "Cupimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 60; d.atk = 7; d.def = 7; d.spd = 5; d.wis = 8; }
+            case "DemiMeramon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 57; d.atk = 6; d.def = 5; d.spd = 8; d.wis = 6; }
+            case "DemiVeemon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 55; d.atk = 7; d.def = 5; d.spd = 7; d.wis = 8; }
+            case "Dorimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 57; d.atk = 7; d.def = 7; d.spd = 5; d.wis = 8; }
+            case "Fluffymon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 59; d.atk = 7; d.def = 7; d.spd = 9; d.wis = 7; }
+            case "Frimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 58; d.atk = 6; d.def = 9; d.spd = 8; d.wis = 6; }
+            case "Gigimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 65; d.atk = 5; d.def = 8; d.spd = 9; d.wis = 8; }
+            case "Gummymon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 65; d.atk = 7; d.def = 9; d.spd = 8; d.wis = 6; }
+            case "Gurimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 55; d.atk = 7; d.def = 9; d.spd = 6; d.wis = 8; }
+            case "Hiyarimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 64; d.atk = 7; d.def = 6; d.spd = 9; d.wis = 7; }
+            case "Hopmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 64; d.atk = 6; d.def = 6; d.spd = 9; d.wis = 6; }
+            case "Kakkinmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 62; d.atk = 6; d.def = 7; d.spd = 8; d.wis = 7; }
+            case "Kapurimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 59; d.atk = 7; d.def = 7; d.spd = 9; d.wis = 7; }
+            case "Kekkomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 61; d.atk = 5; d.def = 7; d.spd = 6; d.wis = 5; }
+            case "Kokomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 63; d.atk = 7; d.def = 8; d.spd = 5; d.wis = 8; }
+            case "Kozenimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 63; d.atk = 5; d.def = 8; d.spd = 9; d.wis = 7; }
+            case "Kyaromon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 56; d.atk = 7; d.def = 7; d.spd = 8; d.wis = 6; }
+            case "Kyokyomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 63; d.atk = 6; d.def = 9; d.spd = 6; d.wis = 8; }
+            case "Minomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 62; d.atk = 6; d.def = 8; d.spd = 5; d.wis = 8; }
+            case "Missimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 55; d.atk = 6; d.def = 6; d.spd = 7; d.wis = 6; }
+            case "Mococomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 58; d.atk = 7; d.def = 9; d.spd = 8; d.wis = 7; }
+            case "Monimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 62; d.atk = 6; d.def = 8; d.spd = 5; d.wis = 8; }
+            case "Moonmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 57; d.atk = 6; d.def = 9; d.spd = 6; d.wis = 8; }
+            case "Motimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 57; d.atk = 6; d.def = 9; d.spd = 6; d.wis = 8; }
+            case "Negamon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 60; d.atk = 6; d.def = 7; d.spd = 9; d.wis = 8; }
+            case "Nyaromon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 59; d.atk = 7; d.def = 7; d.spd = 8; d.wis = 6; }
+            case "Onibimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 57; d.atk = 7; d.def = 6; d.spd = 6; d.wis = 5; }
+            case "Pickmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 61; d.atk = 6; d.def = 5; d.spd = 5; d.wis = 8; }
+            case "Pinamon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 62; d.atk = 7; d.def = 5; d.spd = 5; d.wis = 8; }
+            case "Poromon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 64; d.atk = 7; d.def = 6; d.spd = 6; d.wis = 8; }
+            case "Puroromon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 64; d.atk = 7; d.def = 9; d.spd = 6; d.wis = 8; }
+            case "Pusurimon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 65; d.atk = 5; d.def = 9; d.spd = 6; d.wis = 8; }
+            case "Puyoyomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 56; d.atk = 6; d.def = 7; d.spd = 6; d.wis = 8; }
+            case "Sakuttomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 65; d.atk = 5; d.def = 9; d.spd = 7; d.wis = 5; }
+            case "Sunmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 57; d.atk = 6; d.def = 5; d.spd = 5; d.wis = 7; }
+            case "Tokomon_XAntibody" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 58; d.atk = 5; d.def = 8; d.spd = 9; d.wis = 8; }
+            case "TorikaraBallmon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 64; d.atk = 7; d.def = 9; d.spd = 6; d.wis = 5; }
+            case "Tsumemon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 64; d.atk = 6; d.def = 9; d.spd = 8; d.wis = 6; }
+            case "Tumblemon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 56; d.atk = 7; d.def = 6; d.spd = 9; d.wis = 7; }
+            case "Upamon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 63; d.atk = 5; d.def = 6; d.spd = 9; d.wis = 6; }
+            case "Viximon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 64; d.atk = 7; d.def = 6; d.spd = 6; d.wis = 8; }
+            case "Wanyamon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 61; d.atk = 7; d.def = 5; d.spd = 7; d.wis = 6; }
+            case "Xiaomon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 60; d.atk = 7; d.def = 7; d.spd = 5; d.wis = 8; }
+            case "Yaamon" -> { d.elemento = "NEUTRO"; d.atributo = "DATA";   d.maxHp = 63; d.atk = 6; d.def = 8; d.spd = 8; d.wis = 6; }
             // ── In-Training 2 (nivel 3) — VIRUS o VACCINE ───────────────
             case "Agumon"   -> { d.elemento = "FUEGO"; d.atributo = "VACCINE"; d.maxHp = 90; d.atk = 12; d.def = 10; d.spd = 8; d.wis = 7; }
             case "Gabumon"  -> { d.elemento = "HIELO"; d.atributo = "VIRUS";   d.maxHp = 85; d.atk = 10; d.def = 14; d.spd = 7; d.wis = 8; }
@@ -115,9 +169,10 @@ public class DatoDigimon {
         d.hp = d.maxHp;
         d.hpCombate = d.maxHp;
         d.nivel = switch (especie) {
-            case "Botamon","Punimon","Poyomon","Yuramon","Pichimon","Nyokimon","Kuramon","Chibimon",
+            case "Botamon","Punimon","Poyomon","Yuramon","Pichimon","Nyokimon","Kuramon","Chibomon",
                  "Jyarimon","YukimiBotamon","Pagumon","Burpmon","Calumon","NEO" -> 1;
-            case "Koromon","Tsunomon","Tokomon","Tanemon","Bukamon","Yokomon" -> 2;
+            case "Koromon","Tsunomon","Tokomon","Tanemon","Bukamon","Yokomon",
+                 "Argomon","Bebydomon","Bibimon","Bosamon","Bowmon","Budmon","Chapmon","Chicchimon","Cupimon","DemiMeramon","DemiVeemon","Dorimon","Fluffymon","Frimon","Gigimon","Gummymon","Gurimon","Hiyarimon","Hopmon","Kakkinmon","Kapurimon","Kekkomon","Kokomon","Kozenimon","Kyaromon","Kyokyomon","Minomon","Missimon","Mococomon","Monimon","Moonmon","Motimon","Negamon","Nyaromon","Onibimon","Pickmon","Pinamon","Poromon","Puroromon","Pusurimon","Puyoyomon","Sakuttomon","Sunmon","Tokomon_XAntibody","TorikaraBallmon","Tsumemon","Tumblemon","Upamon","Viximon","Wanyamon","Xiaomon","Yaamon" -> 2;
             case "Agumon","Gabumon","Patamon","Palmon","Gomamon","Biyomon","Veemon" -> 3;
             default -> 1;
         };
@@ -151,6 +206,14 @@ public class DatoDigimon {
         hambre  = Math.min(100, hambre  + h);
         energia = Math.min(100, energia + e);
         hp      = Math.min(maxHp, hp + maxHp * hpPctMax / 100);
+        if ("Burpmon".equals(especie)) {
+            crecimiento = Math.min(3.9, crecimiento + 0.25);
+        }
+    }
+
+    /** ¿Supera 3x y debe intercambiarse al modelo Grande? */
+    public boolean esGrande() {
+        return "Burpmon".equals(especie) && crecimiento >= 3.0;
     }
 
     /** Descansar: recupera energía y HP. */

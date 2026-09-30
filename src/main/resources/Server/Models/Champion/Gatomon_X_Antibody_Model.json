@@ -1,0 +1,97 @@
+{
+  "Model": "NPC/Models/Champion/Gatomon_(X_Antibody).blockymodel",
+  "Texture": "NPC/Textures/Champion/Gatomon_(X_Antibody).png",
+  "EyeHeight": 0.9,
+  "CrouchOffset": -0.3,
+  "HitBox": {
+    "Max": {
+      "X": 0.2,
+      "Y": 0.9,
+      "Z": 0.2
+    },
+    "Min": {
+      "X": -0.2,
+      "Y": 0,
+      "Z": -0.2
+    }
+  },
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon_(X_Antibody)/Idle.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Walk": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon_(X_Antibody)/Walk.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Hurt": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon_(X_Antibody)/Hurt.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Death": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon_(X_Antibody)/Die.blockyanim",
+          "Looping": false
+        }
+      ]
+    },
+    "Sleep": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon_(X_Antibody)/Sleep.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "Blink": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon/Blink.blockyanim"
+        }
+      ]
+    },
+    "Surprised": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon_(X_Antibody)/surprised.blockyanim"
+        }
+      ]
+    },
+    "Interaction": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon/Interaction.blockyanim"
+        }
+      ]
+    },
+    "Attack": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon/Attack.blockyanim"
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "NPC/Models/Champion/Gatomon_(X_Antibody)/Run.blockyanim"
+        }
+      ]
+    }
+  },
+  "MinScale": 1,
+  "MaxScale": 1
+}

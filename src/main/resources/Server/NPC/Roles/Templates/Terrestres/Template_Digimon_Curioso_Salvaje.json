@@ -227,6 +227,42 @@
           },
           "Instructions": [
             {
+              "$Comment": "Parpadeo: inicia temporizador una sola vez",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Any",
+                "Once": true
+              },
+              "Actions": [
+                {
+                  "Type": "TimerStart",
+                  "Name": "DigiBlinkTimer",
+                  "StartValueRange": [3, 5],
+                  "RestartValueRange": [5, 11]
+                }
+              ]
+            },
+            {
+              "$Comment": "Parpadeo: un solo Blink por ciclo de timer",
+              "Continue": true,
+              "Sensor": {
+                "Type": "Timer",
+                "Name": "DigiBlinkTimer",
+                "State": "Stopped"
+              },
+              "Actions": [
+                {
+                  "Type": "PlayAnimation",
+                  "Slot": "Face",
+                  "Animation": "Blink"
+                },
+                {
+                  "Type": "TimerRestart",
+                  "Name": "DigiBlinkTimer"
+                }
+              ]
+            },
+            {
               "$Comment": "Si recibe dano, huye directamente — mas prioridad que la curiosidad",
               "Sensor": {
                 "Type": "Damage",
@@ -305,10 +341,10 @@
                 }
               ]
             },
+
             {
               "$Comment": "Deambulacion diurna normal",
-              "Type": "Random",
-              "ExecuteFor": [
+              "Type": "Random",              "ExecuteFor": [
                 12,
                 18
               ],
@@ -379,9 +415,19 @@
               ]
             },
             {
-              "$Comment": "Duerme de noche",
+              "$Comment": "Duerme solo de noche (sensor Not Time de dia)",
               "Enabled": {
                 "Compute": "AlwaysSleepAtNight"
+              },
+              "Sensor": {
+                "Type": "Not",
+                "Sensor": {
+                  "Type": "Time",
+                  "Period": {
+                    "Compute": "DayTimePeriod"
+                  },
+                  "CheckDay": true
+                }
               },
               "Actions": [
                 {

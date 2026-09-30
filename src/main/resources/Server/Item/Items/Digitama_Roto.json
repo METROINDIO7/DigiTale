@@ -1,0 +1,15 @@
+{
+  "TranslationProperties": {
+    "Name": "items.Digitama_Roto.name",
+    "Description": "items.Digitama_Roto.description"
+  },
+  "Icon": "Icons/ItemsGenerated/Digitamas/Icon_Digitama_Roto.png",
+  "Model": "NPC/Models/Digitama/Digitama.blockymodel",
+  "Texture": "NPC/Textures/Digitama/Digitama_roto.png",
+  "Quality": "Common",
+  "PlayerAnimationsId": "Item",
+  "MaxStack": 64,
+  "Interactions": {
+    "Secondary": "Item_Throw"
+  }
+}

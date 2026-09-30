@@ -2,8 +2,8 @@
   "Type": "Variant",
   "Reference": "Template_Digimon_Neutro_Salvaje",
   "Modify": {
-    "Appearance": "Botamon_Model",
-    "MaxHealth": 20,
+    "Appearance": "Chibomon_Model",
+    "MaxHealth": 22,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
     }
@@ -11,7 +11,7 @@
   "Parameters": {
     "NameTranslationKey": {
       "Value": "server.npcRoles.Chibomon_Salvaje.name",
-      "Description": "Nombre del Digimon companero"
+      "Description": "Nombre del Digimon salvaje"
     }
   }
 }

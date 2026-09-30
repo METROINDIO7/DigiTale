@@ -1,0 +1,386 @@
+[
+  {
+    "idItem": "Digitama_Verde",
+    "nombre": "Huevo Verde",
+    "familia": "Nature Spirits",
+    "atributo": "Data",
+    "tier": "Basico",
+    "ingredientes": [
+      "5x Esencia_Yuramon",
+      "1x Food_Pie_Apple"
+    ],
+    "entorno": "Cerca de arboles/cesped o bosque/llanura",
+    "energia": 2,
+    "ciclos": 1,
+    "especie": "Yuramon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Planta",
+    "especies": [
+      "Yuramon",
+      "Argomon",
+      "Gummymon",
+      "Moonmon",
+      "Tumblemon"
+    ],
+    "segPorCiclo": 60
+  },
+  {
+    "idItem": "Digitama_Naranja",
+    "nombre": "Huevo Naranja",
+    "familia": "Dragon's Roar",
+    "atributo": "Vaccine",
+    "tier": "Basico",
+    "ingredientes": [
+      "5x Esencia_Botamon",
+      "1x Food_Beef_Raw"
+    ],
+    "entorno": "Cerca de lava/fuego o bioma calido",
+    "energia": 5,
+    "ciclos": 1,
+    "especie": "Botamon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Bestia",
+    "especies": [
+      "Botamon",
+      "Bebydomon",
+      "Gurimon",
+      "Motimon",
+      "Upamon"
+    ],
+    "segPorCiclo": 60
+  },
+  {
+    "idItem": "Digitama_Amarillo",
+    "nombre": "Huevo Amarillo",
+    "familia": "Metal Empire",
+    "atributo": "Vaccine",
+    "tier": "Basico",
+    "ingredientes": [
+      "5x Esencia_Kuramon",
+      "1x Ingredient_Bar_Iron"
+    ],
+    "entorno": "Cerca de metal o construccion artificial",
+    "energia": 5,
+    "ciclos": 1,
+    "especie": "Kuramon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Bestia",
+    "especies": [
+      "Kuramon",
+      "Bibimon",
+      "Hiyarimon",
+      "Negamon",
+      "Viximon"
+    ],
+    "segPorCiclo": 60
+  },
+  {
+    "idItem": "Digitama_Rombos",
+    "nombre": "Huevo Azul (Rombos)",
+    "familia": "Deep Savers",
+    "atributo": "Data",
+    "tier": "Basico",
+    "ingredientes": [
+      "5x Esencia_Pichimon",
+      "1x Food_Fish_Raw"
+    ],
+    "entorno": "Rodeado de agua u oceano/rio",
+    "energia": 3,
+    "ciclos": 1,
+    "especie": "Pichimon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Planta",
+    "especies": [
+      "Pichimon",
+      "Bosamon",
+      "Hopmon",
+      "Nyaromon",
+      "Wanyamon"
+    ],
+    "segPorCiclo": 60
+  },
+  {
+    "idItem": "Digitama_Morado",
+    "nombre": "Huevo Morado",
+    "familia": "Nightmare Soldiers",
+    "atributo": "Virus",
+    "tier": "Basico",
+    "ingredientes": [
+      "5x Esencia_YukimiBotamon",
+      "1x Ingredient_Crystal_Purple"
+    ],
+    "entorno": "De noche o cueva oscura (luz 0)",
+    "energia": 3,
+    "ciclos": 1,
+    "especie": "YukimiBotamon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Oscuro",
+    "especies": [
+      "YukimiBotamon",
+      "Bowmon",
+      "Kakkinmon",
+      "Onibimon",
+      "Xiaomon"
+    ],
+    "segPorCiclo": 60
+  },
+  {
+    "idItem": "Digitama_Rojo",
+    "nombre": "Huevo Rojo",
+    "familia": "Dragon's Roar",
+    "atributo": "Virus",
+    "tier": "Basico",
+    "ingredientes": [
+      "5x Esencia_Jyarimon",
+      "1x Ingredient_Charcoal"
+    ],
+    "entorno": "De noche o bioma arido",
+    "energia": 5,
+    "ciclos": 1,
+    "especie": "Jyarimon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Bestia_II",
+    "especies": [
+      "Jyarimon",
+      "Budmon",
+      "Kapurimon",
+      "Pickmon",
+      "Yaamon"
+    ],
+    "segPorCiclo": 60
+  },
+  {
+    "idItem": "Digitama_Olas",
+    "nombre": "Huevo Azul Oscuro",
+    "familia": "Deep Savers",
+    "atributo": "Data",
+    "tier": "Avanzado",
+    "ingredientes": [
+      "10x Esencia_Bukamon",
+      "1x Food_Fish_Grilled"
+    ],
+    "entorno": "Bajo el agua (Y<60) u oceano profundo",
+    "energia": 7,
+    "ciclos": 1,
+    "especie": "Bukamon",
+    "nivelRes": 2,
+    "modeloNpc": "Digitame_Planta",
+    "especies": [
+      "Bukamon",
+      "Chapmon",
+      "Kekkomon",
+      "Pinamon",
+      "Tokomon_XAntibody"
+    ],
+    "segPorCiclo": 300
+  },
+  {
+    "idItem": "Digitama_Llamas",
+    "nombre": "Huevo Rojo-Blanco",
+    "familia": "Nightmare Soldiers",
+    "atributo": "Virus",
+    "tier": "Medio",
+    "ingredientes": [
+      "8x Esencia_Yokomon",
+      "1x Food_Kebab_Meat"
+    ],
+    "entorno": "De noche en Badlands o Nether",
+    "energia": 6,
+    "ciclos": 1,
+    "especie": "Yokomon",
+    "nivelRes": 2,
+    "modeloNpc": "Digitame_Bestia_II",
+    "especies": [
+      "Yokomon",
+      "Chicchimon",
+      "Kokomon",
+      "Poromon"
+    ],
+    "segPorCiclo": 150
+  },
+  {
+    "idItem": "Digitama_Azul",
+    "nombre": "Huevo Azul Claro",
+    "familia": "Metal Empire",
+    "atributo": "Data",
+    "tier": "Medio",
+    "ingredientes": [
+      "8x Esencia_Tokomon",
+      "1x Ingredient_Bar_Gold"
+    ],
+    "entorno": "Bioma frio o cerca de hielo",
+    "energia": 7,
+    "ciclos": 1,
+    "especie": "Tokomon",
+    "nivelRes": 2,
+    "modeloNpc": "Digitame_Planta",
+    "especies": [
+      "Tokomon",
+      "Cupimon",
+      "Kozenimon",
+      "Puroromon"
+    ],
+    "segPorCiclo": 150
+  },
+  {
+    "idItem": "Digitama_Calavera",
+    "nombre": "Huevo Calavera",
+    "familia": "Nightmare Soldiers",
+    "atributo": "Virus",
+    "tier": "Avanzado",
+    "ingredientes": [
+      "10x Esencia_Pagumon",
+      "1x Ingredient_Bone_Fragment"
+    ],
+    "entorno": "Cueva profunda (Y<30), noche, sin luz",
+    "energia": 9,
+    "ciclos": 1,
+    "especie": "Pagumon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Oscuro",
+    "especies": [
+      "Pagumon",
+      "DemiMeramon",
+      "Kyaromon",
+      "Pusurimon"
+    ],
+    "segPorCiclo": 300
+  },
+  {
+    "idItem": "Digitama_Corazon",
+    "nombre": "Huevo Corazon",
+    "familia": "Virus Busters",
+    "atributo": "Vaccine",
+    "tier": "Basico",
+    "ingredientes": [
+      "5x Esencia_Poyomon",
+      "1x Food_Cheese"
+    ],
+    "entorno": "De dia con sol directo o altar",
+    "energia": 5,
+    "ciclos": 1,
+    "especie": "Poyomon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Planta",
+    "especies": [
+      "Poyomon",
+      "DemiVeemon",
+      "Kyokyomon",
+      "Puyoyomon"
+    ],
+    "segPorCiclo": 60
+  },
+  {
+    "idItem": "Digitama_Gris",
+    "nombre": "Huevo Gris",
+    "familia": "Metal Empire",
+    "atributo": "Vaccine",
+    "tier": "Avanzado",
+    "ingredientes": [
+      "10x Esencia_Tanemon",
+      "1x Ingredient_Bar_Mithril"
+    ],
+    "entorno": "Mesa con energia (generador/rayo)",
+    "energia": 10,
+    "ciclos": 1,
+    "especie": "Tanemon",
+    "nivelRes": 2,
+    "modeloNpc": "Digitame_Bestia",
+    "especies": [
+      "Tanemon",
+      "Dorimon",
+      "Minomon",
+      "Sakuttomon"
+    ],
+    "segPorCiclo": 300
+  },
+  {
+    "idItem": "Digitama_Dorado",
+    "nombre": "Huevo Dorado",
+    "familia": "Virus Busters",
+    "atributo": "Vaccine",
+    "tier": "Legendario",
+    "ingredientes": [
+      "12x Esencia_Patamon",
+      "1x Ingredient_Crystal_Yellow"
+    ],
+    "entorno": "Y>150, de dia, despejado",
+    "energia": 10,
+    "ciclos": 1,
+    "especie": "Patamon",
+    "nivelRes": 3,
+    "modeloNpc": "Digitame_Dragon",
+    "especies": [
+      "Patamon",
+      "Fluffymon",
+      "Missimon",
+      "Sunmon"
+    ],
+    "segPorCiclo": 600
+  },
+  {
+    "idItem": "Digitama_Dragon",
+    "nombre": "Huevo Dragon",
+    "familia": "Dragon's Roar",
+    "atributo": "Vaccine",
+    "tier": "Avanzado",
+    "ingredientes": [
+      "10x Esencia_Koromon",
+      "1x Food_Pie_Meat"
+    ],
+    "entorno": "Mesa sobre Y=100",
+    "energia": 8,
+    "ciclos": 1,
+    "especie": "Koromon",
+    "nivelRes": 2,
+    "modeloNpc": "Digitame_Dragon",
+    "especies": [
+      "Koromon",
+      "Frimon",
+      "Mococomon",
+      "TorikaraBallmon"
+    ],
+    "segPorCiclo": 300
+  },
+  {
+    "idItem": "Digitama_Rosa",
+    "nombre": "Huevo Rosa",
+    "familia": "Virus Busters",
+    "atributo": "Vaccine",
+    "tier": "Medio",
+    "ingredientes": [
+      "8x Esencia_Chibomon",
+      "1x Plant_Flower_Bushy_Red"
+    ],
+    "entorno": "Flower Forest o luz sagrada",
+    "energia": 8,
+    "ciclos": 1,
+    "especie": "Chibomon",
+    "nivelRes": 1,
+    "modeloNpc": "Digitame_Planta",
+    "especies": [
+      "Chibomon",
+      "Gigimon",
+      "Monimon",
+      "Tsumemon"
+    ],
+    "segPorCiclo": 150
+  },
+  {
+    "idItem": "TODOS",
+    "nombre": "Receta Base Generica",
+    "familia": "General",
+    "atributo": "Neutral",
+    "tier": "Basico",
+    "ingredientes": [],
+    "entorno": "Normal",
+    "energia": 1,
+    "ciclos": 3,
+    "especie": "Burpmon",
+    "nivelRes": 1,
+    "especies": [
+      "Burpmon",
+      "Calumon"
+    ]
+  }
+]
