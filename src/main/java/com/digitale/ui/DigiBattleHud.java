@@ -18,8 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * HUD de combate (solo display, sin botones): salvaje arriba-derecha,
- * party abajo-izquierda, turno/log abajo-derecha. Los comandos van en la Page.
+ * HUD de combate estilo Cyber: paneles oscuros, acentos cian/dorado y barras
+ * de HP reales. Solo display; los comandos se manejan por teclado desde
+ * {@link MenuBatalla} (W/S mover, ESPACIO aceptar, Q atras).
  */
 public class DigiBattleHud extends CustomUIHud {
 
@@ -35,144 +36,218 @@ public class DigiBattleHud extends CustomUIHud {
     protected void build(UICommandBuilder cmd) {
         cmd.appendInline(null, """
             Group {
-                Group {
+                Group #PartyPanel {
                     LayoutMode: Top;
-                    Anchor: (Top: 10, Left: 10, Width: 230, Height: 124);
-                    Background: (Color: #0b1220);
-                    Padding: (Full: 8);
+                    Anchor: (Top: 12, Left: 12, Width: 330, Height: 240);
+                    Background: (Color: #04070d);
+                    Padding: (Full: 10);
 
                     Group {
                         LayoutMode: Left;
-                        Anchor: (Height: 34);
+                        Anchor: (Height: 24);
+                        Label {
+                            Text: "EQUIPO";
+                            Style: (TextColor: #38d9ff, FontSize: 16, RenderBold: true, LetterSpacing: 1);
+                            Anchor: (Width: 190);
+                        }
+                        Label #HudParteEstado {
+                            Text: "EN COMBATE";
+                            Style: (TextColor: #ffc857, FontSize: 12, HorizontalAlignment: End);
+                            Anchor: (Width: 120);
+                        }
+                    }
+                    Group { Anchor: (Height: 2); Background: (Color: #38d9ff); }
+                    Group { Anchor: (Height: 6); }
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 62);
                         AssetImage #HudAImg {
-                            Anchor: (Width: 30, Height: 30);
+                            Anchor: (Width: 46, Height: 46);
                             AssetPath: "UI/Custom/png_Digis/Botamon.png";
                         }
-                        Group { Anchor: (Width: 6); }
+                        Group { Anchor: (Width: 8); }
                         Group {
                             LayoutMode: Top;
-                            Anchor: (Width: 150);
+                            Anchor: (Width: 246, Height: 58);
                             Label #HudAName {
                                 Text: "---";
-                                Style: (TextColor: #00d4ff, FontSize: 13, HorizontalAlignment: Center);
-                                Anchor: (Height: 16);
+                                Style: (TextColor: #38d9ff, FontSize: 14, RenderBold: true);
+                                Anchor: (Height: 20);
+                            }
+                            Label #HudABar {
+                                Text: "";
+                                Style: (TextColor: #5dffb0, FontSize: 12, LetterSpacing: 1);
+                                Anchor: (Height: 14);
                             }
                             Label #HudAHp {
-                                Text: "";
-                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
-                                Anchor: (Height: 14);
+                                Text: "HP ---";
+                                Style: (TextColor: #5dffb0, FontSize: 11);
+                                Anchor: (Height: 16);
                             }
                         }
                     }
                     Group {
                         LayoutMode: Left;
-                        Anchor: (Height: 34);
+                        Anchor: (Height: 62);
                         AssetImage #HudBImg {
-                            Anchor: (Width: 30, Height: 30);
+                            Anchor: (Width: 46, Height: 46);
                             AssetPath: "UI/Custom/png_Digis/Botamon.png";
                         }
-                        Group { Anchor: (Width: 6); }
+                        Group { Anchor: (Width: 8); }
                         Group {
                             LayoutMode: Top;
-                            Anchor: (Width: 150);
+                            Anchor: (Width: 246, Height: 58);
                             Label #HudBName {
                                 Text: "---";
-                                Style: (TextColor: #ff00ff, FontSize: 13, HorizontalAlignment: Center);
-                                Anchor: (Height: 16);
+                                Style: (TextColor: #ff4fa3, FontSize: 14, RenderBold: true);
+                                Anchor: (Height: 20);
+                            }
+                            Label #HudBBar {
+                                Text: "";
+                                Style: (TextColor: #5dffb0, FontSize: 12, LetterSpacing: 1);
+                                Anchor: (Height: 14);
                             }
                             Label #HudBHp {
-                                Text: "";
-                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
-                                Anchor: (Height: 14);
+                                Text: "HP ---";
+                                Style: (TextColor: #5dffb0, FontSize: 11);
+                                Anchor: (Height: 16);
                             }
                         }
                     }
                     Group {
                         LayoutMode: Left;
-                        Anchor: (Height: 34);
+                        Anchor: (Height: 62);
                         AssetImage #HudCImg {
-                            Anchor: (Width: 30, Height: 30);
+                            Anchor: (Width: 46, Height: 46);
                             AssetPath: "UI/Custom/png_Digis/Botamon.png";
                         }
-                        Group { Anchor: (Width: 6); }
+                        Group { Anchor: (Width: 8); }
                         Group {
                             LayoutMode: Top;
-                            Anchor: (Width: 150);
+                            Anchor: (Width: 246, Height: 58);
                             Label #HudCName {
                                 Text: "---";
-                                Style: (TextColor: #ffcc00, FontSize: 13, HorizontalAlignment: Center);
-                                Anchor: (Height: 16);
+                                Style: (TextColor: #ffc857, FontSize: 14, RenderBold: true);
+                                Anchor: (Height: 20);
+                            }
+                            Label #HudCBar {
+                                Text: "";
+                                Style: (TextColor: #5dffb0, FontSize: 12, LetterSpacing: 1);
+                                Anchor: (Height: 14);
                             }
                             Label #HudCHp {
-                                Text: "";
-                                Style: (TextColor: #00ff88, FontSize: 11, HorizontalAlignment: Center);
-                                Anchor: (Height: 14);
+                                Text: "HP ---";
+                                Style: (TextColor: #5dffb0, FontSize: 11);
+                                Anchor: (Height: 16);
                             }
                         }
                     }
                 }
-                Group {
+
+                Group #EnemyPanel {
                     LayoutMode: Top;
-                    Anchor: (Top: 10, Right: 10, Width: 250, Height: 100);
+                    Anchor: (Top: 12, Right: 12, Width: 380, Height: 172);
                     Background: (Color: #1a0f1a);
-                    Padding: (Full: 8);
+                    Padding: (Full: 10);
 
                     Label #HudEnemName {
                         Text: "---";
-                        Style: (TextColor: #ff4444, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
+                        Style: (TextColor: #ff5f6d, FontSize: 17, RenderBold: true, LetterSpacing: 1);
+                        Anchor: (Height: 24);
+                    }
+                    Label #HudEnemElem {
+                        Text: "ELEMENTO // ---";
+                        Style: (TextColor: #ff9fb0, FontSize: 12, RenderUppercase: true);
                         Anchor: (Height: 18);
                     }
-                    Label #HudEnemHp {
-                        Text: "HP: ---";
-                        Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
+                    Group { Anchor: (Height: 8); }
                     Label #HudEnemBar {
                         Text: "";
-                        Style: (TextColor: #ff4444, FontSize: 12, HorizontalAlignment: Center);
-                        Anchor: (Height: 16);
-                    }
-                }
-                Group {
-                    LayoutMode: Top;
-                    Anchor: (Left: 10, Bottom: 10, Width: 250, Height: 180);
-                    Background: (Color: #0b1220);
-                    Padding: (Full: 8);
-
-                    Label #MenuTitulo {
-                        Text: "COMBATE";
-                        Style: (TextColor: #00d4ff, FontSize: 14, RenderBold: true, HorizontalAlignment: Center);
-                        Anchor: (Height: 20);
-                    }
-                    Label #Menu0 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label #Menu1 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label #Menu2 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label #Menu3 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label #Menu4 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label #Menu5 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label #Menu6 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label #Menu7 { Text: ""; Style: (TextColor: #e0e8f0, FontSize: 12); Anchor: (Height: 16); }
-                    Label {
-                        Text: "W/S mover | ESPACIO aceptar | Q atras";
-                        Style: (TextColor: #8899aa, FontSize: 10, HorizontalAlignment: Center);
-                        Anchor: (Height: 14);
-                    }
-                }
-                Group {
-                    LayoutMode: Top;
-                    Anchor: (Right: 10, Bottom: 10, Width: 300, Height: 98);
-                    Background: (Color: #0b1220);
-                    Padding: (Full: 8);
-
-                    Label #HudTurno {
-                        Text: "";
-                        Style: (TextColor: #ffcc00, FontSize: 13, HorizontalAlignment: Center);
+                        Style: (TextColor: #ff5f6d, FontSize: 13, LetterSpacing: 1);
                         Anchor: (Height: 18);
                     }
+                    Group { Anchor: (Height: 4); }
+                    Label #HudEnemHp {
+                        Text: "HP: ---";
+                        Style: (TextColor: #ff9fb0, FontSize: 13, RenderBold: true);
+                        Anchor: (Height: 18);
+                    }
+                    Label #HudEnemWave {
+                        Text: "";
+                        Style: (TextColor: #ffc857, FontSize: 12);
+                        Anchor: (Height: 18);
+                    }
+                }
+
+                Group #CmdPanel {
+                    LayoutMode: Top;
+                    Anchor: (Left: 12, Bottom: 12, Width: 370, Height: 330);
+                    Background: (Color: #04070d);
+                    Padding: (Full: 10);
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 24);
+                        Label #MenuTitulo {
+                            Text: "COMBATE";
+                            Style: (TextColor: #ffc857, FontSize: 16, RenderBold: true, LetterSpacing: 1);
+                            Anchor: (Width: 240);
+                        }
+                        Label {
+                            Text: "TURNO";
+                            Style: (TextColor: #6f8ca4, FontSize: 12, HorizontalAlignment: End);
+                            Anchor: (Width: 110);
+                        }
+                    }
+                    Group { Anchor: (Height: 2); Background: (Color: #ffc857); }
+                    Group { Anchor: (Height: 6); }
+
+                    Label #Menu0 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+                    Label #Menu1 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+                    Label #Menu2 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+                    Label #Menu3 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+                    Label #Menu4 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+                    Label #Menu5 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+                    Label #Menu6 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+                    Label #Menu7 { Text: ""; Style: (TextColor: #d7ecff, FontSize: 15); Anchor: (Height: 24); }
+
+                    Group { Anchor: (Height: 8); }
+                    Group { Anchor: (Height: 2); Background: (Color: #38d9ff); }
+                    Group { Anchor: (Height: 6); }
+                    Label #MenuHint {
+                        Text: "HAZ CLIC EN UNA OPCION";
+                        Style: (TextColor: #6f8ca4, FontSize: 11, HorizontalAlignment: Center);
+                        Anchor: (Height: 18);
+                    }
+                }
+
+                Group #LogPanel {
+                    LayoutMode: Top;
+                    Anchor: (Right: 12, Bottom: 12, Width: 420, Height: 250);
+                    Background: (Color: #04070d);
+                    Padding: (Full: 10);
+
+                    Group {
+                        LayoutMode: Left;
+                        Anchor: (Height: 24);
+                        Label #HudTurno {
+                            Text: "";
+                            Style: (TextColor: #38d9ff, FontSize: 16, RenderBold: true, LetterSpacing: 1);
+                            Anchor: (Width: 240);
+                        }
+                        Label #HudFase {
+                            Text: "";
+                            Style: (TextColor: #ffc857, FontSize: 13, HorizontalAlignment: End);
+                            Anchor: (Width: 150);
+                        }
+                    }
+                    Group { Anchor: (Height: 2); Background: (Color: #38d9ff); }
+                    Group { Anchor: (Height: 6); }
                     Label #HudLog {
                         Text: "";
-                        Style: (TextColor: #8899aa, FontSize: 11, HorizontalAlignment: Center, Wrap: true);
-                        Anchor: (Height: 60);
+                        Style: (TextColor: #d7ecff, FontSize: 12, Wrap: true);
+                        Anchor: (Height: 190);
                     }
                 }
             }
@@ -196,44 +271,77 @@ public class DigiBattleHud extends CustomUIHud {
         EstadoCombate c = d != null ? d.combate : null;
         if (c == null) {
             cmd.set("#HudEnemName.Text", "---");
+            cmd.set("#HudEnemElem.Text", "ELEMENTO // ---");
             cmd.set("#HudEnemHp.Text", "HP: ---");
             cmd.set("#HudEnemBar.Text", "");
+            cmd.set("#HudEnemWave.Text", "");
+            cmd.set("#HudParteEstado.Text", "SIN COMBATE");
             cmd.set("#HudTurno.Text", "");
+            cmd.set("#HudFase.Text", "");
             cmd.set("#HudLog.Text", "");
+            for (int i = 0; i < 3; i++) {
+                cmd.set(nom(i) + "Name.Text", "---");
+                cmd.set(nom(i) + "Hp.Text", "HP ---");
+                cmd.set(nom(i) + "Bar.Text", "");
+                cmd.set(nom(i) + "Img.Visible", false);
+            }
             return;
         }
+
         List<DatoDigimon> party = (c.party != null && !c.party.isEmpty()) ? c.party
             : (d != null ? d.equipoCombate() : java.util.Collections.emptyList());
 
-        cmd.set("#HudEnemName.Text", c.enemigoNombre
-            + (c.totalOleada > 1 ? " [" + c.oleadaActual + "/" + c.totalOleada + "]" : ""));
-        cmd.set("#HudEnemHp.Text", "HP: " + c.enemigoHp + "/" + c.enemigoMaxHp);
+        // ── Enemigo ─────────────────────────────────────────────────────
+        cmd.set("#HudEnemName.Text", c.enemigoNombre);
+        cmd.set("#HudEnemElem.Text", "ELEMENTO // " + c.enemigoElemento);
+        cmd.set("#HudEnemHp.Text", "HP: " + c.enemigoHp + " / " + c.enemigoMaxHp);
         cmd.set("#HudEnemBar.Text", EstadoCombate.barraHp(c.enemigoHp, c.enemigoMaxHp));
+        cmd.set("#HudEnemWave.Text", c.totalOleada > 1
+            ? "OLEADA " + c.oleadaActual + " / " + c.totalOleada : "DUELO 1 VS 1");
 
+        // ── Equipo ──────────────────────────────────────────────────────
         int[] hps = {c.hpCombateA, c.hpCombateB, c.hpCombateC};
-        String[] noms = {"#HudA", "#HudB", "#HudC"};
         for (int i = 0; i < 3; i++) {
             DatoDigimon digi = i < party.size() ? party.get(i) : null;
-            if (digi != null) {
-                cmd.set(noms[i] + "Name.Text", digi.nombre);
-                cmd.set(noms[i] + "Hp.Text", "HP: " + hps[i] + "/" + digi.maxHp);
+            if (digi != null && hps[i] > 0) {
+                cmd.set(nom(i) + "Name.Text", digi.nombre);
+                cmd.set(nom(i) + "Hp.Text", "HP " + hps[i] + " / " + digi.maxHp);
+                cmd.set(nom(i) + "Bar.Text", EstadoCombate.barraHp(hps[i], Math.max(1, digi.maxHp)));
                 String ruta = DigiImagenes.rutaPara(digi.especie);
-                cmd.set(noms[i] + "Img.Visible", ruta != null);
-                if (ruta != null) cmd.set(noms[i] + "Img.AssetPath", ruta);
+                cmd.set(nom(i) + "Img.Visible", ruta != null);
+                if (ruta != null) cmd.set(nom(i) + "Img.AssetPath", ruta);
             } else {
-                cmd.set(noms[i] + "Name.Text", "---");
-                cmd.set(noms[i] + "Hp.Text", "");
-                cmd.set(noms[i] + "Img.Visible", false);
+                cmd.set(nom(i) + "Name.Text", digi != null ? digi.nombre + " [KO]" : "---");
+                cmd.set(nom(i) + "Hp.Text", digi != null
+                    ? "HP 0 / " + Math.max(1, digi.maxHp) : "HP ---");
+                cmd.set(nom(i) + "Bar.Text", "");
+                cmd.set(nom(i) + "Img.Visible", false);
             }
         }
 
-        if (c.fase == EstadoCombate.Fase.FIN_COMBATE) {
-            cmd.set("#HudTurno.Text", c.victoria ? "VICTORIA!" : "DERROTA...");
-        } else {
-            cmd.set("#HudTurno.Text", "Ronda " + c.ronda);
-        }
+        cmd.set("#HudParteEstado.Text", switch (c.fase) {
+            case FIN_COMBATE -> c.victoria ? "VICTORIA" : "DERROTA";
+            case RESOLVIENDO -> "RESOLVIENDO";
+            default -> "EN COMBATE";
+        });
+
+        cmd.set("#HudTurno.Text", "RONDA " + c.ronda);
+        cmd.set("#HudFase.Text", switch (c.fase) {
+            case INICIATIVA -> "TU TURNO";
+            case RESOLVIENDO -> "RESOLVIENDO...";
+            case ORDER_RING -> "ORDENES";
+            case FIN_COMBATE -> c.victoria ? "VICTORIA" : "DERROTA";
+        });
         cmd.set("#HudLog.Text", c.getLogFormateado());
         dibujarMenu(cmd, d);
+    }
+
+    private static String nom(int i) {
+        return switch (i) {
+            case 0 -> "#HudA";
+            case 1 -> "#HudB";
+            default -> "#HudC";
+        };
     }
 
     /** Caja de menú por teclado (8 slots fijos, cursor "> "). */
@@ -246,7 +354,7 @@ public class DigiBattleHud extends CustomUIHud {
             }
             return;
         }
-        java.util.List<String> items = MenuBatalla.listaItems(d);
+        List<String> items = MenuBatalla.listaItems(d);
         cmd.set("#MenuTitulo.Text", MenuBatalla.titulo(d));
         for (int i = 0; i < 8; i++) {
             if (i < items.size()) {

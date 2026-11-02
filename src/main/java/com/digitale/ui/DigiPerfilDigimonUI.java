@@ -38,12 +38,39 @@ public class DigiPerfilDigimonUI extends CustomUIPage {
                             int slot) {
         LOGGER.log(Level.INFO, "DigiPerfilDigimonUI.open() - slot: " + slot);
 
+        int slotValido = AlmacenJugadores.DatosJugador.slotValido(slot) ? slot : 0;
+
+        // Vuetale primero; si no esta disponible, se usa la UI nativa de abajo.
+        if (intentarVuetale(playerRef, ref, store, slotValido)) return;
+
         DigiPerfilDigimonUI page = new DigiPerfilDigimonUI(playerRef);
-        page.slotActivo = AlmacenJugadores.DatosJugador.slotValido(slot) ? slot : 0;
+        page.slotActivo = slotValido;
 
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player != null) {
             player.getPageManager().openCustomPage(ref, store, page);
+        }
+    }
+
+    /**
+     * Invoca Vuetale por reflexion para que este archivo siga cargando aunque
+     * el jar de Vuetale no este instalado en el servidor.
+     */
+    private static boolean intentarVuetale(@Nonnull PlayerRef playerRef,
+                                           @Nonnull Ref<EntityStore> ref,
+                                           @Nonnull Store<EntityStore> store,
+                                           int slot) {
+        try {
+            Class<?> cls = Class.forName("com.digitale.ui.VuetalePerfilUI");
+            Object abierto = cls.getMethod("abrir", PlayerRef.class, Ref.class, Store.class, int.class)
+                .invoke(null, playerRef, ref, store, slot);
+            return Boolean.TRUE.equals(abierto);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            LOGGER.log(Level.INFO, "Vuetale no disponible; usando la UI nativa del perfil");
+            return false;
+        } catch (Throwable t) {
+            LOGGER.log(Level.WARNING, "Fallo al abrir Perfil en Vuetale; usando la UI nativa: " + t, t);
+            return false;
         }
     }
 

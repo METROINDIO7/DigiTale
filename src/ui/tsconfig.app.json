@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "@vue/tsconfig/tsconfig.dom.json",
+    "./.vuetale/tsconfig.vuetale.json"
+  ],
+  "include": [
+    "env.d.ts",
+    ".vuetale/modules/**/*.d.ts",
+    "lib/**/*.ts",
+    "lib/**/*.vue"
+  ],
+  "exclude": [
+    "lib/**/__tests__/*"
+  ],
+  "compilerOptions": {
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "noUncheckedIndexedAccess": true,
+  }
+}

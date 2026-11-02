@@ -52,6 +52,7 @@ public class DigiTale extends JavaPlugin {
             this.getEntityStoreRegistry().registerComponent(
                 PetProgressComponent.class, "PetProgressComponent", PetProgressComponent.CODEC);
         ComponentRegistry.registerPetProgressType(petProgressType);
+        registrarModuloVuetale();
         // Interacción custom del Sapotama (clic derecho / F → abre /digi_menu).
         this.getCodecRegistry(Interaction.CODEC).register(
             "DigiTale_Sapotama_Menu", SapotamaMenuInteraction.class, SapotamaMenuInteraction.CODEC);
@@ -103,6 +104,25 @@ public class DigiTale extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiSetProgressComando("digi_setprogress", "Set progreso (admin)"));
         this.getCommandRegistry().registerCommand(new com.digitale.comandos.admin.DigiIncubarComando("digi_incubar", "Eclosionar huevo (admin/test)"));
         getLogger().at(Level.INFO).log("DigiTale cargado correctamente!");
+    }
+
+    /**
+     * Registra la carpeta de recursos Vue de DigiTale en Vuetale.
+     * Se hace por reflexión para que el plugin arranque aunque Vuetale no esté
+     * instalado en el servidor (en ese caso se usa la UI nativa).
+     */
+    private void registrarModuloVuetale() {
+        try {
+            Class<?> registry = Class.forName("li.kelp.vuetale.javascript.ModuleRegistry");
+            Object instancia = registry.getField("INSTANCE").get(null);
+            registry.getMethod("registerModule", String.class, Class.class)
+                .invoke(instancia, "digitale", DigiTale.class);
+            getLogger().at(Level.INFO).log("Vuetale: modulo 'digitale' registrado");
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            getLogger().at(Level.INFO).log("Vuetale no instalado; se usara la UI nativa");
+        } catch (Throwable t) {
+            getLogger().at(Level.WARNING).log("No se pudo registrar el modulo Vuetale: " + t);
+        }
     }
 
     /** ¿Tiene el jugador un Sapotama en alguna sección del inventario? */
@@ -196,6 +216,7 @@ public class DigiTale extends JavaPlugin {
                 }
 
                 MountMovementSupport.clearPlayer(uuid);
+                com.digitale.sistema.EscenarioBatalla.limpiar(uuid);
 
                 // Soltar cámara de combate si quedó fija.
                 try {

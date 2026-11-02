@@ -23,6 +23,8 @@ dependencies {
 
     // Hytale Server API - compileOnly porque el servidor ya provee estas clases en runtime
     compileOnly("com.hypixel.hytale:Server:+")
+    // Vuetale (UI Vue) - solo compilación; el jar se instala como mod del servidor
+    compileOnly(files("Vuetale-1.0.30.jar"))
     // Gson se empaqueta dentro del JAR porque es dependencia propia
     implementation("com.google.code.gson:gson:2.10.1")
 }

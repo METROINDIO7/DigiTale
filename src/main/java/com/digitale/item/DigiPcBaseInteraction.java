@@ -1,6 +1,7 @@
 package com.digitale.item;
 
 import com.digitale.ui.DigiBancoPCUI;
+import com.digitale.ui.VuetaleBancoPCUI;
 import com.digitale.util.DigiMsg;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
@@ -50,7 +51,9 @@ public class DigiPcBaseInteraction extends SimpleInstantInteraction {
             store.getExternalData().getWorld().execute(() -> {
                 try {
                     playerRef.sendMessage(DigiMsg.parse("§bPC Digital: gestiona tu equipo y tu caja."));
-                    DigiBancoPCUI.open(playerRef, playerEntity, store);
+                    if (!VuetaleBancoPCUI.abrir(playerRef, playerEntity, store)) {
+                        DigiBancoPCUI.open(playerRef, playerEntity, store);
+                    }
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Error abriendo PC: " + e.getMessage());
                 }

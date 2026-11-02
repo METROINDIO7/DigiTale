@@ -75,7 +75,9 @@ public class DigiMesaProcesaInteraction extends SimpleBlockInteraction {
                 return;
             }
             // El horneado es 100% nativo (TURN ON + recetas). Aquí solo banco/estado.
-            com.digitale.ui.DigiBancoPCUI.open(playerRef, playerEntity, store);
+            if (!com.digitale.ui.VuetaleBancoPCUI.abrir(playerRef, playerEntity, store)) {
+                com.digitale.ui.DigiBancoPCUI.open(playerRef, playerEntity, store);
+            }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "DigiMesaProcesaInteraction: " + e.getMessage());
         }

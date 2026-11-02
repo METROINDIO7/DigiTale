@@ -42,10 +42,35 @@ public class SapotamaTabUI extends CustomUIPage {
             return;
         }
 
+        // Intentar la UI Vue (Vuetale). Si Vuetale no está en runtime o falla,
+        // se usa la implementación nativa de abajo.
+        if (intentarVuetale(playerRef, ref, store)) return;
+
         SapotamaTabUI page = new SapotamaTabUI(playerRef);
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player != null) {
             player.getPageManager().openCustomPage(ref, store, page);
+        }
+    }
+
+    /**
+     * Invoca Vuetale por reflexión para que este archivo siga cargando aunque
+     * el jar de Vuetale no esté instalado en el servidor.
+     */
+    private static boolean intentarVuetale(@Nonnull PlayerRef playerRef,
+                                           @Nonnull Ref<EntityStore> ref,
+                                           @Nonnull Store<EntityStore> store) {
+        try {
+            Class<?> cls = Class.forName("com.digitale.ui.VuetaleSapotamaUI");
+            Object abierto = cls.getMethod("abrir", PlayerRef.class, Ref.class, Store.class)
+                .invoke(null, playerRef, ref, store);
+            return Boolean.TRUE.equals(abierto);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            LOGGER.log(Level.INFO, "Vuetale no disponible; usando la UI nativa");
+            return false;
+        } catch (Throwable t) {
+            LOGGER.log(Level.WARNING, "Fallo al abrir Vuetale; usando la UI nativa: " + t, t);
+            return false;
         }
     }
 

@@ -16,9 +16,11 @@
     }
   ],
   "Website": "",
-  "ServerVersion": "~0.6.4",
+  "ServerVersion": "~0.7.5",
   "Dependencies": {},
-  "OptionalDependencies": {},
+  "OptionalDependencies": {
+    "kelp.li:Vuetale": ">=1.0.30"
+  },
   "LoadBefore": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,

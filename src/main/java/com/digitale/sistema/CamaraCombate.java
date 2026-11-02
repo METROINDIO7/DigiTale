@@ -28,10 +28,12 @@ public final class CamaraCombate {
 
     private static final Logger LOGGER = Logger.getLogger(CamaraCombate.class.getName());
 
-    /** Distancia de batalla (topdown vainilla usa 20; 9 encuadra la party). */
-    public static final float DISTANCIA = 9.0f;
-    /** Pitch lateral estilo Cyber Sleuth (vainilla cenital = -1.5708). */
-    public static final float PITCH = -0.85f;
+    /**
+     * Camara de batalla tipo Cyber Sleuth: vista 3/4 alta y algo alejada para
+     * encuadrar al jugador abajo, la party en linea y el enemigo al fondo.
+     */
+    public static final float DISTANCIA = 8.0f;
+    public static final float PITCH = -0.45f;
 
     public static void entrar(PlayerRef playerRef) {
         entrar(playerRef, DISTANCIA, PITCH);
@@ -47,9 +49,10 @@ public final class CamaraCombate {
             AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
             if (d != null && d.camaraCombate) return;
             ServerCameraSettings s = new ServerCameraSettings();
-            s.positionLerpSpeed = 0.2f;
-            s.rotationLerpSpeed = 0.2f;
+            s.positionLerpSpeed = 0.35f;
+            s.rotationLerpSpeed = 0.35f;
             s.distance = distancia;
+            s.baseFov = 75f;
             s.displayCursor = true;
             s.isFirstPerson = false;
             s.movementForceRotationType = MovementForceRotationType.Custom;

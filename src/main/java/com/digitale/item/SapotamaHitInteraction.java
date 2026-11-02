@@ -169,7 +169,8 @@ public class SapotamaHitInteraction extends SimpleInstantInteraction {
                     // Puesta en escena + menú HUD por teclado (sin Page).
                     SistemaPaseo.prepararBatalla(atacante, entityRef, store);
                     MenuBatalla.abrir(atacante, entityRef, store);
-                    com.digitale.sistema.CamaraCombate.entrar(atacante);
+                    com.digitale.sistema.EscenarioBatalla.iniciar(atacante, entityRef, store);
+                    com.digitale.ui.DigiBatallaComandosUI.abrir(atacante, entityRef, store);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "No se pudo abrir batalla: " + e.getMessage());
                 }

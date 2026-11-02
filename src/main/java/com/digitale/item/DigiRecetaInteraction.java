@@ -73,7 +73,10 @@ public class DigiRecetaInteraction extends SimpleInstantInteraction {
                     // se desbloquea en la Mesa con el dato.
                     playerRef.sendMessage(com.digitale.util.DigiMsg.parse(
                         "§eReceta de " + finalBebe + ": llevala a la §fMesa de Crianza §epara desbloquearla."));
-                    DigiRecetaUI.open(playerRef, playerEntity, store, finalDef);
+                    if (!com.digitale.ui.VuetaleRecetaUI.abrir(
+                            playerRef, playerEntity, store, finalDef)) {
+                        DigiRecetaUI.open(playerRef, playerEntity, store, finalDef);
+                    }
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "No se pudo abrir receta: " + e.getMessage());
                 }

@@ -57,8 +57,12 @@ public class DigiHuevoIncubandoInteraction extends SimpleInstantInteraction {
                         playerRef.sendMessage(DigiMsg.parse("§eSosten el Huevo Incubando para reclamar."));
                         return;
                     }
-                    DigiMesaReclamoUI.open(playerRef, playerEntity, store,
-                        token[0], token[1], token.length > 2);
+                    if (!com.digitale.ui.VuetaleReclamoUI.abrir(
+                            playerRef, playerEntity, store,
+                            token[0], token[1], token.length > 2)) {
+                        DigiMesaReclamoUI.open(playerRef, playerEntity, store,
+                            token[0], token[1], token.length > 2);
+                    }
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Error abriendo reclamo: " + e.getMessage());
                 }

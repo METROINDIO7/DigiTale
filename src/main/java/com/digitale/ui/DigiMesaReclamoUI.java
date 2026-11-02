@@ -41,6 +41,7 @@ public class DigiMesaReclamoUI extends CustomUIPage {
     private static final int MAX_BANCO = 8;
 
     private String msgPendiente = "";
+    private boolean animado = false;
     private int tab = 0;
     /** Token en mano: "Digitama_X" + bebe + variante (receta no exacta). Null = solo ver banco. */
     private final String tokenHuevo;
@@ -133,6 +134,22 @@ public class DigiMesaReclamoUI extends CustomUIPage {
         event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnCerrar",
             EventData.of("action", "cerrar"), false);
         actualizar(cmd, ref, store);
+        if (!animado) {
+            animado = true;
+            AnimacionUI.encender(this::enviarAnimacion, ref, store);
+        } else {
+            cmd.set("#CrtNegro.Visible", false);
+            for (int i = 1; i <= 3; i++) cmd.set("#CrtLinea" + i + ".Visible", false);
+            for (int i = 1; i <= 4; i++) cmd.set("#CrtFade" + i + ".Visible", false);
+        }
+    }
+
+    /** Envia un frame de la animacion CRT al cliente. */
+    public void enviarAnimacion(UICommandBuilder cmd) {
+        try {
+            sendUpdate(cmd);
+        } catch (Exception ignored) {
+        }
     }
 
     private void actualizar(UICommandBuilder cmd, Ref<EntityStore> ref, Store<EntityStore> store) {

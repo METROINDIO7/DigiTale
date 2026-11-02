@@ -148,10 +148,34 @@ public class DigiCuidarMenuUI extends CustomUIPage {
             return;
         }
 
+        // Vuetale primero; si no esta disponible, se usa la UI nativa de abajo.
+        if (intentarVuetale(playerRef, ref, store)) return;
+
         DigiCuidarMenuUI page = new DigiCuidarMenuUI(playerRef);
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player != null) {
             player.getPageManager().openCustomPage(ref, store, page);
+        }
+    }
+
+    /**
+     * Invoca Vuetale por reflexion para que este archivo siga cargando aunque
+     * el jar de Vuetale no este instalado en el servidor.
+     */
+    private static boolean intentarVuetale(@Nonnull PlayerRef playerRef,
+                                           @Nonnull Ref<EntityStore> ref,
+                                           @Nonnull Store<EntityStore> store) {
+        try {
+            Class<?> cls = Class.forName("com.digitale.ui.VuetaleCuidarUI");
+            Object abierto = cls.getMethod("abrir", PlayerRef.class, Ref.class, Store.class)
+                .invoke(null, playerRef, ref, store);
+            return Boolean.TRUE.equals(abierto);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            LOGGER.log(Level.INFO, "Vuetale no disponible; usando la UI nativa de crianza");
+            return false;
+        } catch (Throwable t) {
+            LOGGER.log(Level.WARNING, "Fallo al abrir Cuidar en Vuetale; usando la UI nativa: " + t, t);
+            return false;
         }
     }
 

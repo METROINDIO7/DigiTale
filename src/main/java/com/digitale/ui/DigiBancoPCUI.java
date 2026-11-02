@@ -34,6 +34,7 @@ public class DigiBancoPCUI extends CustomUIPage {
     private static final int FILAS_BANCO = 8;
 
     private String msgPendiente = "";
+    private boolean animado = false;
 
     public DigiBancoPCUI(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss);
@@ -68,6 +69,22 @@ public class DigiBancoPCUI extends CustomUIPage {
         event.addEventBinding(CustomUIEventBindingType.Activating, "#BtnPCCerrar",
             EventData.of("action", "cerrar"), false);
         actualizar(cmd, ref, store);
+        if (!animado) {
+            animado = true;
+            AnimacionUI.encender(this::enviarAnimacion, ref, store);
+        } else {
+            cmd.set("#CrtNegro.Visible", false);
+            for (int i = 1; i <= 3; i++) cmd.set("#CrtLinea" + i + ".Visible", false);
+            for (int i = 1; i <= 4; i++) cmd.set("#CrtFade" + i + ".Visible", false);
+        }
+    }
+
+    /** Envia un frame de la animacion CRT al cliente. */
+    public void enviarAnimacion(UICommandBuilder cmd) {
+        try {
+            sendUpdate(cmd);
+        } catch (Exception ignored) {
+        }
     }
 
     private void actualizar(UICommandBuilder cmd, Ref<EntityStore> ref, Store<EntityStore> store) {

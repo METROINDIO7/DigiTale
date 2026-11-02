@@ -1,15 +1,22 @@
 Group {
+    LayoutMode: Middle;
+    Anchor: (Full: 0);
+    AssetImage #FondoUI {
+        Anchor: (Full: 0);
+        AssetPath: "UI/FondoUI.png";
+    }
+    Group {
     LayoutMode: Top;
     Anchor: (Height: 760, Width: 560);
 
     Group {
         LayoutMode: Top;
-        Background: (Color: #0b1220);
+        Background: (Color: #04070dcc);
         Padding: (Full: 15);
 
         Label {
             Text: "RECLAMO DE CRIAS";
-            Style: (TextColor: #ffcc00, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
+            Style: (TextColor: #ffc857, FontSize: 16, RenderBold: true, HorizontalAlignment: Center);
             Anchor: (Height: 26);
         }
         Group {
@@ -18,20 +25,20 @@ Group {
             TextButton #BtnTabListas {
                 Text: "Reclamar";
                 Anchor: (Width: 200, Height: 30);
-                Style: (Default: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                Style: (Default: (Background: (Color: #0a1826), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
             }
             Group { Anchor: (Width: 8); }
             TextButton #BtnTabBanco {
                 Text: "Banco PC";
                 Anchor: (Width: 200, Height: 30);
-                Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 12, TextColor: #ffcc00, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+                Style: (Default: (Background: (Color: #0a1826), LabelStyle: (FontSize: 12, TextColor: #ffc857, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0a1826), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
             }
         }
         Group #TabListas {
             LayoutMode: Top;
             Label #LblR0 {
                 Text: "";
-                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Style: (TextColor: #d7ecff, FontSize: 12, Wrap: true);
                 Anchor: (Height: 30);
             }
             Group {
@@ -45,24 +52,24 @@ Group {
                 TextButton #BtnEq0 {
                     Text: "Equipo";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBk0 {
                     Text: "Banco";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #38d9ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnRel0 {
                     Text: "Liberar";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblR1 {
                 Text: "";
-                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Style: (TextColor: #d7ecff, FontSize: 12, Wrap: true);
                 Anchor: (Height: 30);
             }
             Group {
@@ -76,24 +83,24 @@ Group {
                 TextButton #BtnEq1 {
                     Text: "Equipo";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBk1 {
                     Text: "Banco";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #38d9ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnRel1 {
                     Text: "Liberar";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblR2 {
                 Text: "";
-                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Style: (TextColor: #d7ecff, FontSize: 12, Wrap: true);
                 Anchor: (Height: 30);
             }
             Group {
@@ -107,24 +114,24 @@ Group {
                 TextButton #BtnEq2 {
                     Text: "Equipo";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBk2 {
                     Text: "Banco";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #38d9ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnRel2 {
                     Text: "Liberar";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblR3 {
                 Text: "";
-                Style: (TextColor: #e0e8f0, FontSize: 12, Wrap: true);
+                Style: (TextColor: #d7ecff, FontSize: 12, Wrap: true);
                 Anchor: (Height: 30);
             }
             Group {
@@ -138,19 +145,19 @@ Group {
                 TextButton #BtnEq3 {
                     Text: "Equipo";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBk3 {
                     Text: "Banco";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #0f3460), LabelStyle: (FontSize: 11, TextColor: #00d4ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #1a5a90), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #38d9ff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #0a1826), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnRel3 {
                     Text: "Liberar";
                     Anchor: (Width: 120, Height: 28);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
         }
@@ -172,13 +179,13 @@ Group {
                 TextButton #BtnBEq0 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel0 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblB1 {
@@ -197,13 +204,13 @@ Group {
                 TextButton #BtnBEq1 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel1 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblB2 {
@@ -222,13 +229,13 @@ Group {
                 TextButton #BtnBEq2 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel2 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblB3 {
@@ -247,13 +254,13 @@ Group {
                 TextButton #BtnBEq3 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel3 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblB4 {
@@ -272,13 +279,13 @@ Group {
                 TextButton #BtnBEq4 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel4 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblB5 {
@@ -297,13 +304,13 @@ Group {
                 TextButton #BtnBEq5 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel5 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblB6 {
@@ -322,13 +329,13 @@ Group {
                 TextButton #BtnBEq6 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel6 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
             Label #LblB7 {
@@ -347,25 +354,35 @@ Group {
                 TextButton #BtnBEq7 {
                     Text: "Al equipo";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #1a6b3c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #27a35c), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #0a2a1e), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)), Hovered: (Background: (Color: #13314a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
                 Group { Anchor: (Width: 6); }
                 TextButton #BtnBRel7 {
                     Text: "Liberar";
                     Anchor: (Width: 140, Height: 26);
-                    Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 11, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
+                    Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 11, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 11, TextColor: #ffffff, HorizontalAlignment: Center)));
                 }
             }
         }
         Label #LblMsg {
             Text: "";
-            Style: (TextColor: #ffcc00, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
+            Style: (TextColor: #ffc857, FontSize: 12, HorizontalAlignment: Center, Wrap: true);
             Anchor: (Height: 30);
         }
         TextButton #BtnCerrar {
             Text: "Cerrar";
             Anchor: (Width: 200, Height: 32);
-            Style: (Default: (Background: (Color: #3c1a1a), LabelStyle: (FontSize: 12, TextColor: #ff8888, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5c2727), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
+            Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 12, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 12, TextColor: #ffffff, HorizontalAlignment: Center)));
         }
     }
+}
+
+    Group #CrtNegro { Anchor: (Full: 0); Background: (Color: #000000); }
+    Group #CrtLinea1 { Anchor: (Full: 0); LayoutMode: Middle; Visible: false; Group { Anchor: (Width: 220, Height: 4); Background: (Color: #d7ecff); } }
+    Group #CrtLinea2 { Anchor: (Full: 0); LayoutMode: Middle; Visible: false; Group { Anchor: (Width: 620, Height: 4); Background: (Color: #d7ecff); } }
+    Group #CrtLinea3 { Anchor: (Full: 0); LayoutMode: Middle; Visible: false; Group { Anchor: (Width: 1020, Height: 4); Background: (Color: #d7ecff); } }
+    Group #CrtFade1 { Anchor: (Full: 0); Background: (Color: #000000e6); Visible: false; }
+    Group #CrtFade2 { Anchor: (Full: 0); Background: (Color: #000000b3); Visible: false; }
+    Group #CrtFade3 { Anchor: (Full: 0); Background: (Color: #00000080); Visible: false; }
+    Group #CrtFade4 { Anchor: (Full: 0); Background: (Color: #0000004d); Visible: false; }
 }

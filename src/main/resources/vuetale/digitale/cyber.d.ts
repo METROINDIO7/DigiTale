@@ -1,0 +1,25 @@
+import type { LabelStyle, PatchStyle, TextButtonStyle } from 'vuetale/types/elements';
+export declare const CYBER: {
+    readonly bg: "#04070d";
+    readonly panel: "#07111d";
+    readonly panelAlt: "#0a1826";
+    readonly text: "#d7ecff";
+    readonly muted: "#6f8ca4";
+    readonly cyan: "#38d9ff";
+    readonly magenta: "#ff4fa3";
+    readonly gold: "#ffc857";
+    readonly green: "#5dffb0";
+    readonly danger: "#ff5f6d";
+    readonly white: "#ffffff";
+};
+export declare const shellBg: PatchStyle;
+export declare const panelBg: PatchStyle;
+export declare const panelSoftBg: PatchStyle;
+export declare const rowBg: PatchStyle;
+export declare const headerBg: PatchStyle;
+export declare function label(color: string, size: number, align?: LabelStyle['HorizontalAlignment'], bold?: boolean, extra?: LabelStyle): LabelStyle;
+export declare function titleStyle(color?: string): LabelStyle;
+export declare function captionStyle(color?: string): LabelStyle;
+export declare function buttonStyle(accent?: string, kind?: string): TextButtonStyle;
+export declare const navStyle: TextButtonStyle;
+export declare const navActiveStyle: TextButtonStyle;

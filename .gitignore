@@ -43,3 +43,8 @@ bin/
 .DS_Store
 libs/HytaleServer.jar
 Assets.zip
+
+# Vuetale (instalar manualmente; jars grandes)
+/Vuetale-*.jar
+/server/mods/
+/server/plugins/Vuetale.jar

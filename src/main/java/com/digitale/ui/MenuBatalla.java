@@ -12,6 +12,7 @@ import com.digitale.sistema.SistemaPaseo;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -74,8 +75,19 @@ public final class MenuBatalla {
             d.menuIdx = 0;
             d.menuSub = "";
         }
+        // Cerrar la Page clickeable (si sigue abierta). menuAbierto ya es false,
+        // asi que onDismiss no vuelve a entrar en cerrar().
+        try {
+            Player player = store.getComponent(ref, Player.getComponentType());
+            if (player != null) {
+                player.getPageManager().setPage(ref, store, Page.None);
+            }
+        } catch (Exception ignored) {
+        }
         SistemaPaseo.recogerBatalla(playerRef, ref, store);
         DigiBattleHud.ocultar(playerRef, ref, store);
+        com.digitale.sistema.CamaraCombate.salir(playerRef);
+        com.digitale.sistema.EscenarioBatalla.detener(playerRef, ref, store);
     }
 
     /** Mover cursor (dir "up"/"down"). */
@@ -111,10 +123,26 @@ public final class MenuBatalla {
 
         if (d.menuNivel == 0) {
             switch (d.menuIdx) {
-                case 0 -> { d.menuNivel = 1; d.menuSub = "combate"; d.menuIdx = 0; }
-                case 1 -> { d.menuNivel = 1; d.menuSub = "equipo"; d.menuIdx = 0; }
-                case 2 -> { d.menuNivel = 1; d.menuSub = "tactica"; d.menuIdx = 0; }
-                case 3 -> { d.menuNivel = 1; d.menuSub = "inventario"; d.menuIdx = 0; }
+                case 0 -> {
+                    atacarBasico(playerRef, ref, store, d, c);
+                    return;
+                }
+                case 1 -> {
+                    d.menuNivel = 1;
+                    d.menuSub = "habilidad";
+                    d.menuIdx = 0;
+                }
+                case 2 -> {
+                    // APOYO: carga OP y pasa el turno (equivalente al Guard/Charge).
+                    SistemaBatalla.support(c);
+                    trasAccion(playerRef, ref, store, d, c);
+                    return;
+                }
+                case 3 -> {
+                    d.menuNivel = 1;
+                    d.menuSub = "cambio";
+                    d.menuIdx = 0;
+                }
                 case 4 -> {
                     if (SistemaBatalla.huir(c)) {
                         guardarFin(ref, store, d);
@@ -129,37 +157,70 @@ public final class MenuBatalla {
         }
 
         switch (d.menuSub) {
-            case "combate" -> {
+            case "habilidad" -> {
                 DatoDigimon lider = liderDe(d);
-                java.util.List<DatoDigimon.Movimiento> movs =
-                    lider != null ? lider.movimientosEquipados() : java.util.Collections.emptyList();
-                if (d.menuIdx >= 0 && d.menuIdx < movs.size()) {
-                    SistemaBatalla.ejecutarMovimiento(c, lider, movs.get(d.menuIdx));
+                java.util.List<DatoDigimon.Movimiento> skills = habilidadesDe(lider);
+                if (d.menuIdx < skills.size()) {
+                    SistemaBatalla.ejecutarMovimiento(c, lider, skills.get(d.menuIdx));
                 } else {
                     SistemaBatalla.pasarTurno(c);
                 }
                 trasAccion(playerRef, ref, store, d, c);
             }
-            case "equipo" -> {
-                if (!SistemaBatalla.intercambiarLider(c, d, d.menuIdx)) {
-                    c.logear("No puedes sacar a ese (dormido, KO o ya en campo).");
-                    DigiBattleHud.actualizar(playerRef, ref, store);
+            case "cambio" -> {
+                java.util.List<Integer> slots = slotsCambio(d);
+                if (d.menuIdx < slots.size()) {
+                    if (!SistemaBatalla.intercambiarLider(c, d, slots.get(d.menuIdx))) {
+                        c.logear("No puedes sacar a ese (dormido, KO o ya en campo).");
+                        DigiBattleHud.actualizar(playerRef, ref, store);
+                    } else {
+                        SistemaBatalla.pasarTurno(c);
+                        trasAccion(playerRef, ref, store, d, c);
+                    }
                 } else {
-                    SistemaBatalla.pasarTurno(c);
-                    trasAccion(playerRef, ref, store, d, c);
+                    DigiBattleHud.actualizar(playerRef, ref, store);
                 }
-            }
-            case "tactica" -> {
-                switch (d.menuIdx) {
-                    case 0 -> { c.tacticaA = ciclar(c.tacticaA); c.logear("Tactica A -> " + c.tacticaA); }
-                    case 1 -> { c.tacticaB = ciclar(c.tacticaB); c.logear("Tactica B -> " + c.tacticaB); }
-                    case 2 -> { c.tacticaC = ciclar(c.tacticaC); c.logear("Tactica C -> " + c.tacticaC); }
-                    default -> { }
-                }
-                DigiBattleHud.actualizar(playerRef, ref, store);
             }
             default -> DigiBattleHud.actualizar(playerRef, ref, store);
         }
+    }
+
+    /** ATACAR: usa el movimiento basico (primero equipado). */
+    private static void atacarBasico(PlayerRef playerRef, Ref<EntityStore> ref,
+                                     Store<EntityStore> store, DatosJugador d, EstadoCombate c) {
+        DatoDigimon lider = liderDe(d);
+        java.util.List<DatoDigimon.Movimiento> movs =
+            lider != null ? lider.movimientosEquipados() : java.util.Collections.emptyList();
+        if (!movs.isEmpty()) {
+            SistemaBatalla.ejecutarMovimiento(c, lider, movs.get(0));
+        } else {
+            SistemaBatalla.pasarTurno(c);
+        }
+        trasAccion(playerRef, ref, store, d, c);
+    }
+
+    /** HABILIDAD: movimientos equipados excepto el ataque basico. */
+    private static java.util.List<DatoDigimon.Movimiento> habilidadesDe(DatoDigimon lider) {
+        if (lider == null) return java.util.Collections.emptyList();
+        java.util.List<DatoDigimon.Movimiento> movs = lider.movimientosEquipados();
+        if (movs.size() <= 1) return java.util.Collections.emptyList();
+        return new ArrayList<>(movs.subList(1, movs.size()));
+    }
+
+    /** CAMBIAR: solo reservas disponibles (fuera de campo, vivas y despiertas). */
+    private static java.util.List<Integer> slotsCambio(DatosJugador d) {
+        java.util.List<Integer> out = new ArrayList<>();
+        EstadoCombate c = d.combate;
+        java.util.List<DatoDigimon> party = (c != null && c.party != null && !c.party.isEmpty())
+            ? c.party : d.equipoCombate();
+        for (int i = 0; i < DatosJugador.MAX_EQUIPO; i++) {
+            DatoDigimon digi = d.getSlot(i);
+            if (digi == null) continue;
+            if (party.contains(digi)) continue;
+            if (digi.dormido || !digi.vivo || digi.hp <= 0) continue;
+            out.add(i);
+        }
+        return out;
     }
 
     /** Retroceder (Q): submenú → raíz; raíz → cerrar solo si terminó. */
@@ -179,7 +240,7 @@ public final class MenuBatalla {
         if (c != null && c.fase == EstadoCombate.Fase.FIN_COMBATE) {
             cerrar(playerRef, ref, store);
         } else {
-            if (c != null) c.logear("Usa HUIR para escapar del combate.");
+            if (c != null) c.logear("Usa RETIRARSE para escapar del combate.");
             DigiBattleHud.actualizar(playerRef, ref, store);
         }
     }
@@ -259,10 +320,8 @@ public final class MenuBatalla {
     public static String titulo(DatosJugador d) {
         if (d.menuNivel == 1) {
             return switch (d.menuSub) {
-                case "combate" -> "MOVIMIENTOS";
-                case "equipo" -> "EQUIPO";
-                case "tactica" -> "TACTICAS";
-                case "inventario" -> "MOCHILA";
+                case "habilidad" -> "HABILIDAD";
+                case "cambio" -> "CAMBIAR";
                 default -> "COMBATE";
             };
         }
@@ -272,50 +331,33 @@ public final class MenuBatalla {
     public static List<String> listaItems(DatosJugador d) {
         List<String> out = new ArrayList<>();
         if (d.menuNivel == 0) {
-            out.add("Combate");
-            out.add("Equipo");
-            out.add("Tactica");
-            out.add("Inventario");
-            out.add("Huir");
+            out.add("ATACAR");
+            out.add("HABILIDAD");
+            out.add("APOYO");
+            out.add("CAMBIAR");
+            out.add("HUIR");
             return out;
         }
         EstadoCombate c = d.combate;
         switch (d.menuSub) {
-            case "combate" -> {
+            case "habilidad" -> {
                 DatoDigimon lider = liderDe(d);
-                java.util.List<DatoDigimon.Movimiento> movs =
-                    lider != null ? lider.movimientosEquipados() : java.util.Collections.emptyList();
-                for (DatoDigimon.Movimiento m : movs) {
+                for (DatoDigimon.Movimiento m : habilidadesDe(lider)) {
                     out.add(m.nombre + " [" + m.coste + "]");
                 }
                 out.add("Pasar");
             }
-            case "equipo" -> {
-                java.util.List<DatoDigimon> party =
-                    (c != null && c.party != null) ? c.party : java.util.Collections.emptyList();
-                for (int i = 0; i < DatosJugador.MAX_EQUIPO; i++) {
-                    DatoDigimon digi = d.getSlot(i);
-                    if (digi == null) {
-                        out.add((i + 1) + ". ---");
-                    } else {
-                        String marca = "";
-                        if (party.contains(digi)) marca += " [CAMPO]";
-                        else if (digi.dormido) marca += " [Zzz]";
-                        else if (!digi.vivo || digi.hp <= 0) marca += " [KO]";
-                        out.add((i + 1) + ". " + digi.nombre + " " + digi.hp + "/" + digi.maxHp + marca);
+            case "cambio" -> {
+                java.util.List<Integer> slots = slotsCambio(d);
+                if (slots.isEmpty()) {
+                    out.add("Sin reservas disponibles");
+                } else {
+                    for (int slot : slots) {
+                        DatoDigimon digi = d.getSlot(slot);
+                        if (digi == null) continue;
+                        out.add((slot + 1) + ". " + digi.nombre + " " + digi.hp + "/" + digi.maxHp);
                     }
                 }
-            }
-            case "tactica" -> {
-                EstadoCombate.Tactica ta = c != null ? c.tacticaA : EstadoCombate.Tactica.EQUILIBRADO;
-                EstadoCombate.Tactica tb = c != null ? c.tacticaB : EstadoCombate.Tactica.EQUILIBRADO;
-                EstadoCombate.Tactica tc = c != null ? c.tacticaC : EstadoCombate.Tactica.EQUILIBRADO;
-                out.add("A: " + ta);
-                out.add("B: " + tb);
-                out.add("C: " + tc);
-            }
-            case "inventario" -> {
-                out.add("(Objetos de combate proximamente)");
             }
             default -> { }
         }

@@ -33,10 +33,30 @@ public class DigiStartMenuUI extends CustomUIPage {
                             @Nonnull Ref<EntityStore> ref,
                             @Nonnull Store<EntityStore> store) {
         LOGGER.info("DigiStartMenuUI.open()");
+        if (abrirVuetale(playerRef, ref, store)) return;
         DigiStartMenuUI page = new DigiStartMenuUI(playerRef);
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player != null) {
             player.getPageManager().openCustomPage(ref, store, page);
+        }
+    }
+
+    private static boolean abrirVuetale(@Nonnull PlayerRef playerRef,
+                                        @Nonnull Ref<EntityStore> ref,
+                                        @Nonnull Store<EntityStore> store) {
+        try {
+            Class<?> puente = Class.forName("com.digitale.ui.VuetaleSeleccionUI");
+            Object abierto = puente
+                .getMethod("abrir", PlayerRef.class, Ref.class, Store.class)
+                .invoke(null, playerRef, ref, store);
+            return Boolean.TRUE.equals(abierto);
+        } catch (ClassNotFoundException e) {
+            LOGGER.info("Vuetale no presente: seleccion nativa.");
+            return false;
+        } catch (Throwable t) {
+            LOGGER.log(java.util.logging.Level.WARNING,
+                "Fallo la seleccion Vuetale; se usa la nativa: " + t, t);
+            return false;
         }
     }
 

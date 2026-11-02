@@ -262,18 +262,18 @@ public class SistemaPaseo {
             World world = store.getExternalData().getWorld();
             if (world == null) return;
 
-            // Salvaje enfrente (3.5 bloques).
+            // Salvaje enfrente (4.8 bloques): mas cerca y visible.
             if (c.objetivo != null && c.objetivo.isValid()) {
                 teleportar(store, c.objetivo,
-                    new Vector3d(p).add(fx * 3.5, 0.5, fz * 3.5));
+                    new Vector3d(p).add(fx * 4.8, 0.5, fz * 4.8));
             }
 
-            // Party en abanico: centro + laterales, 1.2 bloques hacia el jugador.
+            // Party en linea (3/4 de Cyber Sleuth): 2.2 adelante y 2.2 de separacion.
             for (int i = 0; i < party.size() && i < 3; i++) {
                 DatoDigimon d = party.get(i);
                 if (d == null) continue;
                 Vector3d pos = new Vector3d(p)
-                    .add(fx * 1.2 + rx * ((i - 1) * 1.6), 0.5, fz * 1.2 + rz * ((i - 1) * 1.6));
+                    .add(fx * 2.2 + rx * ((i - 1) * 2.2), 0.5, fz * 2.2 + rz * ((i - 1) * 2.2));
                 Ref<?> npcRef = (i < datos.refsBatalla.length) ? datos.refsBatalla[i] : null;
                 if (npcRef == null || !npcRef.isValid()) {
                     npcRef = registrarSpawnearNpc(world, playerRef, d,

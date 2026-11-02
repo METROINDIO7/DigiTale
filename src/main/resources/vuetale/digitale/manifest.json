@@ -1,0 +1,28 @@
+{
+  "name": "digitale",
+  "version": "1.1.1",
+  "description": "DigiTale Vue UI pages powered by Vuetale",
+  "components": [
+    "CyberShell",
+    "CyberShell.vue?vue&type=script&setup=true&lang"
+  ],
+  "pages": [
+    "BancoPcPage",
+    "BatallaPage",
+    "CuidarPage",
+    "PerfilPage",
+    "RecetaPage",
+    "ReclamoPage",
+    "SapotamaPage",
+    "SeleccionPage",
+    "BancoPcPage.vue?vue&type=script&setup=true&lang",
+    "ReclamoPage.vue?vue&type=script&setup=true&lang",
+    "RecetaPage.vue?vue&type=script&setup=true&lang",
+    "SapotamaPage.vue?vue&type=script&setup=true&lang",
+    "CuidarPage.vue?vue&type=script&setup=true&lang",
+    "BatallaPage.vue?vue&type=script&setup=true&lang",
+    "SeleccionPage.vue?vue&type=script&setup=true&lang",
+    "PerfilPage.vue?vue&type=script&setup=true&lang"
+  ],
+  "huds": []
+}

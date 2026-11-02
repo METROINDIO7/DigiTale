@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig.app.json",
+    "exclude": [
+        "lib/**/__tests__/*",
+        ".vuetale/modules/**/*.d.ts"
+    ]
+}
