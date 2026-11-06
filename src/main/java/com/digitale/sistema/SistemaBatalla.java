@@ -4,76 +4,128 @@ import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.datos.EnemigoCombate;
 import com.digitale.datos.EstadoCombate;
+import com.digitale.datos.EstadoCombate.Actor;
+import com.digitale.datos.EstadoCombate.Enemigo;
 import com.digitale.datos.EstadoCombate.EstadoAlterado;
-import com.digitale.datos.EstadoCombate.Tactica;
-import com.digitale.datos.EstadoCombate.Orden;
-import com.digitale.datos.EstadoCombate.TipoDano;
 import com.digitale.datos.EstadoCombate.Fase;
+import com.digitale.datos.TablaTipos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Motor de combate por turnos (ATB) de DigiTale.
+ *
+ * <p>Un encuentro enfrenta a la party (máx 3) contra un <b>grupo de 1 a 5
+ * salvajes</b> que aparecen todos a la vez. Cada actor tiene su barra; quien
+ * llega antes a {@link EstadoCombate#GAUGE_MAX} actúa. Cuando le toca al líder
+ * (aliado 0) el motor se detiene y espera la orden del jugador.</p>
+ */
 public class SistemaBatalla {
 
     private static final Logger LOGGER = Logger.getLogger(SistemaBatalla.class.getName());
     private static final Random RNG = new Random();
 
-    private static final float PCT_HP_REFUERZO = 0.65f;
-    private static final int RONDA_REFUERZO = 3;
-    private static final int OP_POR_SUPPORT = 20;
-    private static final int OP_POR_GUARD   = 5;
+    private static final int MAX_OLEADAS = 5; // ahora = tamaño máximo del grupo
+    private static final int MAX_PASOS_PROCESO = 600;
+    private static final int MAX_TICKS = 4000;
 
-    public static int getOpPorSupport() { return OP_POR_SUPPORT; }
+    // ── Economía OP / CP ────────────────────────────────────────────────
+    private static final int OP_POR_TURNO     = 8;
+    private static final int OP_POR_IMPACTO   = 12;
+    private static final int OP_POR_APOYO     = 25;
+    private static final int OP_POR_GUARDIA   = 20;
+    private static final int CP_POR_IMPACTO   = 6;
+    private static final int CP_POR_DEBILIDAD = 10;
+    private static final int CP_POR_CRITICO   = 5;
+    private static final int CP_POR_GUARDIA   = 8;
+    private static final int CP_POR_APOYO     = 25;
+    private static final int CP_POR_DANO      = 3;
+    private static final int CP_POR_ANALIZAR  = 5;
 
-    private static final double PCT_CRIT_BASE    = 0.05;
+    // ── Probabilidades ──────────────────────────────────────────────────
+    private static final double PCT_CRIT_BASE      = 0.05;
     private static final double PCT_CRIT_WIS_SCALE = 0.004;
-    private static final double PCT_MUY_CRIT_BASE = 0.01;
+    private static final double PCT_MUY_CRIT_BASE  = 0.01;
     private static final double PCT_MUY_CRIT_WIS_SCALE = 0.002;
+    private static final double PCT_FALLO_BASE     = 0.04;
 
-    private static final double PCT_FALLO_BASE   = 0.05;
-    private static final double PCT_FALLO_DEF_SCALE = 0.002;
+    // ── ATB ─────────────────────────────────────────────────────────────
+    private static final int AVANCE_SPD = 12;
+    private static final int AVANCE_RND = 12;
 
-    public static EstadoCombate iniciarCombate(java.util.List<DatoDigimon> party) {
-        return iniciarCombate(party, null);
+    public static int getOpPorSupport() { return OP_POR_APOYO; }
+
+    // ══════════════════════════════════════════════════════════════════
+    // INICIO DE COMBATE
+    // ══════════════════════════════════════════════════════════════════
+
+    public static EstadoCombate iniciarCombate(List<DatoDigimon> party) {
+        return iniciarCombate(party, null, 1);
     }
 
-    public static EstadoCombate iniciarCombate(java.util.List<DatoDigimon> party, String especieEnemiga) {
+    public static EstadoCombate iniciarCombate(List<DatoDigimon> party, String especieEnemiga) {
+        return iniciarCombate(party, especieEnemiga, 1);
+    }
+
+    /** Combate contra un grupo de 1..5 salvajes (todos a la vez). */
+    public static EstadoCombate iniciarCombate(List<DatoDigimon> party, String especieEnemiga,
+                                               int cantidadEnemigos) {
+        if (party == null || party.isEmpty()) return null;
         int nivel = 1;
         for (DatoDigimon d : party) if (d != null && d.nivel > nivel) nivel = d.nivel;
-        EstadoCombate c = EnemigoCombate.generarCombatePara(nivel, especieEnemiga);
-        DatoDigimon a = lado(party, 0);
-        DatoDigimon b = lado(party, 1);
-        DatoDigimon cc = lado(party, 2);
-        c.hpCombateA = a != null ? a.maxHp : 0;
-        c.hpCombateB = b != null ? b.maxHp : 0;
-        c.hpCombateC = cc != null ? cc.maxHp : 0;
+        return iniciarCombate(party, especieEnemiga, cantidadEnemigos, nivel);
+    }
 
-        inicializarGauge(c, party);
-        cargarRefuerzo(c, nivel);
-        c.party = new java.util.ArrayList<>(party);
-        // Duelo simple por defecto (1 oleada); los encuentros salvajes usan N.
-        c.nivelZona = nivel;
-        c.totalOleada = 1;
-        c.oleadaActual = 1;
-        c.colaRestante = 0;
-        LOGGER.log(Level.INFO, "Combate vs " + c.enemigoNombre + " | lados: " + party.size()
-            + " gaugeA:" + c.gaugeA + " gaugeB:" + c.gaugeB + " gaugeC:" + c.gaugeC + " gaugeE:" + c.gaugeEnemigo);
+    public static EstadoCombate iniciarCombate(List<DatoDigimon> party, String especieEnemiga,
+                                               int cantidadEnemigos, int nivelZona) {
+        if (party == null || party.isEmpty()) return null;
+        int nivelEquipo = 1;
+        for (DatoDigimon d : party) if (d != null && d.nivel > nivelEquipo) nivelEquipo = d.nivel;
+        int zona = Math.max(1, nivelZona);
+
+        EstadoCombate c = new EstadoCombate();
+        c.party = new ArrayList<>(party);
+        prepararLados(c);
+        c.enemigos.addAll(EnemigoCombate.generarGrupo(zona, especieEnemiga, cantidadEnemigos));
+        c.nivelZona = zona;
+        c.objetivoIdx = 0;
+        c.opA = c.opB = c.opC = EstadoCombate.OP_INICIAL;
+        c.cp = 0;
+        c.ronda = 1;
+        c.rondasJugador = 0;
+        c.fase = Fase.INICIATIVA;
+        c.turnosEnemigo = 0;
+
+        // Iniciativa del jugador (DigiAttack preventivo): actúa primero.
+        c.actorActual = Actor.aliado(0);
+        c.esperandoJugador = c.equipoVivo();
+        c.gaugeA = EstadoCombate.GAUGE_MAX;
+        actualizarObjetivo(c);
+
+        c.logear("¡" + EnemigoCombate.resumenGrupo(c.enemigos) + " quiere pelear!");
+        if (c.enemigos.size() > 1) {
+            c.logear("Grupo de " + c.enemigos.size() + " salvajes.");
+        }
+        c.logear("▶ Tu turno, " + c.nombreDe(Actor.aliado(0)) + ".");
+        LOGGER.log(Level.INFO, "Combate grupo=" + c.enemigos.size()
+            + " (" + EnemigoCombate.resumenGrupo(c.enemigos) + ")"
+            + " | nivelZona=" + zona + " | nivelEquipo=" + nivelEquipo
+            + " | party=" + party.size());
         return c;
     }
 
-    /**
-     * Entrada oficial a combate (reglas de sueño + banco de 3):
-     * - Requiere al menos un despierto (si no, null).
-     * - Party = equipoCombate() (máx 3, despiertos primero).
-     * - Los dormidos de relleno entran con efecto DORMIDO.
-     */
+    /** Entrada con reglas de sueño + banco de 3. */
     public static EstadoCombate iniciarCombatePara(AlmacenJugadores.DatosJugador datos) {
         if (datos == null || !datos.puedeCombatir()) return null;
-        java.util.List<DatoDigimon> party = datos.equipoCombate();
+        List<DatoDigimon> party = datos.equipoCombate();
         if (party.isEmpty()) return null;
         EstadoCombate c = iniciarCombate(party);
+        if (c == null) return null;
         c.calumonDobla = datos.tieneCalumon();
         if (c.calumonDobla) c.logear("¡Calumon apoya! Stats x2.");
         aplicarDormidosIniciales(c, party);
@@ -81,10 +133,7 @@ public class SistemaBatalla {
         return c;
     }
 
-    /**
-     * Encuentro salvaje por turnos: 1-5 oleadas según nivel de zona vs party
-     * y tamaño del equipo. Zona más dura o equipo grande = más oleadas.
-     */
+    /** Encuentro salvaje: 1-5 salvajes que aparecen TODOS a la vez. */
     public static EstadoCombate iniciarEncuentroSalvaje(AlmacenJugadores.DatosJugador datos,
                                                         int nivelZona,
                                                         com.hypixel.hytale.component.Ref<?> objetivo) {
@@ -96,26 +145,30 @@ public class SistemaBatalla {
                                                         com.hypixel.hytale.component.Ref<?> objetivo,
                                                         String especieEnemiga) {
         if (datos == null || !datos.puedeCombatir()) return null;
-        java.util.List<DatoDigimon> party = datos.equipoCombate();
+        List<DatoDigimon> party = datos.equipoCombate();
         if (party.isEmpty()) return null;
+
         int nivelParty = 1;
         for (DatoDigimon d : party) if (d != null && d.nivel > nivelParty) nivelParty = d.nivel;
-        int total = tamanoEncuentro(nivelParty, Math.max(1, nivelZona), party.size());
-        EstadoCombate c = iniciarCombate(party, especieEnemiga);
+        int zona = Math.max(1, nivelZona);
+        int total = tamanoEncuentro(nivelParty, zona, party.size());
+
+        EstadoCombate c = iniciarCombate(party, especieEnemiga, total, zona);
+        if (c == null) return null;
         c.calumonDobla = datos.tieneCalumon();
         if (c.calumonDobla) c.logear("¡Calumon apoya! Stats x2.");
-        c.nivelZona = Math.max(1, nivelZona);
         c.objetivo = objetivo;
-        c.totalOleada = total;
-        c.oleadaActual = 1;
-        c.colaRestante = total - 1;
+        // El primer enemigo es el NPC que golpeaste (mismo modelo en escena).
+        if (objetivo != null && !c.enemigos.isEmpty()) {
+            c.enemigos.get(0).ref = objetivo;
+            c.enemigos.get(0).propio = false;
+        }
         aplicarDormidosIniciales(c, party);
-        if (total > 1) c.logear("¡Manada de " + total + " salvajes! (oleada 1/" + total + ")");
         datos.combate = c;
         return c;
     }
 
-    /** 1-5 según diferencia de nivel + tamaño del equipo + azar. */
+    /** 1-5 salvajes según diferencia de nivel, tamaño del equipo y azar. */
     public static int tamanoEncuentro(int nivelParty, int nivelZona, int tamParty) {
         int n = 1;
         int diff = nivelZona - Math.max(1, nivelParty);
@@ -123,10 +176,28 @@ public class SistemaBatalla {
         else if (diff >= 0) n += 1;
         if (tamParty >= 3) n += 1;
         n += RNG.nextInt(2);
-        return Math.max(1, Math.min(5, n));
+        return Math.max(1, Math.min(MAX_OLEADAS, n));
     }
 
-    private static void aplicarDormidosIniciales(EstadoCombate c, java.util.List<DatoDigimon> party) {
+    private static void prepararLados(EstadoCombate c) {
+        c.hpCombateA = hpInicial(lado(c.party, 0));
+        c.hpCombateB = hpInicial(lado(c.party, 1));
+        c.hpCombateC = hpInicial(lado(c.party, 2));
+        c.estadosA.clear();
+        c.estadosB.clear();
+        c.estadosC.clear();
+    }
+
+    private static int hpInicial(DatoDigimon d) {
+        if (d == null || !d.vivo || d.hp <= 0) return 0;
+        return Math.min(d.maxHp, Math.max(1, d.hp));
+    }
+
+    private static DatoDigimon lado(List<DatoDigimon> party, int i) {
+        return (party != null && i >= 0 && i < party.size()) ? party.get(i) : null;
+    }
+
+    private static void aplicarDormidosIniciales(EstadoCombate c, List<DatoDigimon> party) {
         String[] lados = {"A", "B", "C"};
         for (int i = 0; i < party.size() && i < 3; i++) {
             DatoDigimon d = party.get(i);
@@ -139,11 +210,10 @@ public class SistemaBatalla {
         }
     }
 
-    private static DatoDigimon lado(java.util.List<DatoDigimon> party, int i) {
-        return (party != null && i >= 0 && i < party.size()) ? party.get(i) : null;
-    }
+    // ══════════════════════════════════════════════════════════════════
+    // STATS EFECTIVAS (Calumon x2)
+    // ══════════════════════════════════════════════════════════════════
 
-    // ── Stats efectivas: ×2 con Calumon vivo en el equipo (soporte) ──
     static int atkEf(DatoDigimon d, EstadoCombate c) {
         if (d == null) return 0;
         return (c != null && c.calumonDobla) ? d.atk * 2 : d.atk;
@@ -164,224 +234,746 @@ public class SistemaBatalla {
         return (c != null && c.calumonDobla) ? d.wis * 2 : d.wis;
     }
 
-    private static int hpLado(EstadoCombate c, int i) {
-        return switch (i) {
-            case 0 -> c.hpCombateA;
-            case 1 -> c.hpCombateB;
-            default -> c.hpCombateC;
+    // ══════════════════════════════════════════════════════════════════
+    // BUCLE DE TURNOS (ATB)
+    // ══════════════════════════════════════════════════════════════════
+
+    /**
+     * Resuelve <b>un solo actor</b> (o deja el combate esperando al jugador).
+     *
+     * <p>La escena ({@link AnimacionesCombate}) vuelve a llamar aquí cuando
+     * termina de reproducir la animación del turno; así el siguiente turno no
+     * empieza hasta que se ha visto el golpe anterior.</p>
+     */
+    public static void procesarTurnos(EstadoCombate c) {
+        if (c == null || !c.activa || c.fase == Fase.FIN_COMBATE) return;
+        if (c.cinematicaActiva) return;
+        // Comprobar el fin SIEMPRE (también mientras se espera al jugador: un
+        // Arte Cruzado o el daño residual pueden terminar el combate).
+        if (comprobarFin(c)) return;
+        if (c.esperandoJugador) {
+            c.fase = Fase.INICIATIVA;
+            return;
+        }
+        c.fase = Fase.RESOLVIENDO;
+
+        Actor actor = siguienteActor(c);
+        if (actor == null) {
+            c.fase = Fase.INICIATIVA;
+            c.esperandoJugador = true;
+            c.actorActual = Actor.aliado(primerAliadoVivo(c));
+            return;
+        }
+
+        c.actorActual = actor;
+        boolean actua = iniciarTurno(c, actor);
+
+        if (actor.aliado()) {
+            // El jugador controla a los TRES aliados (modelo Time Stranger).
+            // Si está incapacitado, se pierde el turno y sigue el siguiente.
+            if (!actua) {
+                finalizarTurno(c, actor);
+                return;
+            }
+            c.esperandoJugador = true;
+            c.fase = Fase.INICIATIVA;
+            actualizarObjetivo(c);
+            c.logear("▶ Turno de " + c.nombreDe(actor) + " (" + letra(actor.idx())
+                + "). Elige una orden.");
+            return;
+        }
+
+        if (actua) turnoEnemigo(c, actor.idx());
+        finalizarTurno(c, actor);
+    }
+
+    /** Letra del slot (A/B/C) para los mensajes. */
+    private static String letra(int idx) {
+        return switch (idx) {
+            case 0 -> "A";
+            case 1 -> "B";
+            default -> "C";
         };
     }
 
-    private static void setHpLado(EstadoCombate c, int i, int hp) {
-        switch (i) {
-            case 0 -> c.hpCombateA = hp;
-            case 1 -> c.hpCombateB = hp;
-            default -> c.hpCombateC = hp;
-        }
+    private static int primerAliadoVivo(EstadoCombate c) {
+        for (int i = 0; i < 3; i++) if (c.vivo(Actor.aliado(i))) return i;
+        return 0;
     }
 
-    private static void inicializarGauge(EstadoCombate c, java.util.List<DatoDigimon> party) {
-        DatoDigimon a = lado(party, 0);
-        DatoDigimon b = lado(party, 1);
-        DatoDigimon cc = lado(party, 2);
-        int spdA = a != null ? spdEf(a, c) : 5;
-        int spdB = b != null ? spdEf(b, c) : 5;
-        int spdC = cc != null ? spdEf(cc, c) : 5;
-        int spdE = c.enemigoSpd;
-        int spdR = c.refuerzoSpd;
-
-        c.gaugeA = EstadoCombate.GAUGE_MAX - spdA * 8 + RNG.nextInt(16);
-        c.gaugeB = EstadoCombate.GAUGE_MAX - spdB * 8 + RNG.nextInt(16);
-        c.gaugeC = EstadoCombate.GAUGE_MAX - spdC * 8 + RNG.nextInt(16);
-        c.gaugeEnemigo = EstadoCombate.GAUGE_MAX - spdE * 8 + RNG.nextInt(16);
-        c.gaugeRefuerzo = EstadoCombate.GAUGE_MAX - spdR * 8 + RNG.nextInt(16);
-
-        c.gaugeA = Math.max(0, Math.min(EstadoCombate.GAUGE_MAX, c.gaugeA));
-        c.gaugeB = Math.max(0, Math.min(EstadoCombate.GAUGE_MAX, c.gaugeB));
-        c.gaugeC = Math.max(0, Math.min(EstadoCombate.GAUGE_MAX, c.gaugeC));
-        c.gaugeEnemigo = Math.max(0, Math.min(EstadoCombate.GAUGE_MAX, c.gaugeEnemigo));
-        c.gaugeRefuerzo = Math.max(0, Math.min(EstadoCombate.GAUGE_MAX, c.gaugeRefuerzo));
-    }
-
-    private static void cargarRefuerzo(EstadoCombate c, int nivel) {
-        EstadoCombate tmp = EnemigoCombate.generarCombate(nivel);
-        c.refuerzoNombre   = tmp.enemigoNombre;
-        c.refuerzoElemento = tmp.enemigoElemento;
-        c.refuerzoMaxHp    = Math.max(1, (int)(tmp.enemigoMaxHp * 0.65f));
-        c.refuerzoHp       = c.refuerzoMaxHp;
-        c.refuerzoAtk      = Math.max(1, (int)(tmp.enemigoAtk * 0.65f));
-        c.refuerzoDef      = Math.max(1, (int)(tmp.enemigoDef * 0.65f));
-        c.refuerzoSpd      = Math.max(1, (int)(tmp.enemigoSpd * 0.65f));
-        c.refuerzoExp      = (int)(tmp.enemigoExp * 0.50f);
-    }
-
-    public static void support(EstadoCombate c) {
-        if (!c.activa || c.fase == Fase.FIN_COMBATE) return;
-        if (c.aVivo()) c.opA = Math.min(EstadoCombate.OP_SPECIAL, c.opA + OP_POR_SUPPORT);
-        if (c.bVivo()) c.opB = Math.min(EstadoCombate.OP_SPECIAL, c.opB + OP_POR_SUPPORT);
-        if (c.cVivo()) c.opC = Math.min(EstadoCombate.OP_SPECIAL, c.opC + OP_POR_SUPPORT);
-
-        c.fase = Fase.RESOLVIENDO;
-        procesarGauge(c, c.party);
-    }
-
-    public static boolean ejecutarOrden(EstadoCombate c, Orden orden) {
-        if (!c.activa || c.fase == Fase.FIN_COMBATE) return false;
-        java.util.List<DatoDigimon> party = c.party;
-        DatoDigimon a = lado(party, 0);
-        DatoDigimon b = lado(party, 1);
-        DatoDigimon cc = lado(party, 2);
-        String nomA = a != null ? a.nombre : "A";
-        String nomB = b != null ? b.nombre : "B";
-        String nomC = cc != null ? cc.nombre : "C";
-        boolean exito = true;
-
-        switch (orden) {
-            case GUARD_A  -> { if (c.opA < EstadoCombate.OP_GUARD) return false; c.opA -= EstadoCombate.OP_GUARD; c.guardActivo_A = true; c.opA += OP_POR_GUARD; c.logear("[G] " + nomA + " se defiende (+" + OP_POR_GUARD + " OP)"); }
-            case GUARD_B  -> { if (c.opB < EstadoCombate.OP_GUARD) return false; c.opB -= EstadoCombate.OP_GUARD; c.guardActivo_B = true; c.opB += OP_POR_GUARD; c.logear("[G] " + nomB + " se defiende (+" + OP_POR_GUARD + " OP)"); }
-            case GUARD_C  -> { if (c.opC < EstadoCombate.OP_GUARD) return false; c.opC -= EstadoCombate.OP_GUARD; c.guardActivo_C = true; c.opC += OP_POR_GUARD; c.logear("[G] " + nomC + " se defiende (+" + OP_POR_GUARD + " OP)"); }
-            case ATTACK_A -> { if (c.opA < EstadoCombate.OP_ATTACK) return false; c.opA -= EstadoCombate.OP_ATTACK; c.attackOrden_A = true; c.logear("[ORD] " + nomA + " ataca con fuerza!"); }
-            case ATTACK_B -> { if (c.opB < EstadoCombate.OP_ATTACK) return false; c.opB -= EstadoCombate.OP_ATTACK; c.attackOrden_B = true; c.logear("[ORD] " + nomB + " ataca con fuerza!"); }
-            case ATTACK_C -> { if (c.opC < EstadoCombate.OP_ATTACK) return false; c.opC -= EstadoCombate.OP_ATTACK; c.attackOrden_C = true; c.logear("[ORD] " + nomC + " ataca con fuerza!"); }
-            case SPECIAL_A -> { if (c.opA < EstadoCombate.OP_SPECIAL) return false; c.opA -= EstadoCombate.OP_SPECIAL; c.specialActivo_A = true; c.logear("*** ESPECIAL de " + nomA + "! ***"); }
-            case SPECIAL_B -> { if (c.opB < EstadoCombate.OP_SPECIAL) return false; c.opB -= EstadoCombate.OP_SPECIAL; c.specialActivo_B = true; c.logear("*** ESPECIAL de " + nomB + "! ***"); }
-            case SPECIAL_C -> { if (c.opC < EstadoCombate.OP_SPECIAL) return false; c.opC -= EstadoCombate.OP_SPECIAL; c.specialActivo_C = true; c.logear("*** ESPECIAL de " + nomC + "! ***"); }
-            case EXE_FUSION -> {
-                if (c.opTotal() < EstadoCombate.OP_EXE) return false;
-                if (a != null && a.lazo < 70) { c.logear("Lazo insuficiente para ExE Fusion!"); return false; }
-                c.exeFusion = true; c.turnosExeRestantes = 2; c.opA = 0; c.opB = 0;
-                c.logear(">>> EXE FUSION! " + nomA + " + " + nomB + " se fusionan! <<<");
+    /** Avanza las barras hasta que alguien esté listo y lo devuelve. */
+    private static Actor siguienteActor(EstadoCombate c) {
+        for (int tick = 0; tick < MAX_TICKS; tick++) {
+            avanzarGauges(c);
+            Actor mejor = null;
+            int mejorGauge = -1;
+            int mejorSpd = -1;
+            for (Actor a : actoresVivos(c)) {
+                int g = c.gaugeDe(a);
+                if (g < EstadoCombate.GAUGE_MAX) continue;
+                int spd = spdDe(c, a);
+                if (g > mejorGauge || (g == mejorGauge && spd > mejorSpd)) {
+                    mejor = a;
+                    mejorGauge = g;
+                    mejorSpd = spd;
+                }
             }
-            case SKILL_1 -> {
-                if (c.opA < EstadoCombate.OP_SKILL_1) return false;
-                c.opA -= EstadoCombate.OP_SKILL_1;
-                aplicarSkill(c, a, b, 1, false);
-            }
-            case SKILL_2 -> {
-                if (c.opA < EstadoCombate.OP_SKILL_2) return false;
-                c.opA -= EstadoCombate.OP_SKILL_2;
-                aplicarSkill(c, a, b, 2, false);
-            }
-            case SKILL_3 -> {
-                if (c.opA < EstadoCombate.OP_SKILL_3) return false;
-                c.opA -= EstadoCombate.OP_SKILL_3;
-                aplicarSkill(c, a, b, 3, false);
-            }
-            case SKILL_4 -> { return ordenDano(c, a, 4, EstadoCombate.OP_SKILL_4); }
-            case SKILL_5 -> { return ordenDano(c, a, 5, EstadoCombate.OP_SKILL_5); }
-            case SKILL_6 -> { return ordenDano(c, a, 6, EstadoCombate.OP_SKILL_6); }
-            case SKILL_7 -> { return ordenDano(c, a, 7, EstadoCombate.OP_SKILL_7); }
-            default -> { exito = false; }
+            if (mejor != null) return mejor;
         }
-        if (exito) {
-            c.ordenActiva = orden;
-            c.fase = Fase.RESOLVIENDO;
-            procesarGauge(c, party);
-        }
-        return exito;
+        return null;
     }
 
-    /** Técnicas de daño 4-7 del líder (lado A): fijan multiplicador y avanzan. */
-    private static boolean ordenDano(EstadoCombate c, DatoDigimon a, int slot, int coste) {
-        if (a == null || !c.aVivo()) return false;
-        if (c.opA < coste) {
-            c.logear("OP insuficiente para la técnica " + slot + " (pide " + coste + ").");
-            return false;
+    private static List<Actor> actoresVivos(EstadoCombate c) {
+        List<Actor> out = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Actor a = Actor.aliado(i);
+            if (c.vivo(a)) out.add(a);
         }
-        c.opA -= coste;
-        double mult = switch (slot) {
-            case 4 -> 2.0;
-            case 5 -> 2.5;
-            case 6 -> 3.0;
-            case 7 -> 3.5;
-            default -> 1.5;
-        };
-        c.habMult_A = mult;
-        c.habNombre_A = a.nombresHabilidades().length >= slot ? a.nombresHabilidades()[slot - 1] : ("Tecnica " + slot);
-        c.logear("*** " + a.nombre + " prepara " + c.habNombre_A + "! ***");
-        c.ordenActiva = switch (slot) {
-            case 4 -> Orden.SKILL_4;
-            case 5 -> Orden.SKILL_5;
-            case 6 -> Orden.SKILL_6;
-            default -> Orden.SKILL_7;
-        };
-        c.fase = Fase.RESOLVIENDO;
-        procesarGauge(c, c.party);
-        return true;
+        for (int i = 0; i < c.enemigos.size(); i++) {
+            Actor a = Actor.enemigo(i);
+            if (c.vivo(a)) out.add(a);
+        }
+        return out;
     }
 
-    /** Pasar turno sin actuar (cuesta la ronda). */
-    public static void pasarTurno(EstadoCombate c) {
-        if (!c.activa || c.fase == Fase.FIN_COMBATE) return;
-        c.logear("Tomas aire... (pasas)");
-        c.fase = Fase.RESOLVIENDO;
-        procesarGauge(c, c.party);
+    private static int spdDe(EstadoCombate c, Actor a) {
+        if (!a.aliado()) {
+            Enemigo e = c.enemigo(a.idx());
+            return e != null ? Math.max(1, e.spd) : 1;
+        }
+        DatoDigimon d = c.digimonDe(a.idx());
+        return d != null ? Math.max(1, spdEf(d, c)) : 1;
+    }
+
+    private static void avanzarGauges(EstadoCombate c) {
+        for (int i = 0; i < 3; i++) {
+            Actor a = Actor.aliado(i);
+            if (!c.vivo(a)) continue;
+            int g = c.gaugeDe(a);
+            int inc = spdDe(c, a) * AVANCE_SPD + RNG.nextInt(AVANCE_RND);
+            c.setGauge(a, Math.min(EstadoCombate.GAUGE_MAX, g + inc));
+        }
+        for (int i = 0; i < c.enemigos.size(); i++) {
+            Enemigo e = c.enemigos.get(i);
+            if (e == null || !e.vivo()) continue;
+            int inc = Math.max(1, e.spd) * AVANCE_SPD + RNG.nextInt(AVANCE_RND);
+            e.gauge = Math.min(EstadoCombate.GAUGE_MAX, e.gauge + inc);
+        }
     }
 
     /**
-     * Ejecuta un Movimiento aprendido del líder (lado A): daño con mult
-     * propio y/o estado al enemigo. Avanza la ronda.
+     * Prepara el turno de un actor: guardia, daño residual, estados y OP pasivo.
+     * @return false si pierde el turno (dormido, aturdido, paralizado o KO).
      */
+    private static boolean iniciarTurno(EstadoCombate c, Actor actor) {
+        if (!c.vivo(actor)) return false;
+
+        if (actor.aliado()) {
+            c.setGuardia(actor.idx(), false); // la guardia dura hasta tu próximo turno
+            int residual = switch (actor.idx()) {
+                case 0 -> c.danoResidualA();
+                case 1 -> c.danoResidualB();
+                default -> c.danoResidualC();
+            };
+            if (residual > 0) {
+                c.logear(c.nombreDe(actor) + " sufre " + residual + " de daño residual"
+                    + EstadoCombate.estadosToString(c.estadosDeAliado(actor.idx())) + ".");
+            }
+            if (!c.vivo(actor)) {
+                c.logear(c.nombreDe(actor) + " cae por el daño residual.");
+                return false;
+            }
+            Set<EstadoAlterado> estados = c.estadosDeAliado(actor.idx());
+            if (incapacitado(c, actor, estados, true)) return false;
+            c.setOp(actor.idx(), c.opDe(actor.idx()) + OP_POR_TURNO);
+            return true;
+        }
+
+        Enemigo e = c.enemigo(actor.idx());
+        if (e == null) return false;
+        int residual = e.tickEstados();
+        if (residual > 0) {
+            c.logear(e.nombre + " sufre " + residual + " de daño residual"
+                + EstadoCombate.estadosToString(e.estados) + ".");
+        }
+        if (!e.vivo()) {
+            c.logear("¡" + e.nombre + " cae por el daño residual!");
+            return false;
+        }
+        if (e.estados.contains(EstadoAlterado.DORMIDO)) {
+            e.turnosDormido--;
+            boolean despierta = e.turnosDormido <= 0 || RNG.nextDouble() < 0.30;
+            if (despierta) {
+                e.estados.remove(EstadoAlterado.DORMIDO);
+                c.logear(e.nombre + " se despertó.");
+            } else {
+                c.logear(e.nombre + " sigue dormido.");
+            }
+            return false;
+        }
+        if (e.estados.contains(EstadoAlterado.ATURDIDO)) {
+            e.estados.remove(EstadoAlterado.ATURDIDO);
+            c.logear(e.nombre + " está aturdido y pierde el turno.");
+            return false;
+        }
+        if (e.estados.contains(EstadoAlterado.PARALISIS)) {
+            e.turnosParalisis--;
+            if (e.turnosParalisis <= 0) {
+                e.estados.remove(EstadoAlterado.PARALISIS);
+            } else if (RNG.nextDouble() < 0.25) {
+                c.logear(e.nombre + " está paralizado y no puede moverse.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean incapacitado(EstadoCombate c, Actor actor,
+                                        Set<EstadoAlterado> estados, boolean esAliado) {
+        int i = actor.idx();
+        if (estados.contains(EstadoAlterado.DORMIDO)) {
+            int t = turnosDormido(c, i) - 1;
+            setTurnosDormido(c, i, t);
+            if (t <= 0 || RNG.nextDouble() < 0.30) {
+                estados.remove(EstadoAlterado.DORMIDO);
+                c.logear(c.nombreDe(actor) + " se despertó.");
+            } else {
+                c.logear(c.nombreDe(actor) + " sigue dormido (" + t + ").");
+            }
+            return true;
+        }
+        if (estados.contains(EstadoAlterado.ATURDIDO)) {
+            int t = turnosAturdido(c, i) - 1;
+            setTurnosAturdido(c, i, t);
+            if (t <= 0) estados.remove(EstadoAlterado.ATURDIDO);
+            c.logear(c.nombreDe(actor) + " está aturdido y pierde el turno.");
+            return true;
+        }
+        if (estados.contains(EstadoAlterado.PARALISIS)) {
+            int t = turnosParalisis(c, i) - 1;
+            setTurnosParalisis(c, i, t);
+            if (t <= 0) {
+                estados.remove(EstadoAlterado.PARALISIS);
+            } else if (RNG.nextDouble() < 0.25) {
+                c.logear(c.nombreDe(actor) + " está paralizado y no puede moverse.");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void finalizarTurno(EstadoCombate c, Actor actor) {
+        c.setGauge(actor, 0);
+        if (actor.aliado()) {
+            c.rondasJugador++;
+            c.ronda = c.rondasJugador + 1;
+            c.comboCount = 0;
+            c.esperandoJugador = false;
+        }
+        if (c.actorActual != null && c.actorActual.equals(actor)) c.actorActual = null;
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // IA ALIADA (aliados 1 y 2)
+    // ══════════════════════════════════════════════════════════════════
+
+    // ══════════════════════════════════════════════════════════════════
+    // IA ENEMIGA (carga + ataque fuerte)
+    // ══════════════════════════════════════════════════════════════════
+
+    private static void turnoEnemigo(EstadoCombate c, int idx) {
+        Enemigo e = c.enemigo(idx);
+        if (e == null || !e.vivo()) return;
+        c.turnosEnemigo++;
+
+        if (e.cargando) {
+            e.cargando = false;
+            c.logear("*** ¡" + e.nombre + " DESATA SU ATAQUE CARGADO! ***");
+            ataqueDeEnemigo(c, idx, 2.1);
+            return;
+        }
+        if (c.turnosEnemigo % 4 == 0) {
+            e.cargando = true;
+            c.logear("⚠ " + e.nombre + " está CARGANDO energía... ¡protégete!");
+            return;
+        }
+        ataqueDeEnemigo(c, idx, 1.0);
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // OBJETIVOS
+    // ══════════════════════════════════════════════════════════════════
+
+    private static double ventaja(String elem, String atr, Enemigo e) {
+        if (e == null) return 1.0;
+        return TablaTipos.multTotal(elem, atr, e.elemento, e.atributo);
+    }
+
+    /** Mejor enemigo para un ataque: máxima ventaja de tipo y, a igualdad, menos HP. */
+    public static Enemigo mejorObjetivo(EstadoCombate c, String elem, String atr) {
+        Enemigo mejor = null;
+        double mejorPunt = -1;
+        for (Enemigo e : c.enemigos) {
+            if (e == null || !e.vivo()) continue;
+            double punt = ventaja(elem, atr, e) * 2.0 + (1.0 - e.pctHp());
+            if (punt > mejorPunt) {
+                mejorPunt = punt;
+                mejor = e;
+            }
+        }
+        return mejor;
+    }
+
+    /** Reajusta el objetivo por defecto (el que se marca en el HUD). */
+    private static void actualizarObjetivo(EstadoCombate c) {
+        DatoDigimon activo = null;
+        if (c.actorActual != null && c.actorActual.aliado()) {
+            activo = c.digimonDe(c.actorActual.idx());
+        }
+        if (activo == null) activo = c.digimonDe(primerAliadoVivo(c));
+        Enemigo mejor = activo != null
+            ? mejorObjetivo(c, activo.elemento, activo.atributo)
+            : (c.enemigosVivos().isEmpty() ? null : c.enemigosVivos().get(0));
+        if (mejor == null) return;
+        int idx = c.enemigos.indexOf(mejor);
+        if (idx >= 0) c.objetivoIdx = idx;
+    }
+
+    /** Fija el objetivo a un enemigo concreto (acción gratuita). */
+    public static boolean seleccionarObjetivo(EstadoCombate c, int idx) {
+        if (c == null || !c.activa || c.fase == Fase.FIN_COMBATE) return false;
+        if (c.cinematicaActiva) return false;
+        Enemigo e = c.enemigo(idx);
+        if (e == null || !e.vivo()) return false;
+        c.objetivoIdx = idx;
+        c.logear("🎯 Objetivo: " + e.nombre + " [" + e.elemento + "/" + e.atributo
+            + "] HP " + e.hp + "/" + e.maxHp);
+        return true;
+    }
+
+    /** Cicla el objetivo entre los enemigos vivos (acción gratuita). */
+    public static boolean cambiarObjetivo(EstadoCombate c) {
+        if (c == null || !c.activa || c.fase == Fase.FIN_COMBATE) return false;
+        if (c.cinematicaActiva) return false;
+        List<Integer> vivos = new ArrayList<>();
+        for (int i = 0; i < c.enemigos.size(); i++) {
+            Enemigo e = c.enemigos.get(i);
+            if (e != null && e.vivo()) vivos.add(i);
+        }
+        if (vivos.isEmpty()) return false;
+        int pos = vivos.indexOf(c.objetivoIdx);
+        c.objetivoIdx = vivos.get((pos + 1) % vivos.size());
+        Enemigo e = c.enemigo(c.objetivoIdx);
+        if (e != null) {
+            c.logear("🎯 Objetivo: " + e.nombre + " [" + e.elemento + "/" + e.atributo
+                + "] HP " + e.hp + "/" + e.maxHp);
+        }
+        return true;
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // ATAQUES
+    // ══════════════════════════════════════════════════════════════════
+
+    /** Registra un golpe para que la escena lo anime (foco + Attack/Hurt/Death). */
+    private static void registrarEvento(EstadoCombate c, Actor atacante, Actor objetivo,
+                                        int dano, boolean muerte) {
+        if (c == null || atacante == null || objetivo == null) return;
+        // La cola es solo visual: si nadie la consume (p. ej. sin escena),
+        // no debe crecer sin límite.
+        if (c.eventos.size() >= 32) c.eventos.clear();
+        c.eventos.add(new EstadoCombate.EventoVisual(
+            atacante.aliado(), atacante.idx(),
+            objetivo.aliado(), objetivo.idx(), dano, muerte));
+    }
+
+    private static void ataqueDeAliado(EstadoCombate c, Actor actor, DatoDigimon d,
+                                       Enemigo objetivo, double multBase, String nombreAtaque) {
+        if (objetivo == null || !objetivo.vivo()) {
+            c.logear(d.nombre + " ataca al aire: no quedan enemigos.");
+            return;
+        }
+        String nomTgt = objetivo.nombre;
+        double multTipo = TablaTipos.multTotal(d.elemento, d.atributo,
+            objetivo.elemento, objetivo.atributo);
+
+        boolean fallo = RNG.nextDouble() < PCT_FALLO_BASE;
+        boolean muyCritico = RNG.nextDouble()
+            < (PCT_MUY_CRIT_BASE + wisEf(d, c) * PCT_MUY_CRIT_WIS_SCALE);
+        boolean critico = !muyCritico && RNG.nextDouble()
+            < (PCT_CRIT_BASE + wisEf(d, c) * PCT_CRIT_WIS_SCALE);
+
+        double base = Math.max(1, atkEf(d, c) * Math.max(0.1, multBase) - objetivo.def * 0.35);
+        int suelo = Math.max(1, objetivo.maxHp / 20);
+
+        int dano;
+        EstadoCombate.TipoDano tipo;
+        if (multTipo <= TablaTipos.INMUNE) {
+            tipo = EstadoCombate.TipoDano.INMUNE;
+            dano = 0;
+        } else if (fallo) {
+            tipo = EstadoCombate.TipoDano.FALLIDO;
+            dano = 0;
+        } else if (muyCritico) {
+            tipo = EstadoCombate.TipoDano.MUY_CRITICO;
+            dano = Math.max(suelo, (int) (base * multTipo * 1.8 * (0.85 + RNG.nextDouble() * 0.3)));
+        } else if (critico) {
+            tipo = EstadoCombate.TipoDano.CRITICO;
+            dano = Math.max(suelo, (int) (base * multTipo * 1.4 * (0.85 + RNG.nextDouble() * 0.3)));
+        } else if (multTipo <= TablaTipos.RESISTE) {
+            tipo = EstadoCombate.TipoDano.RESISTIDO;
+            dano = Math.max(1, (int) (base * multTipo * (0.9 + RNG.nextDouble() * 0.2)));
+        } else {
+            tipo = EstadoCombate.TipoDano.NORMAL;
+            dano = Math.max(suelo, (int) (base * multTipo * (0.9 + RNG.nextDouble() * 0.2)));
+        }
+
+        objetivo.hp = Math.max(0, objetivo.hp - dano);
+        c.danoTotalAcumulado += dano;
+
+        if (dano > 0) {
+            int cp = CP_POR_IMPACTO;
+            if (multTipo >= TablaTipos.FUERTE) cp += CP_POR_DEBILIDAD;
+            if (critico || muyCritico) cp += CP_POR_CRITICO;
+            c.ganarCp(cp);
+            if (actor.aliado()) c.setOp(actor.idx(), c.opDe(actor.idx()) + OP_POR_IMPACTO);
+            c.comboCount++;
+            if (c.comboCount > c.comboMax) c.comboMax = c.comboCount;
+        }
+
+        String tag = switch (tipo) {
+            case MUY_CRITICO -> " <<MUERTE>>";
+            case CRITICO -> " <CRIT!>";
+            case FALLIDO -> " <FALLO>";
+            case RESISTIDO -> " [RESISTIDO]";
+            case INMUNE -> " [INMUNE]";
+            default -> "";
+        };
+        String etiqueta = TablaTipos.etiqueta(multTipo);
+        if (!etiqueta.isEmpty() && dano > 0) tag += " [" + etiqueta + "]";
+        if (c.comboCount > 1) tag += " (combo x" + c.comboCount + ")";
+
+        String pref = (nombreAtaque == null || nombreAtaque.isBlank()) ? "" : " [" + nombreAtaque + "]";
+        c.logear(d.nombre + pref + " > " + nomTgt + "  -" + dano + " HP" + tag);
+
+        int idxTgt = c.enemigos.indexOf(objetivo);
+        if (idxTgt >= 0) {
+            registrarEvento(c, actor, Actor.enemigo(idxTgt), dano, !objetivo.vivo());
+        }
+        if (!objetivo.vivo()) {
+            c.logear("¡" + nomTgt + " ha caído!");
+            actualizarObjetivo(c);
+        }
+    }
+
+    private static void ataqueDeEnemigo(EstadoCombate c, int enemigoIdx, double multBase) {
+        Enemigo atacante = c.enemigo(enemigoIdx);
+        if (atacante == null || !atacante.vivo()) return;
+
+        Actor tgt = elegirObjetivoAliado(c);
+        if (tgt == null) return;
+        DatoDigimon obj = c.digimonDe(tgt.idx());
+        if (obj == null) return;
+
+        boolean guard = c.guardiaDe(tgt.idx());
+        double multTipo = TablaTipos.multTotal(atacante.elemento, atacante.atributo,
+            obj.elemento, obj.atributo);
+        boolean critico = RNG.nextDouble() < 0.08;
+        boolean fallo = RNG.nextDouble() < 0.05;
+
+        int dano;
+        if (multTipo <= TablaTipos.INMUNE) {
+            dano = 0;
+            c.logear(atacante.nombre + " ataca a " + obj.nombre
+                + " pero es INMUNE a " + atacante.elemento + ".");
+        } else if (fallo) {
+            dano = 0;
+            c.logear(atacante.nombre + " ataca a " + obj.nombre + " pero FALLA!");
+        } else {
+            double base = Math.max(1, atacante.atk * multBase - defEf(obj, c) * 0.35);
+            double bruto = Math.max(Math.max(1, obj.maxHp / 20),
+                base * multTipo * (critico ? 1.5 : 1.0) * (0.85 + RNG.nextDouble() * 0.3));
+            dano = Math.max(1, (int) (bruto * (guard ? 0.4 : 1.0)));
+
+            String tag = (critico ? " <CRIT!>" : "") + (guard ? "(BLOQUEADO)" : "");
+            String etiqueta = TablaTipos.etiqueta(multTipo);
+            if (!etiqueta.isEmpty()) tag += " [" + etiqueta + "]";
+            c.logear(atacante.nombre + " > " + obj.nombre + "  -" + dano + " HP" + tag);
+        }
+
+        if (dano <= 0) return;
+        c.setHpDe(tgt, Math.max(0, c.hpDe(tgt) - dano));
+        c.danoTotalAcumulado += dano;
+        c.comboCount = 0;
+        c.ganarCp(CP_POR_DANO);
+        c.setOp(tgt.idx(), c.opDe(tgt.idx()) + OP_POR_TURNO);
+
+        Set<EstadoAlterado> estados = c.estadosDeAliado(tgt.idx());
+        if (critico && c.vivo(tgt) && RNG.nextDouble() < 0.20) {
+            EstadoAlterado e = multBase > 1.5 ? EstadoAlterado.ENVENENADO_FUERTE : EstadoAlterado.VENENO;
+            estados.add(e);
+            setTurnosVeneno(c, tgt.idx(), Math.max(turnosVeneno(c, tgt.idx()), 4));
+            c.logear(obj.nombre + " queda " + (e == EstadoAlterado.ENVENENADO_FUERTE
+                ? "ENVENENADO FUERTE" : "envenenado") + ".");
+        }
+
+        registrarEvento(c, Actor.enemigo(enemigoIdx), tgt, dano, !c.vivo(tgt));
+        if (!c.vivo(tgt)) c.logear("¡" + obj.nombre + " ha caído!");
+    }
+
+    /** 50% al que está peor de HP, 50% al azar (así la guardia y el daño se reparten). */
+    private static Actor elegirObjetivoAliado(EstadoCombate c) {
+        List<Actor> vivos = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Actor a = Actor.aliado(i);
+            if (c.vivo(a)) vivos.add(a);
+        }
+        if (vivos.isEmpty()) return null;
+        if (RNG.nextDouble() < 0.50) {
+            Actor peor = vivos.get(0);
+            double peorFrac = 2.0;
+            for (Actor a : vivos) {
+                double f = c.pctHpDe(a);
+                if (f < peorFrac) {
+                    peorFrac = f;
+                    peor = a;
+                }
+            }
+            return peor;
+        }
+        return vivos.get(RNG.nextInt(vivos.size()));
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // MOVIMIENTOS DEL JUGADOR Y LA IA
+    // ══════════════════════════════════════════════════════════════════
+
+    /** Ejecuta un Movimiento del líder (aliado 0). Consume OP y el turno. */
     public static boolean ejecutarMovimiento(EstadoCombate c, DatoDigimon a,
                                              DatoDigimon.Movimiento m) {
-        if (!c.activa || c.fase == Fase.FIN_COMBATE) return false;
-        if (a == null || !c.aVivo() || m == null) return false;
-        if (c.opA < m.coste) {
-            c.logear("OP insuficiente para " + m.nombre + " (pide " + m.coste + ").");
-            return false;
-        }
-        c.opA -= m.coste;
-        if (m.mult > 0) {
-            c.habMult_A = m.mult;
-            c.habNombre_A = m.nombre;
-            c.habSuicida_A = "EXPLOSIVO".equals(m.categoria);
-            c.logear("*** " + a.nombre + " prepara " + m.nombre + "! ***");
-        }
-        if (m.efecto != null) {
-            if (c.enemigoVivo()) aplicarEstadoEnemigo(c, m.efecto, m.turnos, false);
-            else if (c.refuerzoVivo()) aplicarEstadoEnemigo(c, m.efecto, m.turnos, true);
-            c.logear(a.nombre + " usa " + m.nombre + "!");
-        }
-        c.ordenActiva = Orden.NINGUNA;
-        c.fase = Fase.RESOLVIENDO;
-        procesarGauge(c, c.party);
-        return true;
-    }
-
-    private static void aplicarEstadoEnemigo(EstadoCombate c, EstadoAlterado e, int turnos, boolean ref) {
-        if (!ref) {
-            switch (e) {
-                case QUEMADO -> { c.enemigosEstados.add(e); c.turnosQuemado = Math.max(c.turnosQuemado, turnos); }
-                case VENENO, ENVENENADO_FUERTE -> { c.enemigosEstados.add(e); c.turnosVeneno = Math.max(c.turnosVeneno, turnos); }
-                case PARALISIS, ATURDIDO -> { c.enemigosEstados.add(e); c.turnosParalisis = Math.max(c.turnosParalisis, turnos); }
-                case DORMIDO -> { c.enemigosEstados.add(e); c.turnosDormido = Math.max(c.turnosDormido, turnos); }
-                default -> c.enemigosEstados.add(e);
-            }
-        } else {
-            switch (e) {
-                case QUEMADO -> { c.refuerzoEstados.add(e); c.refTurnosQuemado = Math.max(c.refTurnosQuemado, turnos); }
-                case VENENO, ENVENENADO_FUERTE -> { c.refuerzoEstados.add(e); c.refTurnosVeneno = Math.max(c.refTurnosVeneno, turnos); }
-                case PARALISIS, ATURDIDO -> { c.refuerzoEstados.add(e); c.refTurnosParalisis = Math.max(c.refTurnosParalisis, turnos); }
-                case DORMIDO -> { c.refuerzoEstados.add(e); c.refTurnosDormido = Math.max(c.refTurnosDormido, turnos); }
-                default -> c.refuerzoEstados.add(e);
-            }
-        }
+        return ejecutarMovimiento(c, a, m, -1);
     }
 
     /**
-     * Cambia al líder (lado A) por un suplente despierto de la banca.
-     * Pierde el turno (gauge A a 0) y limpia sus estados.
+     * Ejecuta un movimiento sobre el enemigo elegido (índice en el grupo).
+     * @param objetivoIdx -1 = objetivo automático
      */
-    public static boolean intercambiarLider(EstadoCombate c,
-                                            AlmacenJugadores.DatosJugador datos, int benchSlot) {
-        if (!c.activa || c.fase == Fase.FIN_COMBATE) return false;
-        if (!AlmacenJugadores.DatosJugador.slotValido(benchSlot)) return false;
-        java.util.List<DatoDigimon> party = c.party;
+    public static boolean ejecutarMovimiento(EstadoCombate c, DatoDigimon a,
+                                             DatoDigimon.Movimiento m, int objetivoIdx) {
+        if (!puedeOrdenar(c)) return false;
+        if (!aliadoPuedeActuar(c)) return false;
+        if (m == null) return false;
+        Actor actor = c.actorActual;
+        int idx = actor.idx();
+        DatoDigimon d = c.digimonDe(idx);
+        if (d == null) d = a;
+        if (d == null) return false;
+
+        int op = c.opDe(idx);
+        if (op < m.coste) {
+            c.logear("OP insuficiente para " + m.nombre + " (pide " + m.coste
+                + ", tienes " + op + ").");
+            return false;
+        }
+        c.setOp(idx, op - m.coste);
+        aplicarMovimiento(c, actor, d, objetivoElegido(c, objetivoIdx), m);
+        finalizarTurno(c, actor);
+        // El siguiente turno lo dispara la escena al acabar la animación.
+        return true;
+    }
+
+    /** Objetivo indicado por el jugador o, si no, el automático. */
+    private static Enemigo objetivoElegido(EstadoCombate c, int idx) {
+        if (idx >= 0) {
+            Enemigo e = c.enemigo(idx);
+            if (e != null && e.vivo()) {
+                c.objetivoIdx = idx;
+                return e;
+            }
+        }
+        return c.objetivoActual();
+    }
+
+    private static void aplicarMovimiento(EstadoCombate c, Actor actor, DatoDigimon d,
+                                          Enemigo objetivo, DatoDigimon.Movimiento m) {
+        Enemigo tgt = objetivo != null && objetivo.vivo()
+            ? objetivo
+            : mejorObjetivo(c, d.elemento, d.atributo);
+        if (m.mult > 0) {
+            ataqueDeAliado(c, actor, d, tgt, m.mult, m.nombre);
+        } else {
+            c.logear(d.nombre + " usa " + m.nombre + ".");
+        }
+        if (m.efecto != null && tgt != null && tgt.vivo()) {
+            if (RNG.nextDouble() < 0.75) {
+                tgt.aplicarEstado(m.efecto, m.turnos);
+                c.logear(tgt.nombre + " queda " + nombreEstado(m.efecto) + ".");
+            } else {
+                c.logear("¡Pero " + tgt.nombre + " resistió el efecto!");
+            }
+        }
+        if ("EXPLOSIVO".equals(m.categoria) && actor.aliado()) {
+            c.setHpDe(actor, 0);
+            c.logear("¡" + d.nombre + " se sacrificó en la explosión!");
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // ACCIONES DEL JUGADOR (menú)
+    // ══════════════════════════════════════════════════════════════════
+
+    public static boolean puedeOrdenar(EstadoCombate c) {
+        if (c == null || !c.activa || c.fase == Fase.FIN_COMBATE) return false;
+        if (c.cinematicaActiva) {
+            c.logear("Espera a que termine la animación de combate...");
+            return false;
+        }
+        if (!c.esperandoJugador || c.actorActual == null || !c.actorActual.aliado()) {
+            c.logear("Espera tu turno...");
+            return false;
+        }
+        return true;
+    }
+
+    /** El aliado que tiene el turno debe estar vivo para atacar/usar habilidad. */
+    private static boolean aliadoPuedeActuar(EstadoCombate c) {
+        if (c.actorActual == null || !c.vivo(c.actorActual)) {
+            c.logear("Ese Digimon está fuera de combate: usa CAMBIAR o Pasar.");
+            return false;
+        }
+        return true;
+    }
+
+    /** APOYO: carga OP y CP de todo el equipo y cura un poco. Consume turno. */
+    public static void support(EstadoCombate c) {
+        if (!puedeOrdenar(c)) return;
+        if (!aliadoPuedeActuar(c)) return;
+        Actor actor = c.actorActual;
+        c.ganarCp(CP_POR_APOYO);
+        for (int i = 0; i < 3; i++) {
+            Actor a = Actor.aliado(i);
+            if (!c.vivo(a)) continue;
+            c.setOp(i, c.opDe(i) + OP_POR_APOYO);
+            DatoDigimon d = c.digimonDe(i);
+            if (d != null) {
+                int cura = Math.max(1, d.maxHp / 20);
+                c.setHpDe(a, Math.min(d.maxHp, c.hpDe(a) + cura));
+            }
+        }
+        c.logear("APOYO de " + c.nombreDe(actor) + ": el equipo se concentra (+"
+            + OP_POR_APOYO + " OP, +" + CP_POR_APOYO + " CP, cura leve).");
+        finalizarTurno(c, actor);
+    }
+
+    /** GUARDIA: reduce el daño recibido hasta tu próximo turno. Consume turno. */
+    public static void guardar(EstadoCombate c) {
+        if (!puedeOrdenar(c)) return;
+        if (!aliadoPuedeActuar(c)) return;
+        Actor actor = c.actorActual;
+        int idx = actor.idx();
+        c.setGuardia(idx, true);
+        c.ganarCp(CP_POR_GUARDIA);
+        c.setOp(idx, c.opDe(idx) + OP_POR_GUARDIA);
+        c.logear("🛡 " + c.nombreDe(actor)
+            + " se protege: recibirá 60% menos daño hasta su próximo turno.");
+        finalizarTurno(c, actor);
+    }
+
+    /** ANALIZAR: revela debilidades del objetivo. NO consume turno. */
+    public static boolean analizar(EstadoCombate c) {
+        if (c == null || !c.activa || c.fase == Fase.FIN_COMBATE) return false;
+        if (c.cinematicaActiva) return false;
+        if (!c.esperandoJugador || c.actorActual == null || !c.actorActual.aliado()) {
+            c.logear("Espera tu turno para analizar.");
+            return false;
+        }
+        Enemigo e = c.objetivoActual();
+        if (e == null) return false;
+        if (e.analizado) {
+            c.logear("Ya tienes analizado a " + e.nombre + ".");
+            return false;
+        }
+        e.analizado = true;
+        c.ganarCp(CP_POR_ANALIZAR);
+        c.logear("🔍 ANÁLISIS de " + e.nombre + " [" + e.elemento + "/" + e.atributo
+            + "]: " + TablaTipos.analisis(e.elemento, e.atributo));
+        return true;
+    }
+
+    /** ARTE CRUZADO: todos los aliados vivos atacan a la vez. 100 CP, sin turno. */
+    public static boolean arteCruzado(EstadoCombate c) {
+        if (c == null || !c.activa || c.fase == Fase.FIN_COMBATE) return false;
+        if (c.cinematicaActiva) return false;
+        if (!c.esperandoJugador || c.actorActual == null || !c.actorActual.aliado()) {
+            c.logear("Espera tu turno para el Arte Cruzado.");
+            return false;
+        }
+        if (!aliadoPuedeActuar(c)) return false;
+        if (c.cp < EstadoCombate.CP_ARTE_CRUZADO) {
+            c.logear("CP insuficiente para el Arte Cruzado (" + c.cp + "/"
+                + EstadoCombate.CP_ARTE_CRUZADO + ").");
+            return false;
+        }
+        Enemigo tgt = c.objetivoActual();
+        if (tgt == null) return false;
+        c.cp = 0;
+        c.logear(">>> ¡ARTE CRUZADO! Todo el equipo ataca al unísono. <<<");
+        int total = 0;
+        for (int i = 0; i < 3; i++) {
+            Actor a = Actor.aliado(i);
+            if (!c.vivo(a)) continue;
+            DatoDigimon d = c.digimonDe(i);
+            if (d == null) continue;
+            double mult = TablaTipos.multTotal(d.elemento, d.atributo, tgt.elemento, tgt.atributo);
+            int dano = mult <= TablaTipos.INMUNE ? 0 : Math.max(1, (int) (atkEf(d, c) * 1.8 * mult));
+            total += dano;
+            c.logear("  " + d.nombre + " golpea con " + d.elemento + " (-" + dano + ")");
+        }
+        tgt.hp = Math.max(0, tgt.hp - total);
+        c.danoTotalAcumulado += total;
+        c.logear(">>> " + tgt.nombre + " recibe -" + total + " HP en total <<<");
+        int idxTgt = c.enemigos.indexOf(tgt);
+        if (idxTgt >= 0) {
+            registrarEvento(c, Actor.aliado(0), Actor.enemigo(idxTgt), total, !tgt.vivo());
+        }
+        if (!tgt.vivo()) {
+            c.logear("¡" + tgt.nombre + " ha caído!");
+            actualizarObjetivo(c);
+        }
+        return true;
+    }
+
+    public static void pasarTurno(EstadoCombate c) {
+        if (!puedeOrdenar(c)) return;
+        Actor actor = c.actorActual;
+        c.logear(c.nombreDe(actor) + " pasa el turno.");
+        finalizarTurno(c, actor);
+    }
+
+    /**
+     * CAMBIO: reemplaza al Digimon que tiene el turno por una reserva.
+     * NO consume el turno (el que entra puede atacar de inmediato).
+     */
+    public static boolean cambiarActivo(EstadoCombate c,
+                                        AlmacenJugadores.DatosJugador datos, int benchSlot) {
+        if (c == null || !c.activa || c.fase == Fase.FIN_COMBATE) return false;
+        if (c.cinematicaActiva) return false;
+        if (!c.esperandoJugador || c.actorActual == null || !c.actorActual.aliado()) {
+            c.logear("Solo puedes cambiar en tu turno.");
+            return false;
+        }
+        if (datos == null || !AlmacenJugadores.DatosJugador.slotValido(benchSlot)) return false;
+
+        Actor actor = c.actorActual;
+        int idx = actor.idx();
         DatoDigimon entra = datos.getSlot(benchSlot);
-        if (entra == null || !entra.vivo || entra.dormido) return false;
-        if (party.isEmpty() || party.contains(entra)) return false;
-        DatoDigimon sale = party.get(0);
-        // Intercambiar en party y en equipo.
+        if (entra == null || !entra.vivo || entra.dormido || entra.noCombate || entra.hp <= 0) {
+            return false;
+        }
+        List<DatoDigimon> party = c.party;
+        if (party.isEmpty() || idx >= party.size() || party.contains(entra)) return false;
+
+        DatoDigimon sale = party.get(idx);
         int slotSale = -1;
         for (int i = 0; i < AlmacenJugadores.DatosJugador.MAX_EQUIPO; i++) {
             if (datos.getSlot(i) == sale) {
@@ -390,495 +982,296 @@ public class SistemaBatalla {
             }
         }
         if (slotSale == -1) return false;
-        party.set(0, entra);
+
+        party.set(idx, entra);
         datos.setSlot(benchSlot, sale);
         datos.setSlot(slotSale, entra);
-        c.hpCombateA = entra.hp;
-        c.opA = 0;
-        c.gaugeA = 0;
-        c.estadosA.clear();
-        c.turnosQuemadoA = 0; c.turnosVenenoA = 0; c.turnosParalisisA = 0; c.turnosDormidoA = 0;
-        c.guardActivo_A = false; c.attackOrden_A = false; c.specialActivo_A = false;
-        c.habMult_A = 0; c.habNombre_A = ""; c.habSuicida_A = false;
-        c.logear("¡Cambio! " + entra.nombre + " entra al frente.");
-        return true;
-    }
 
-    private static void aplicarSkill(EstadoCombate c, DatoDigimon digi, DatoDigimon otro, int nivel, boolean esRefuerzo) {
-        if (digi == null) return;
-        String nom = digi.nombre;
-
-        switch (nivel) {
+        sale.hp = Math.max(1, c.hpDe(actor));
+        c.setHpDe(actor, Math.min(entra.maxHp, Math.max(1, entra.hp)));
+        c.setOp(idx, EstadoCombate.OP_INICIAL);
+        c.estadosDeAliado(idx).clear();
+        switch (idx) {
+            case 0 -> {
+                c.turnosQuemadoA = 0; c.turnosVenenoA = 0; c.turnosParalisisA = 0;
+                c.turnosDormidoA = 0; c.turnosAturdidoA = 0; c.turnosSangradoA = 0;
+            }
             case 1 -> {
-                c.logear(nom + " usa QUEMAR! (quema al objetivo)");
-                if (!esRefuerzo) {
-                    if (c.enemigoVivo()) { c.enemigosEstados.add(EstadoAlterado.QUEMADO); c.turnosQuemado = 3; }
-                    else if (c.refuerzoVivo()) { c.refuerzoEstados.add(EstadoAlterado.QUEMADO); c.refTurnosQuemado = 3; }
-                } else {
-                    if (c.aVivo()) { c.estadosA.add(EstadoAlterado.QUEMADO); c.turnosQuemadoA = 3; }
-                    if (c.bVivo()) { c.estadosB.add(EstadoAlterado.QUEMADO); c.turnosQuemadoB = 3; }
-                }
+                c.turnosQuemadoB = 0; c.turnosVenenoB = 0; c.turnosParalisisB = 0;
+                c.turnosDormidoB = 0; c.turnosAturdidoB = 0; c.turnosSangradoB = 0;
             }
-            case 2 -> {
-                c.logear(nom + " usa VENENO! (envenena al objetivo)");
-                if (!esRefuerzo) {
-                    if (c.enemigoVivo()) { c.enemigosEstados.add(EstadoAlterado.VENENO); c.turnosVeneno = 4; }
-                    else if (c.refuerzoVivo()) { c.refuerzoEstados.add(EstadoAlterado.VENENO); c.refTurnosVeneno = 4; }
-                } else {
-                    if (c.aVivo()) { c.estadosA.add(EstadoAlterado.VENENO); c.turnosVenenoA = 4; }
-                    if (c.bVivo()) { c.estadosB.add(EstadoAlterado.VENENO); c.turnosVenenoB = 4; }
-                }
-            }
-            case 3 -> {
-                c.logear(nom + " usa PARALIZAR! (puede paralizar)");
-                boolean paralizo = RNG.nextDouble() < 0.40;
-                if (!esRefuerzo) {
-                    if (c.enemigoVivo()) {
-                        c.enemigosEstados.add(EstadoAlterado.PARALISIS);
-                        c.turnosParalisis = paralizo ? 2 : 0;
-                        c.logear(paralizo ? "Enemigo paralizado!" : "Pero fallo!");
-                    }
-                } else {
-                    if (c.aVivo()) {
-                        c.estadosA.add(EstadoAlterado.PARALISIS);
-                        c.turnosParalisisA = paralizo ? 2 : 0;
-                    }
-                    if (c.bVivo()) {
-                        c.estadosB.add(EstadoAlterado.PARALISIS);
-                        c.turnosParalisisB = paralizo ? 2 : 0;
-                    }
-                }
+            default -> {
+                c.turnosQuemadoC = 0; c.turnosVenenoC = 0; c.turnosParalisisC = 0;
+                c.turnosDormidoC = 0; c.turnosAturdidoC = 0; c.turnosSangradoC = 0;
             }
         }
+        c.setGuardia(idx, false);
+        // Sigue siendo su turno: puede actuar con el que acaba de entrar.
+        c.setGauge(actor, EstadoCombate.GAUGE_MAX);
+        c.logear("¡Cambio! " + entra.nombre + " reemplaza a " + sale.nombre
+            + " (no consume turno).");
+        return true;
     }
 
     public static boolean huir(EstadoCombate c) {
-        if (!c.activa) return false;
-        java.util.List<DatoDigimon> party = c.party;
+        if (c == null || !c.activa) return false;
+        if (!puedeOrdenar(c)) return false;
+
         int spdEq = 0;
         for (int i = 0; i < 3; i++) {
-            DatoDigimon d = lado(party, i);
-            if (d != null && spdEf(d, c) > spdEq) spdEq = spdEf(d, c);
+            Actor a = Actor.aliado(i);
+            if (!c.vivo(a)) continue;
+            DatoDigimon d = c.digimonDe(i);
+            if (d != null) spdEq = Math.max(spdEq, spdEf(d, c));
         }
-        int spdEn = c.enemigoSpd + (c.refuerzoActivo ? c.refuerzoSpd : 0);
+        int spdEn = 1;
+        for (Enemigo e : c.enemigos) {
+            if (e != null && e.vivo()) spdEn = Math.max(spdEn, e.spd);
+        }
         double prob = 0.35 + (spdEq / (double) Math.max(1, spdEq + spdEn)) * 0.45;
+
         if (RNG.nextDouble() < prob) {
-            c.activa = false; c.victoria = false;
+            c.activa = false;
+            c.victoria = false;
             c.fase = Fase.FIN_COMBATE;
-            c.logear("Lograste escapar!");
+            c.esperandoJugador = false;
+            c.logear("¡Lograste escapar!");
             return true;
-        } else {
-            c.logear("No pudiste huir!");
-            if (c.enemigoVivo()) enemigoAtaca(c, party, false);
-            if (c.refuerzoVivo()) enemigoAtaca(c, party, true);
-            return false;
         }
+
+        c.logear("¡No pudiste huir! El enemigo aprovecha para atacar.");
+        for (int i = 0; i < c.enemigos.size(); i++) {
+            Enemigo e = c.enemigos.get(i);
+            if (e != null && e.vivo() && RNG.nextDouble() < 0.5) {
+                ataqueDeEnemigo(c, i, 1.0);
+            }
+        }
+        finalizarTurno(c, c.actorActual != null ? c.actorActual : Actor.aliado(0));
+        return false;
     }
 
-    private static void procesarGauge(EstadoCombate c, java.util.List<DatoDigimon> party) {
-        if (!c.activa || c.fase == Fase.FIN_COMBATE) return;
+    // ══════════════════════════════════════════════════════════════════
+    // FIN DE COMBATE
+    // ══════════════════════════════════════════════════════════════════
 
-        boolean gaugeEnemigoListo = c.enemigoVivo() && c.gaugeEnemigo >= EstadoCombate.GAUGE_MAX;
-        boolean gaugeRefListo    = c.refuerzoVivo() && c.gaugeRefuerzo >= EstadoCombate.GAUGE_MAX;
+    private static boolean comprobarFin(EstadoCombate c) {
+        if (!c.activa || c.fase == Fase.FIN_COMBATE) return true;
 
-        DatoDigimon a = lado(party, 0);
-        DatoDigimon b = lado(party, 1);
-        DatoDigimon cc = lado(party, 2);
-
-        if (c.aVivo() && c.gaugeA >= EstadoCombate.GAUGE_MAX && !c.tieneEstadoA(EstadoAlterado.DORMIDO)) {
-            if (c.tieneEstadoA(EstadoAlterado.ATURDIDO)) {
-                c.logear(a.nombre + " aturdido! No puede moverse!");
-                if (--c.turnosAturdidoA <= 0) c.estadosA.remove(EstadoAlterado.ATURDIDO);
-            } else if (!(c.tieneEstadoA(EstadoAlterado.PARALISIS) && RNG.nextDouble() < 0.25)) {
-                atacarConDigimon(c, a, 0);
-            } else {
-                c.logear(a.nombre + " paralizado! No puede moverse!");
-            }
-        }
-        if (c.bVivo() && c.gaugeB >= EstadoCombate.GAUGE_MAX && !c.tieneEstadoB(EstadoAlterado.DORMIDO)) {
-            if (c.tieneEstadoB(EstadoAlterado.ATURDIDO)) {
-                c.logear(b.nombre + " aturdido! No puede moverse!");
-                if (--c.turnosAturdidoB <= 0) c.estadosB.remove(EstadoAlterado.ATURDIDO);
-            } else if (!(c.tieneEstadoB(EstadoAlterado.PARALISIS) && RNG.nextDouble() < 0.25)) {
-                atacarConDigimon(c, b, 1);
-            } else {
-                c.logear(b.nombre + " paralizado! No puede moverse!");
-            }
-        }
-        if (c.cVivo() && c.gaugeC >= EstadoCombate.GAUGE_MAX && !c.tieneEstadoC(EstadoAlterado.DORMIDO)) {
-            if (c.tieneEstadoC(EstadoAlterado.ATURDIDO)) {
-                c.logear(cc.nombre + " aturdido! No puede moverse!");
-                if (--c.turnosAturdidoC <= 0) c.estadosC.remove(EstadoAlterado.ATURDIDO);
-            } else if (!(c.tieneEstadoC(EstadoAlterado.PARALISIS) && RNG.nextDouble() < 0.25)) {
-                atacarConDigimon(c, cc, 2);
-            } else {
-                c.logear(cc.nombre + " paralizado! No puede moverse!");
-            }
-        }
-
-        if (c.turnosExeRestantes > 0) c.turnosExeRestantes--;
-
-        comprobarRefuerzo(c);
-
-        if (gaugeEnemigoListo && c.enemigoVivo()) {
-            if (c.tieneEstadoEnemigo(EstadoAlterado.ATURDIDO)) {
-                c.logear(c.enemigoNombre + " aturdido!");
-            } else if (!(c.tieneEstadoEnemigo(EstadoAlterado.PARALISIS) && RNG.nextDouble() < 0.25)) {
-                enemigoAtaca(c, party, false);
-            } else {
-                c.logear(c.enemigoNombre + " paralizado!");
-            }
-        }
-        if (gaugeRefListo && c.refuerzoVivo()) {
-            if (c.tieneEstadoRefuerzo(EstadoAlterado.ATURDIDO)) {
-                c.logear(c.refuerzoNombre + " aturdido!");
-            } else if (!(c.tieneEstadoRefuerzo(EstadoAlterado.PARALISIS) && RNG.nextDouble() < 0.25)) {
-                enemigoAtaca(c, party, true);
-            } else {
-                c.logear(c.refuerzoNombre + " paralizado!");
-            }
-        }
-
-        danoResidualYDespertar(c, party);
-
-        avanzarGauge(c, party);
-        c.ronda++;
-
-        if (c.todosEnemigosDerrota()) {
-            // Cobrar la oleada caída (activo + refuerzo si participó).
-            c.expTotal += c.enemigoExp + (c.refuerzoActivo ? c.refuerzoExp : 0);
-            if (c.colaRestante > 0 && reponerEnemigo(c)) {
-                c.fase = Fase.INICIATIVA;
-            } else {
-                c.victoria = true; c.activa = false;
-                c.fase = Fase.FIN_COMBATE;
-                int bonusCombo = c.comboMax * 5;
-                c.expTotal += bonusCombo;
-                c.logear("Bonus combo: +" + bonusCombo + " XP");
-                c.logear(">>> VICTORIA! +" + c.expTotal + " XP <<<");
-                aplicarVictoria(c, party);
-            }
-        } else if (!c.equipoVivo()) {
-            c.victoria = false; c.activa = false;
+        if (!c.equipoVivo()) {
+            c.victoria = false;
+            c.activa = false;
             c.fase = Fase.FIN_COMBATE;
-            c.logear("Derrota... el equipo cayo!");
-            aplicarDerrota(party, c);
-        } else {
-            c.fase = Fase.INICIATIVA;
-        }
-    }
-
-    private static void danoResidualYDespertar(EstadoCombate c, java.util.List<DatoDigimon> party) {
-        DatoDigimon a = lado(party, 0);
-        DatoDigimon b = lado(party, 1);
-        DatoDigimon cc = lado(party, 2);
-        int danoA = c.danoResidualA();
-        if (danoA > 0 && a != null) c.logear(a.nombre + " recibe " + danoA + " dano residual!");
-        int danoB = c.danoResidualB();
-        if (danoB > 0 && b != null) c.logear(b.nombre + " recibe " + danoB + " dano residual!");
-        int danoC = c.danoResidualC();
-        if (danoC > 0 && cc != null) c.logear(cc.nombre + " recibe " + danoC + " dano residual!");
-        int danoE = c.danoResidualEnemigo();
-        if (danoE > 0) c.logear(c.enemigoNombre + " recibe " + danoE + " dano residual!");
-        int danoR = c.danoResidualRefuerzo();
-        if (danoR > 0) c.logear(c.refuerzoNombre + " recibe " + danoR + " dano residual!");
-        c.verificarDespertar();
-    }
-
-    private static void avanzarGauge(EstadoCombate c, java.util.List<DatoDigimon> party) {
-        DatoDigimon a = lado(party, 0);
-        DatoDigimon b = lado(party, 1);
-        DatoDigimon cc = lado(party, 2);
-        int spdA = a != null ? spdEf(a, c) : 5;
-        int spdB = b != null ? spdEf(b, c) : 5;
-        int spdC = cc != null ? spdEf(cc, c) : 5;
-        int spdE = c.enemigoSpd;
-        int spdR = c.refuerzoSpd;
-
-        c.gaugeA += spdA * 10 + RNG.nextInt(20);
-        c.gaugeB += spdB * 10 + RNG.nextInt(20);
-        c.gaugeC += spdC * 10 + RNG.nextInt(20);
-        c.gaugeEnemigo += spdE * 10 + RNG.nextInt(20);
-        c.gaugeRefuerzo += spdR * 10 + RNG.nextInt(20);
-
-        if (c.gaugeA > EstadoCombate.GAUGE_MAX) c.gaugeA = EstadoCombate.GAUGE_MAX;
-        if (c.gaugeB > EstadoCombate.GAUGE_MAX) c.gaugeB = EstadoCombate.GAUGE_MAX;
-        if (c.gaugeC > EstadoCombate.GAUGE_MAX) c.gaugeC = EstadoCombate.GAUGE_MAX;
-        if (c.gaugeEnemigo > EstadoCombate.GAUGE_MAX) c.gaugeEnemigo = EstadoCombate.GAUGE_MAX;
-        if (c.gaugeRefuerzo > EstadoCombate.GAUGE_MAX) c.gaugeRefuerzo = EstadoCombate.GAUGE_MAX;
-    }
-
-    private static void atacarConDigimon(EstadoCombate c, DatoDigimon d, int ladoIdx) {
-        if (d == null) return;
-        if (hpLado(c, ladoIdx) <= 0) return;
-
-        boolean especial = ladoIdx == 0 ? c.specialActivo_A : ladoIdx == 1 ? c.specialActivo_B : c.specialActivo_C;
-        boolean forzado  = ladoIdx == 0 ? c.attackOrden_A   : ladoIdx == 1 ? c.attackOrden_B   : c.attackOrden_C;
-
-        boolean atacaRef = c.refuerzoVivo() && (!c.enemigoVivo() || c.pctHpRefuerzo() < c.pctHpEnemigo());
-        int defTarget = atacaRef ? c.refuerzoDef : c.enemigoDef;
-        String elemTgt = atacaRef ? c.refuerzoElemento : c.enemigoElemento;
-        String nomTgt = atacaRef ? c.refuerzoNombre : c.enemigoNombre;
-        Set<EstadoAlterado> tgtEstados = atacaRef ? c.refuerzoEstados : c.enemigosEstados;
-
-        double multElem = EnemigoCombate.multElemental(d.elemento, elemTgt);
-
-        boolean muyCritico = RNG.nextDouble() < (PCT_MUY_CRIT_BASE + wisEf(d, c) * PCT_MUY_CRIT_WIS_SCALE);
-        boolean critico    = !muyCritico && RNG.nextDouble() < (PCT_CRIT_BASE + wisEf(d, c) * PCT_CRIT_WIS_SCALE);
-        boolean fallo      = RNG.nextDouble() < (PCT_FALLO_BASE + defTarget * PCT_FALLO_DEF_SCALE);
-
-        int base;
-        boolean usoHab = ladoIdx == 0 && c.habMult_A > 0;
-        String nombreHab = usoHab ? c.habNombre_A : "";
-        if (usoHab) {
-            base = Math.max(1, (int) (atkEf(d, c) * c.habMult_A * multElem));
-            c.habMult_A = 0;
-            c.habNombre_A = "";
-        } else if (c.exeFusion && c.turnosExeRestantes > 0) {
-            base = (int)(atkEf(d, c) * 4.0 * multElem);
-        } else if (especial) {
-            base = (int)(atkEf(d, c) * 2.5 * multElem);
-        } else if (forzado) {
-            base = (int)(atkEf(d, c) * 1.6 * multElem);
-        } else {
-            double ratio = switch (ladoIdx == 0 ? c.tacticaA : ladoIdx == 1 ? c.tacticaB : c.tacticaC) {
-                case AGRESIVO   -> 1.4;
-                case DEFENSIVO   -> 0.7;
-                default          -> 1.0;
-            };
-            base = Math.max(1, atkEf(d, c) - defTarget / 2);
-            base = (int)(base * ratio * multElem);
+            c.esperandoJugador = false;
+            c.logear("Derrota... el equipo cayó.");
+            aplicarDerrota(c.party, c);
+            return true;
         }
 
-        TipoDano tipo;
-        int dano;
+        if (!c.todosEnemigosDerrota()) return false;
 
-        if (fallo) {
-            tipo = TipoDano.FALLIDO;
-            dano = 0;
-            c.logear(d.nombre + " ataca a " + nomTgt + " pero FALLA!");
-        } else if (muyCritico) {
-            tipo = TipoDano.MUY_CRITICO;
-            dano = Math.max(1, (int)(base * 1.8 * (0.85 + RNG.nextDouble() * 0.3)));
-            aplicarEstadoPostAtaque(d, tgtEstados);
-        } else if (critico) {
-            tipo = TipoDano.CRITICO;
-            dano = Math.max(1, (int)(base * 1.4 * (0.85 + RNG.nextDouble() * 0.3)));
-            aplicarEstadoPostAtaque(d, tgtEstados);
-        } else {
-            tipo = TipoDano.NORMAL;
-            dano = Math.max(1, (int)(base * (0.85 + RNG.nextDouble() * 0.3)));
+        for (Enemigo e : c.enemigos) {
+            if (e != null) c.expTotal += e.exp;
         }
-
-        if (atacaRef) c.refuerzoHp = Math.max(0, c.refuerzoHp - dano);
-        else          c.enemigoHp  = Math.max(0, c.enemigoHp  - dano);
-
-        c.danoTotalAcumulado += dano;
-        c.comboCount++;
-        if (c.comboCount > c.comboMax) c.comboMax = c.comboCount;
-        if (ladoIdx == 0 && c.habSuicida_A && !fallo) {
-            c.habSuicida_A = false;
-            setHpLado(c, 0, 0);
-            c.logear("¡" + d.nombre + " se autodestruyo!");
-        }
-
-        String tag = switch (tipo) {
-            case MUY_CRITICO -> "<<<< MUERTE >>>>";
-            case CRITICO     -> "<CRIT!>";
-            case FALLIDO     -> "<FALLO>";
-            default          -> "";
-        };
-
-        if (especial) tag += "[ESP]";
-        if (forzado)  tag += "[ORD]";
-        if (usoHab) tag += "[HAB:" + nombreHab + "]";
-        if (c.exeFusion && c.turnosExeRestantes > 0) tag += "[FUS]";
-
-        c.logear(d.nombre + " > " + nomTgt + " -" + dano + " HP " + tag);
-    }
-
-    private static void aplicarEstadoPostAtaque(DatoDigimon atk, Set<EstadoAlterado> estados) {
-        double r = RNG.nextDouble();
-        if (r < 0.15) {
-            estados.add(EstadoAlterado.QUEMADO);
-        } else if (r < 0.25) {
-            estados.add(EstadoAlterado.VENENO);
-        } else if (r < 0.35) {
-            estados.add(EstadoAlterado.SANGRANDO);
-        }
-    }
-
-    private static void enemigoAtaca(EstadoCombate c, java.util.List<DatoDigimon> party, boolean esRef) {
-        int atk    = esRef ? c.refuerzoAtk : c.enemigoAtk;
-        String nom = esRef ? c.refuerzoNombre : c.enemigoNombre;
-        String elem = esRef ? c.refuerzoElemento : c.enemigoElemento;
-        boolean fuerte = (c.ronda % 4 == 0);
-        if (esRef) c.refuerzoCargando = fuerte; else c.enemigoCargando = fuerte;
-
-        // Objetivo: el lado vivo con menor fracción de HP.
-        int objetivo = -1;
-        double peorFrac = 2.0;
-        for (int i = 0; i < 3; i++) {
-            DatoDigimon cand = lado(party, i);
-            int hp = hpLado(c, i);
-            if (cand == null || hp <= 0) continue;
-            double frac = (double) hp / Math.max(1, cand.maxHp);
-            if (frac < peorFrac) {
-                peorFrac = frac;
-                objetivo = i;
-            }
-        }
-        if (objetivo == -1) return;
-
-        DatoDigimon obj = lado(party, objetivo);
-        if (obj == null) return;
-
-        boolean guard = objetivo == 0 ? c.guardActivo_A : objetivo == 1 ? c.guardActivo_B : c.guardActivo_C;
-        double multE  = EnemigoCombate.multElemental(elem, obj.elemento);
-        boolean critico = RNG.nextDouble() < 0.08;
-        boolean fallo   = RNG.nextDouble() < 0.05;
-
-        int dano;
-        if (fallo) {
-            c.logear(nom + " ataca a " + obj.nombre + " pero FALLA!");
-            dano = 0;
-        } else {
-            dano = Math.max(1, (int)(Math.max(1, atk - defEf(obj, c) / 2) * multE
-                    * (guard ? 0.4 : 1.0)
-                    * (fuerte ? 2.0 : 1.0)
-                    * (critico ? 1.5 : 1.0)
-                    * (0.85 + RNG.nextDouble() * 0.3)));
-        }
-
-        setHpLado(c, objetivo, Math.max(0, hpLado(c, objetivo) - dano));
-
-        String tag = critico ? " <CRIT!>" : (fuerte ? " [!FUERTE!]" : "") + (guard ? "(BLOQUEADO)" : "");
-        if (!fallo) {
-            Set<EstadoAlterado> objEstados = objetivo == 0 ? c.estadosA : objetivo == 1 ? c.estadosB : c.estadosC;
-            if (critico && RNG.nextDouble() < 0.20) {
-                if (fuerte) {
-                    objEstados.add(EstadoAlterado.ENVENENADO_FUERTE);
-                    c.logear(nom + " > " + obj.nombre + " -" + dano + " HP" + tag + " (VENENO FUERTE!)");
-                } else {
-                    objEstados.add(EstadoAlterado.VENENO);
-                    c.logear(nom + " > " + obj.nombre + " -" + dano + " HP" + tag + " (envenenado)");
-                }
-            } else {
-                c.logear(nom + " > " + obj.nombre + " -" + dano + " HP" + tag);
-            }
-        }
-    }
-
-    /**
-     * Siguiente oleada: genera un salvaje fresco de la zona y lo pone como
-     * enemigo activo. Retorna false si no se pudo (no debería pasar).
-     */
-    private static boolean reponerEnemigo(EstadoCombate c) {
-        EstadoCombate tmp = EnemigoCombate.generarCombate(Math.max(1, c.nivelZona));
-        if (tmp == null) return false;
-        c.enemigoNombre = tmp.enemigoNombre;
-        c.enemigoElemento = tmp.enemigoElemento;
-        c.enemigoHp = tmp.enemigoHp;
-        c.enemigoMaxHp = tmp.enemigoMaxHp;
-        c.enemigoAtk = tmp.enemigoAtk;
-        c.enemigoDef = tmp.enemigoDef;
-        c.enemigoSpd = tmp.enemigoSpd;
-        c.enemigoWis = tmp.enemigoWis;
-        c.enemigoExp = tmp.enemigoExp;
-        c.enemigoCargando = false;
-        c.enemigosEstados.clear();
-        c.turnosQuemado = 0; c.turnosVeneno = 0; c.turnosParalisis = 0; c.turnosDormido = 0;
-        c.gaugeEnemigo = Math.max(0, EstadoCombate.GAUGE_MAX - c.enemigoSpd * 8 + RNG.nextInt(16));
-        c.refuerzoActivo = false;
-        c.refuerzoAnunciado = false;
-        c.colaRestante--;
-        c.oleadaActual++;
-        c.logear("¡Otro salvaje aparece! " + c.enemigoNombre + " [" + c.enemigoElemento + "]"
-            + " (oleada " + c.oleadaActual + "/" + c.totalOleada + ")");
+        c.victoria = true;
+        c.activa = false;
+        c.fase = Fase.FIN_COMBATE;
+        c.esperandoJugador = false;
+        int bonusCombo = c.comboMax * 5;
+        c.expTotal += bonusCombo;
+        if (bonusCombo > 0) c.logear("Bonus combo: +" + bonusCombo + " XP");
+        c.logear(">>> VICTORIA! +" + c.expTotal + " XP <<<");
+        aplicarVictoria(c.party, c);
         return true;
     }
 
-    private static void comprobarRefuerzo(EstadoCombate c) {
-        if (c.refuerzoActivo || c.refuerzoMaxHp == 0) return;
-        // Con oleadas pendientes no hay refuerzo (ya viene más compañía).
-        if (c.colaRestante > 0) return;
-        if (c.pctHpEnemigo() <= PCT_HP_REFUERZO || c.ronda >= RONDA_REFUERZO) {
-            c.refuerzoActivo = true;
-            c.refuerzoAnunciado = false;
-            c.gaugeRefuerzo = 0;
-            c.logear(">> UN " + c.refuerzoNombre + " [" + c.refuerzoElemento + "] SALVAJE APARECE! <<");
-        }
-    }
-
-    private static void aplicarVictoria(EstadoCombate c, java.util.List<DatoDigimon> party) {
-        // expTotal ya trae oleadas cobradas + bonus combo.
-        boolean[] vivos = {c.aVivo(), c.bVivo(), c.cVivo()};
-        int[] hps = {c.hpCombateA, c.hpCombateB, c.hpCombateC};
+    private static void aplicarVictoria(List<DatoDigimon> party, EstadoCombate c) {
         for (int i = 0; i < 3; i++) {
             DatoDigimon d = lado(party, i);
-            if (d != null && vivos[i]) {
+            if (d == null) continue;
+            Actor a = Actor.aliado(i);
+            boolean vivo = c.vivo(a);
+            if (vivo) {
                 d.victorias++;
                 d.lazo = Math.min(100, d.lazo + 2);
-                d.hp = hps[i];
-                d.energia = Math.max(10, d.energia - 15);
                 d.abi = Math.min(100, d.abi + 1);
+                d.hp = Math.max(1, c.hpDe(a));
+                d.xp += Math.max(1, c.expTotal);
+                int antes = d.nivelAv;
+                d.subirNivelAventura();
+                if (d.nivelAv > antes) {
+                    c.logear("¡" + d.nombre + " sube a nivel de aventura " + d.nivelAv + "!");
+                }
+            } else {
+                d.hp = Math.max(1, d.maxHp / 4);
             }
+            d.energia = Math.max(10, d.energia - 15);
+            d.hpCombate = d.hp;
         }
     }
 
-    /**
-     * Derrota en encuentro salvaje/jefe (NO PvP): derrotas/energía/lazo como
-     * siempre + los CAÍDOS pierden 20% de stats (10% con Calumon vivo).
-     */
-    public static void aplicarDerrota(java.util.List<DatoDigimon> party, EstadoCombate c) {
+    public static void aplicarDerrota(List<DatoDigimon> party, EstadoCombate c) {
         boolean pvp = c != null && c.esPvP;
         boolean calumon = c != null && c.calumonDobla;
         double factor = calumon ? 0.9 : 0.8;
         for (int i = 0; i < 3; i++) {
             DatoDigimon d = lado(party, i);
-            if (d != null) {
-                d.derrotas++;
-                d.energia = Math.max(5, d.energia - 25);
-                d.lazo = Math.max(0, d.lazo - 3);
-                if (!pvp && d.hpCombate <= 0) {
-                    d.atk = Math.max(1, (int) (d.atk * factor));
-                    d.def = Math.max(1, (int) (d.def * factor));
-                    d.spd = Math.max(1, (int) (d.spd * factor));
-                    d.wis = Math.max(1, (int) (d.wis * factor));
-                    d.maxHp = Math.max(10, (int) (d.maxHp * factor));
-                    d.hp = Math.min(d.hp, d.maxHp);
-                    if (c != null) {
-                        c.logear(d.nombre + " cae derrotado: -" + (calumon ? "10" : "20")
-                            + "% stats" + (calumon ? " (Calumon protege)" : "") + ".");
-                    }
+            if (d == null) continue;
+            d.derrotas++;
+            d.energia = Math.max(5, d.energia - 25);
+            d.lazo = Math.max(0, d.lazo - 3);
+            boolean cayo = c == null || c.hpDe(Actor.aliado(i)) <= 0;
+            if (!pvp && cayo) {
+                d.atk = Math.max(1, (int) (d.atk * factor));
+                d.def = Math.max(1, (int) (d.def * factor));
+                d.spd = Math.max(1, (int) (d.spd * factor));
+                d.wis = Math.max(1, (int) (d.wis * factor));
+                d.maxHp = Math.max(10, (int) (d.maxHp * factor));
+                d.hp = Math.max(1, Math.min(d.hp, d.maxHp / 4));
+                d.hpCombate = d.hp;
+                if (c != null) {
+                    c.logear(d.nombre + " cae derrotado: -" + (calumon ? "10" : "20")
+                        + "% stats" + (calumon ? " (Calumon protege)" : "") + ".");
                 }
             }
         }
     }
 
-    /** Compatibilidad: derrota sin contexto (cuenta como salvaje sin Calumon). */
-    public static void aplicarDerrota(java.util.List<DatoDigimon> party) {
+    public static void aplicarDerrota(List<DatoDigimon> party) {
         aplicarDerrota(party, null);
     }
 
-    public static String nombreEstado(EstadoAlterado e) {
-        return switch (e) {
-            case QUEMADO -> "🔥";
-            case VENENO, ENVENENADO_FUERTE -> "☠";
-            case PARALISIS -> "⚡";
-            case DORMIDO -> "💤";
-            case ATURDIDO -> "😵";
-            case SANGRANDO -> "🩸";
+    // ══════════════════════════════════════════════════════════════════
+    // TURNOS: PREDICCIÓN PARA LA UI
+    // ══════════════════════════════════════════════════════════════════
+
+    /**
+     * Predice los próximos {@code n} turnos sin tocar el estado real.
+     * Si el combate está esperando al jugador, el primero es el líder
+     * (que es quien actúa AHORA), no el siguiente de la simulación.
+     */
+    public static List<Actor> predecirTurnos(EstadoCombate c, int n) {
+        List<Actor> out = new ArrayList<>();
+        if (c == null || n <= 0) return out;
+
+        boolean esperando = (c.esperandoJugador || c.cinematicaActiva)
+            && c.actorActual != null && c.vivo(c.actorActual);
+        List<Actor> actores = actoresVivos(c);
+        int[] g = new int[actores.size()];
+        int[] spd = new int[actores.size()];
+        int[] avance = new int[actores.size()];
+        for (int i = 0; i < actores.size(); i++) {
+            Actor a = actores.get(i);
+            g[i] = c.gaugeDe(a);
+            spd[i] = spdDe(c, a);
+            avance[i] = Math.max(1, spd[i]) * AVANCE_SPD + AVANCE_RND / 2;
+        }
+
+        if (esperando) {
+            out.add(c.actorActual);
+            // El actor que tiene el turno (o lo está animando) ya reinició su barra.
+            int idxActor = actores.indexOf(c.actorActual);
+            if (idxActor >= 0) g[idxActor] = 0;
+            if (out.size() >= n) return out;
+        }
+
+        // Un actor por tick, igual que siguienteActor(): así la cola refleja
+        // de verdad el orden de turnos y no "adelanta" dos en el mismo tick.
+        for (int tick = 0; tick < 4000 && out.size() < n; tick++) {
+            for (int i = 0; i < actores.size(); i++) {
+                g[i] = Math.min(EstadoCombate.GAUGE_MAX, g[i] + avance[i]);
+            }
+            int mejor = -1;
+            for (int i = 0; i < actores.size(); i++) {
+                if (g[i] < EstadoCombate.GAUGE_MAX) continue;
+                if (mejor < 0 || g[i] > g[mejor]
+                    || (g[i] == g[mejor] && spd[i] > spd[mejor])) {
+                    mejor = i;
+                }
+            }
+            if (mejor < 0) continue;
+            out.add(actores.get(mejor));
+            g[mejor] = 0;
+        }
+        return out;
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // HELPERS DE CONTADORES DE ESTADO (party)
+    // ══════════════════════════════════════════════════════════════════
+
+    private static int turnosVeneno(EstadoCombate c, int i) {
+        return switch (i) {
+            case 0 -> c.turnosVenenoA;
+            case 1 -> c.turnosVenenoB;
+            default -> c.turnosVenenoC;
         };
     }
 
-    public static String estadosToString(Set<EstadoAlterado> estados) {
-        if (estados.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder();
-        for (EstadoAlterado e : estados) {
-            if (sb.length() > 0) sb.append(" ");
-            sb.append(nombreEstado(e));
+    private static void setTurnosVeneno(EstadoCombate c, int i, int v) {
+        switch (i) {
+            case 0 -> c.turnosVenenoA = v;
+            case 1 -> c.turnosVenenoB = v;
+            default -> c.turnosVenenoC = v;
         }
-        return sb.toString();
+    }
+
+    private static int turnosParalisis(EstadoCombate c, int i) {
+        return switch (i) {
+            case 0 -> c.turnosParalisisA;
+            case 1 -> c.turnosParalisisB;
+            default -> c.turnosParalisisC;
+        };
+    }
+
+    private static void setTurnosParalisis(EstadoCombate c, int i, int v) {
+        switch (i) {
+            case 0 -> c.turnosParalisisA = v;
+            case 1 -> c.turnosParalisisB = v;
+            default -> c.turnosParalisisC = v;
+        }
+    }
+
+    private static int turnosDormido(EstadoCombate c, int i) {
+        return switch (i) {
+            case 0 -> c.turnosDormidoA;
+            case 1 -> c.turnosDormidoB;
+            default -> c.turnosDormidoC;
+        };
+    }
+
+    private static void setTurnosDormido(EstadoCombate c, int i, int v) {
+        switch (i) {
+            case 0 -> c.turnosDormidoA = v;
+            case 1 -> c.turnosDormidoB = v;
+            default -> c.turnosDormidoC = v;
+        }
+    }
+
+    private static int turnosAturdido(EstadoCombate c, int i) {
+        return switch (i) {
+            case 0 -> c.turnosAturdidoA;
+            case 1 -> c.turnosAturdidoB;
+            default -> c.turnosAturdidoC;
+        };
+    }
+
+    private static void setTurnosAturdido(EstadoCombate c, int i, int v) {
+        switch (i) {
+            case 0 -> c.turnosAturdidoA = v;
+            case 1 -> c.turnosAturdidoB = v;
+            default -> c.turnosAturdidoC = v;
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // TEXTO DE ESTADOS
+    // ══════════════════════════════════════════════════════════════════
+
+    public static String nombreEstado(EstadoAlterado e) {
+        return EstadoCombate.nombreEstado(e);
+    }
+
+    public static String estadosToString(Set<EstadoAlterado> estados) {
+        return EstadoCombate.estadosToString(estados);
     }
 }

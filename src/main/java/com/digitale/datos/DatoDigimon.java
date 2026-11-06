@@ -14,6 +14,8 @@ public class DatoDigimon {
     public int    nivel         = 1;  // 1=Baby, 2=In-Training, 3=Rookie, 4=Champion, 5=Ultimate, 6=Mega
     /** Nivel de aventura (sube con XP; desbloquea movimientos). */
     public int nivelAv = 1;
+    /** XP acumulada hacia el siguiente nivel de aventura (100 = sube). */
+    public int xp = 0;
     /** Veces seguidas comiendo a tope (3 = se vuelve Burpmon). */
     public int vecesLleno = 0;
 
@@ -176,6 +178,11 @@ public class DatoDigimon {
             case "Agumon","Gabumon","Patamon","Palmon","Gomamon","Biyomon","Veemon" -> 3;
             default -> 1;
         };
+        // Canon: Baby (Fresh) e In-Training NO tienen atributo; Vaccin/Virus/Data
+        // empiezan en Child/Rookie. Calumon/NEO/Burpmon conservan UNKNOWN.
+        if (d.nivel <= 2 && !"UNKNOWN".equalsIgnoreCase(d.atributo)) {
+            d.atributo = "NONE";
+        }
         d.lazo = 20;
         d.disciplina = 20;
         return d;
@@ -253,6 +260,64 @@ public class DatoDigimon {
     /** Interactuar: sube lazo. */
     public void interactuar() {
         lazo = Math.min(100, lazo + 5);
+    }
+
+    // ── Progresión de aventura (XP de combate) ─────────────────────
+
+    /** XP necesaria para el siguiente nivel de aventura. */
+    public static final int XP_POR_NIVEL = 100;
+    public static final int NIVEL_AV_MAX = 10;
+
+    /**
+     * Suma XP y sube de nivel de aventura (desbloquea movimientos).
+     * @return cuántos niveles subió.
+     */
+    public int subirNivelAventura() {
+        if (xp < 0) xp = 0;
+        int subidas = 0;
+        while (xp >= XP_POR_NIVEL && nivelAv < NIVEL_AV_MAX) {
+            xp -= XP_POR_NIVEL;
+            nivelAv++;
+            subidas++;
+        }
+        if (nivelAv >= NIVEL_AV_MAX) xp = Math.min(xp, XP_POR_NIVEL - 1);
+        return subidas;
+    }
+
+    /** Fracción de HP actual (0..1) para la UI. */
+    public float pctHp() {
+        if (maxHp <= 0) return 0f;
+        return Math.max(0f, Math.min(1f, (float) hp / maxHp));
+    }
+
+    /**
+     * Repara datos viejos o incoherentes al cargar: atributo ausente,
+     * HP fuera de rango o XP negativa. No cambia especie/nivel/estadísticas.
+     */
+    public void repararIntegridad() {
+        if (especie == null || especie.isBlank()) {
+            especie = "Ninguno";
+        }
+        if (nombre == null || nombre.isBlank()) nombre = especie;
+        String atr = atributo == null ? "" : atributo.trim().toUpperCase(java.util.Locale.ROOT);
+        if (nivel <= 2) {
+            // Migración: antes los In-Training tenían DATA/VIRUS; el canon dice
+            // que no tienen atributo (No Attribute).
+            if (!"UNKNOWN".equals(atr)) atributo = "NONE";
+        } else if (atr.isEmpty() || "NONE".equals(atr) || "UNKNOWN".equals(atr)) {
+            String calculado = TablaTipos.atributoDeEspecie(especie);
+            if (calculado != null && !calculado.isEmpty()) atributo = calculado;
+        }
+        if (elemento == null || elemento.isBlank()) elemento = "NEUTRO";
+        if (maxHp < 1) maxHp = 10;
+        if (hp < 0) hp = 0;
+        if (hp > maxHp) hp = maxHp;
+        if (hpCombate < 0) hpCombate = 0;
+        if (hpCombate > maxHp) hpCombate = maxHp;
+        if (nivelAv < 1) nivelAv = 1;
+        if (nivelAv > NIVEL_AV_MAX) nivelAv = NIVEL_AV_MAX;
+        if (xp < 0) xp = 0;
+        if (hp <= 0 && vivo) hp = 1;
     }
 
     /** Daño en combate (lazo afecta precisión/multiplicador). */
@@ -433,8 +498,10 @@ public class DatoDigimon {
             return out;
         }
         String[] base = nombresHabilidades();
-        double[] mults = {1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0};
-        int[] costes = {20, 50, 100, 60, 90, 120, 150};
+        // Multiplicadores y costes en orden creciente (antes el coste 3 era
+        // más caro que el 4, lo que hacía que las técnicas no escalaran).
+        double[] mults = {1.2, 1.6, 2.0, 2.4, 3.0, 3.6, 4.2};
+        int[] costes = {20, 40, 60, 90, 110, 130, 150};
         for (int i = 0; i < Math.min(base.length, 7); i++) {
             out.add(new Movimiento(base[i], "PROYECTIL", mults[i], null, 0, costes[i], 1));
         }

@@ -4,6 +4,8 @@ import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.datos.EstadoCombate;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.entity.Frozen;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.component.Ref;
@@ -256,41 +258,196 @@ public class SistemaPaseo {
             Vector3d p = transform.getPosition();
             Rotation3f rot = transform.getRotation();
             float yaw = rot != null ? rot.y : 0f;
-            double fx = -Math.sin(yaw), fz = Math.cos(yaw);
-            double rx = -Math.cos(yaw), rz = -Math.sin(yaw);
+            // Convencion Hytale: yaw 0 mira a -Z -> forward = (-sin, 0, -cos).
+            double fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+            double rx = -fz, rz = fx;
 
             World world = store.getExternalData().getWorld();
             if (world == null) return;
-
-            // Salvaje enfrente (4.8 bloques): mas cerca y visible.
-            if (c.objetivo != null && c.objetivo.isValid()) {
-                teleportar(store, c.objetivo,
-                    new Vector3d(p).add(fx * 4.8, 0.5, fz * 4.8));
-            }
 
             // Party en linea (3/4 de Cyber Sleuth): 2.2 adelante y 2.2 de separacion.
             for (int i = 0; i < party.size() && i < 3; i++) {
                 DatoDigimon d = party.get(i);
                 if (d == null) continue;
                 Vector3d pos = new Vector3d(p)
-                    .add(fx * 2.2 + rx * ((i - 1) * 2.2), 0.5, fz * 2.2 + rz * ((i - 1) * 2.2));
+                    .add(fx * 2.2 + rx * ((i - 1) * 2.2), 0.05, fz * 2.2 + rz * ((i - 1) * 2.2));
+                String rol = rolPara(d);
                 Ref<?> npcRef = (i < datos.refsBatalla.length) ? datos.refsBatalla[i] : null;
-                if (npcRef == null || !npcRef.isValid()) {
-                    npcRef = registrarSpawnearNpc(world, playerRef, d,
-                        rolPara(d), pos, store, i == 0);
-                    if (npcRef != null && i < datos.refsBatalla.length) {
+                // Si el slot cambió de Digimon (Cambio), reciclamos el NPC.
+                boolean especieCambio = npcRef != null
+                    && !d.especie.equals(datos.refsBatallaEspecie[i]);
+                if (npcRef != null && (!npcRef.isValid() || especieCambio)) {
+                    if (npcRef.isValid()) intentarDespawnear(store, npcRef, "party" + i);
+                    npcRef = null;
+                    datos.refsBatalla[i] = null;
+                }
+                if (npcRef == null) {
+                    npcRef = registrarSpawnearNpc(world, playerRef, d, rol, pos, store, i == 0);
+                    if (npcRef != null) {
                         datos.refsBatalla[i] = npcRef;
-                    } else if (npcRef == null) {
+                        datos.refsBatallaEspecie[i] = d.especie;
+                    } else {
                         LOGGER.log(Level.WARNING, "[SistemaPaseo] Sin rol de batalla para: " + d.especie);
                         continue;
                     }
                 } else {
                     teleportar(store, npcRef, pos);
                 }
+                congelar(store, npcRef);
             }
+
+            // ── Grupo enemigo: todos a la vez, en formación ──────────────
+            int n = c.enemigos.size();
+            for (int i = 0; i < n; i++) {
+                com.digitale.datos.EstadoCombate.Enemigo e = c.enemigos.get(i);
+                if (e == null) continue;
+                // Un salvaje derrotado se retira DESPUÉS de su animación de muerte.
+                if (!e.vivo()) {
+                    long ahora = System.currentTimeMillis();
+                    if (e.despawnEn == 0) e.despawnEn = ahora + 1800L;
+                    if (ahora >= e.despawnEn) {
+                        if (e.ref != null) despawnearUno(store, e.ref);
+                        e.ref = null;
+                    }
+                    continue;
+                }
+                Vector3d pos = posicionEnemigo(p, fx, fz, rx, rz, i, n);
+
+                // El primer salvaje es el NPC que golpeaste (mismo modelo).
+                if (i == 0 && e.ref == null && c.objetivo != null && c.objetivo.isValid()) {
+                    e.ref = c.objetivo;
+                    e.propio = false;
+                }
+                if (e.ref != null && e.ref.isValid()) {
+                    teleportar(store, e.ref, pos);
+                    congelar(store, e.ref);
+                    continue;
+                }
+                if (e.spawnFallido) continue;
+                Ref<?> nuevo = spawnSalvaje(store, playerRef, e.nombre, pos);
+                if (nuevo != null) {
+                    e.ref = nuevo;
+                    e.propio = true;
+                    congelar(store, nuevo);
+                } else {
+                    e.spawnFallido = true;
+                    LOGGER.log(Level.WARNING, "[SistemaPaseo] Sin rol salvaje para: " + e.nombre);
+                }
+            }
+            // Altura media de las hitboxes: la cámara escala con ella.
+            c.alturaMedia = calcularAlturaMedia(store, datos, c);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "[SistemaPaseo] prepararBatalla: " + e.getMessage());
         }
+    }
+
+    /** Altura media (y) de las hitboxes de party + enemigos. */
+    private static float calcularAlturaMedia(Store<EntityStore> store,
+                                             AlmacenJugadores.DatosJugador datos,
+                                             com.digitale.datos.EstadoCombate c) {
+        float suma = 0f;
+        int n = 0;
+        if (datos.refsBatalla != null) {
+            for (Ref<?> r : datos.refsBatalla) {
+                float h = alturaDe(store, r);
+                if (h > 0.01f) { suma += h; n++; }
+            }
+        }
+        for (com.digitale.datos.EstadoCombate.Enemigo e : c.enemigos) {
+            if (e == null) continue;
+            float h = alturaDe(store, e.ref);
+            if (h > 0.01f) { suma += h; n++; }
+        }
+        return n > 0 ? suma / n : 0f;
+    }
+
+    private static float alturaDe(Store<EntityStore> store, Ref<?> ref) {
+        if (ref == null || !ref.isValid()) return 0f;
+        try {
+            @SuppressWarnings("unchecked")
+            Ref<EntityStore> r = (Ref<EntityStore>) ref;
+            var bb = store.getComponent(r,
+                com.hypixel.hytale.server.core.modules.entity.component.BoundingBox.getComponentType());
+            if (bb != null && bb.getBoundingBox() != null) {
+                var b = bb.getBoundingBox();
+                return (float) Math.abs(b.max.y - b.min.y);
+            }
+            var mc = store.getComponent(r, ModelComponent.getComponentType());
+            if (mc != null && mc.getModel() != null && mc.getModel().getBoundingBox() != null) {
+                var b = mc.getModel().getBoundingBox();
+                return (float) (Math.abs(b.max.y - b.min.y)
+                    * Math.max(0.01f, mc.getModel().getScale()));
+            }
+        } catch (Exception ignored) {
+        }
+        return 0f;
+    }
+
+    /** Congela al NPC (la AI deja de moverlo/girarlo durante el combate). */
+    private static void congelar(Store<EntityStore> store, Ref<?> ref) {
+        if (ref == null || !ref.isValid()) return;
+        try {
+            @SuppressWarnings("unchecked")
+            Ref<EntityStore> r = (Ref<EntityStore>) ref;
+            store.ensureComponent(r, Frozen.getComponentType());
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static void descongelar(Store<EntityStore> store, Ref<?> ref) {
+        if (ref == null || !ref.isValid()) return;
+        try {
+            @SuppressWarnings("unchecked")
+            Ref<EntityStore> r = (Ref<EntityStore>) ref;
+            store.tryRemoveComponent(r, Frozen.getComponentType());
+        } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * Posición de cada salvaje del grupo. El índice 0 (el que golpeaste) va al
+     * centro delante; el resto se reparte en una o dos filas.
+     */
+    private static Vector3d posicionEnemigo(Vector3d p, double fx, double fz,
+                                            double rx, double rz, int i, int n) {
+        double[][] off = switch (Math.max(1, Math.min(5, n))) {
+            case 1 -> new double[][]{{0, 5.2}};
+            case 2 -> new double[][]{{-1.3, 5.3}, {1.3, 5.3}};
+            case 3 -> new double[][]{{0, 5.5}, {-2.2, 5.0}, {2.2, 5.0}};
+            case 4 -> new double[][]{{0, 5.2}, {-2.1, 5.8}, {2.1, 5.8}, {0, 6.8}};
+            default -> new double[][]{{0, 5.2}, {-2.2, 5.8}, {2.2, 5.8}, {-1.2, 6.8}, {1.2, 6.8}};
+        };
+        double[] o = off[Math.min(i, off.length - 1)];
+        return new Vector3d(p).add(fx * o[1] + rx * o[0], 0.05, fz * o[1] + rz * o[0]);
+    }
+
+    /**
+     * Spawnea el NPC salvaje de una oleada (la especie cambia entre oleadas).
+     * @return la ref del NPC o null si el rol no existe.
+     */
+    public static Ref<?> spawnSalvaje(Store<EntityStore> store, PlayerRef playerRef,
+                                      String especie, Vector3d pos) {
+        try {
+            World world = store.getExternalData().getWorld();
+            if (world == null) return null;
+            String rol = com.digitale.datos.EnemigoCombate.rolSalvajeDe(especie);
+            NPCPlugin npc = NPCPlugin.get();
+            if (npc == null) return null;
+            var result = npc.spawnNPC(store, rol, null, pos, new Rotation3f());
+            if (result == null) {
+                LOGGER.log(Level.WARNING, "[SistemaPaseo] No se pudo spawnear oleada: " + rol);
+                return null;
+            }
+            try {
+                Object r = result.getClass().getMethod("first").invoke(result);
+                if (r instanceof Ref<?> ref) return ref;
+            } catch (Exception ignored) {
+            }
+            if (result instanceof Ref<?> ref) return ref;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "[SistemaPaseo] spawnSalvaje: " + e.getMessage());
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -298,7 +455,12 @@ public class SistemaPaseo {
         try {
             Ref<EntityStore> ref = (Ref<EntityStore>) npcRef;
             TransformComponent t = store.getComponent(ref, TransformComponent.getComponentType());
-            if (t != null) t.teleportPosition(pos);
+            if (t == null) return;
+            // Si ya está en su sitio, NO se re-teleporta: re-teleportar cada tick
+            // hacía que el NPC se creyera en el aire y repitiera el salto.
+            Vector3d actual = t.getPosition();
+            if (actual != null && actual.distanceSquared(pos) < 0.04) return;
+            t.teleportPosition(pos);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "[SistemaPaseo] teleport: " + e.getMessage());
         }
@@ -313,7 +475,25 @@ public class SistemaPaseo {
         }
     }
 
-    /** Recoge los NPCs de la formación de combate. */
+    /** Recoge los NPCs de la formación de combate y limpia los enemigos. */
+    /** Descongela a todos los combatientes (al salir del combate). */
+    public static void descongelarBatalla(PlayerRef playerRef, Store<EntityStore> store) {
+        try {
+            AlmacenJugadores.DatosJugador datos =
+                AlmacenJugadores.getDatos(obtenerUuidJugador(playerRef));
+            if (datos == null) return;
+            if (datos.refsBatalla != null) {
+                for (Ref<?> r : datos.refsBatalla) descongelar(store, r);
+            }
+            if (datos.combate != null) {
+                for (com.digitale.datos.EstadoCombate.Enemigo e : datos.combate.enemigos) {
+                    if (e != null) descongelar(store, e.ref);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     public static void recogerBatalla(PlayerRef playerRef,
                                       Ref<EntityStore> ref,
                                       Store<EntityStore> store) {
@@ -321,10 +501,28 @@ public class SistemaPaseo {
             AlmacenJugadores.DatosJugador datos =
                 AlmacenJugadores.getDatos(obtenerUuidJugador(playerRef));
             if (datos == null) return;
+            com.digitale.datos.EstadoCombate c = datos.combate;
+
             for (int i = 0; i < datos.refsBatalla.length; i++) {
+                descongelar(store, datos.refsBatalla[i]);
                 despawnearUno(store, datos.refsBatalla[i]);
             }
             datos.limpiarBatalla();
+
+            if (c != null) {
+                // Los spawneados por la batalla se retiran siempre; los salvajes
+                // del mundo solo si fueron derrotados (victoria).
+                for (com.digitale.datos.EstadoCombate.Enemigo e : c.enemigos) {
+                    if (e == null || e.ref == null) continue;
+                    descongelar(store, e.ref);
+                    if (e.propio || c.victoria) despawnearUno(store, e.ref);
+                    e.ref = null;
+                }
+                c.objetivo = null;
+            }
+            // El combate ya terminó: liberamos la referencia para que la UI
+            // no siga mostrando un combate viejo.
+            datos.combate = null;
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "[SistemaPaseo] recogerBatalla: " + e.getMessage());
         }
@@ -367,58 +565,15 @@ public class SistemaPaseo {
         });
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("unchecked")
     private static void intentarDespawnear(Store<EntityStore> store, Ref<?> npcRef, String slot) {
-
-        // PASO 1: Loguear todos los valores del enum para diagnostico definitivo
+        if (npcRef == null || !npcRef.isValid()) return;
         try {
-            Class<?> removeReasonClass = Class.forName("com.hypixel.hytale.component.RemoveReason");
-            Object[] constants = removeReasonClass.getEnumConstants();
-            if (constants != null && constants.length > 0) {
-                StringBuilder sb = new StringBuilder("[SistemaPaseo] Valores de RemoveReason: ");
-                for (Object c : constants) sb.append(c.toString()).append(" | ");
-                LOGGER.log(Level.INFO, sb.toString());
-            } else {
-                LOGGER.log(Level.WARNING, "[SistemaPaseo] RemoveReason no tiene constantes");
-            }
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "[SistemaPaseo] No se pudo inspeccionar RemoveReason: " + ex.getMessage());
-        }
-
-        // PASO 2: Probar candidatos de nombre conocidos
-        String[] candidatos = {"DESPAWN", "KILLED", "REMOVE", "UNLOAD", "DELETE", "NONE", "DEFAULT", "FORCE", "PLUGIN"};
-        for (String candidato : candidatos) {
-            try {
-                Class<?> removeReasonClass = Class.forName("com.hypixel.hytale.component.RemoveReason");
-                Object reason = Enum.valueOf((Class<Enum>) removeReasonClass, candidato);
-                store.getClass()
-                        .getMethod("removeEntity", Ref.class, removeReasonClass)
-                        .invoke(store, npcRef, reason);
-                LOGGER.log(Level.INFO, "[SistemaPaseo] [" + slot + "] Despawneado con RemoveReason." + candidato);
-                return;
-            } catch (IllegalArgumentException ignored) {
-                // nombre no existe, siguiente
-            } catch (Exception e) {
-                LOGGER.log(Level.WARNING, "[SistemaPaseo] Fallo con " + candidato + ": " + e.getMessage());
-            }
-        }
-
-        // PASO 3: Usar el primer valor del enum disponible
-        try {
-            Class<?> removeReasonClass = Class.forName("com.hypixel.hytale.component.RemoveReason");
-            Object[] constants = removeReasonClass.getEnumConstants();
-            if (constants != null && constants.length > 0) {
-                Object primerValor = constants[0];
-                store.getClass()
-                        .getMethod("removeEntity", Ref.class, removeReasonClass)
-                        .invoke(store, npcRef, primerValor);
-                LOGGER.log(Level.INFO, "[SistemaPaseo] [" + slot + "] Despawneado con primer valor: " + primerValor);
-                return;
-            }
+            store.removeEntity((Ref<EntityStore>) npcRef,
+                com.hypixel.hytale.component.RemoveReason.REMOVE);
+            LOGGER.log(Level.FINE, "[SistemaPaseo] [" + slot + "] NPC eliminado.");
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "[SistemaPaseo] Fallo con primer valor del enum: " + e.getMessage());
+            LOGGER.log(Level.WARNING, "[SistemaPaseo] [" + slot + "] despawn: " + e.getMessage());
         }
-
-        LOGGER.log(Level.SEVERE, "[SistemaPaseo] [" + slot + "] Todos los intentos de despawn fallaron.");
     }
 }

@@ -3,6 +3,10 @@ package com.digitale.ui;
 import com.digitale.datos.AlmacenJugadores;
 import com.digitale.datos.DatoDigimon;
 import com.digitale.datos.EstadoCombate;
+import com.digitale.datos.EstadoCombate.Actor;
+import com.digitale.datos.EstadoCombate.Enemigo;
+import com.digitale.datos.TablaTipos;
+import com.digitale.sistema.SistemaBatalla;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hypixel.hytale.component.Ref;
@@ -15,11 +19,18 @@ import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +43,30 @@ public class DigiBatallaComandosUI extends CustomUIPage {
     private static final Logger LOGGER = Logger.getLogger(DigiBatallaComandosUI.class.getName());
     private static final int MAX_ITEMS = 8;
 
-    private record Turno(String nombre, int gauge, boolean aliado, String icono) {}
+    private record Turno(String nombre, int gauge, boolean aliado, String imagen,
+                         String estado, Actor actor) {}
+
+    // ── Animación de la línea de turnos ─────────────────────────────
+    private static final ScheduledExecutorService ANIM =
+        Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "digitale-ui-turnos");
+            t.setDaemon(true);
+            return t;
+        });
+    private ScheduledFuture<?> animTask;
+    private volatile boolean abierta = false;
+    private List<Actor> ordenAnterior = new ArrayList<>();
+    /** Valor de barra que se está mostrando (para interpolar). */
+    private final Map<Actor, Integer> gaugeMostrado = new HashMap<>();
+    /** Valor de barra al que hay que llegar. */
+    private final Map<Actor, Integer> gaugeObjetivo = new HashMap<>();
+    /** Para refrescar la página entera cuando termina una cinemática. */
+    private boolean cineAnterior = false;
+    /** El fin de combate ya se pintó. */
+    private boolean finMostrado = false;
+    /** Último turno pintado (para refrescar cuando cambia el actor). */
+    private boolean esperaAnterior = false;
+    private int actorAnterior = -1;
 
     public DigiBatallaComandosUI(@Nonnull PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CantClose);
@@ -57,89 +91,13 @@ public class DigiBatallaComandosUI extends CustomUIPage {
                       @Nonnull UICommandBuilder cmd,
                       @Nonnull UIEventBuilder event,
                       @Nonnull Store<EntityStore> store) {
-        cmd.appendInline(null, """
+        String markup = """
             Group {
-                Group #PCard0 {
-                    Anchor: (Left: 410, Bottom: 12, Width: 210, Height: 125);
-                    AssetImage #PCardBg0 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_digimon.png"; }
-                    AssetImage #PCardImg0 { Anchor: (Left: 18, Top: 10, Width: 32, Height: 32); AssetPath: "UI/Custom/png_Digis/Botamon.png"; }
-                    AssetImage #PCardType0 { Anchor: (Left: 182, Top: 6, Width: 20, Height: 20); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                    Label #PName0 { Anchor: (Left: 62, Top: 4, Width: 116, Height: 20); Text: "---"; Style: (TextColor: #38d9ff, FontSize: 17, RenderBold: true); }
-                    Label #PHp0 { Anchor: (Left: 62, Top: 24, Width: 116, Height: 16); Text: "HP ---"; Style: (TextColor: #5dffb0, FontSize: 12); }
-                    Label #POp0 { Anchor: (Left: 14, Top: 66, Width: 182, Height: 18); Text: "OP ---"; Style: (TextColor: #d7ecff, FontSize: 12, RenderBold: true); }
-                    Label #PTurn0 { Anchor: (Left: 14, Top: 88, Width: 182, Height: 18); Text: "TURNO ---"; Style: (TextColor: #38d9ff, FontSize: 12); }
-                }
-                Group #PCard1 {
-                    Anchor: (Left: 630, Bottom: 12, Width: 210, Height: 125);
-                    AssetImage #PCardBg1 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_digimon.png"; }
-                    AssetImage #PCardImg1 { Anchor: (Left: 18, Top: 10, Width: 32, Height: 32); AssetPath: "UI/Custom/png_Digis/Botamon.png"; }
-                    AssetImage #PCardType1 { Anchor: (Left: 182, Top: 6, Width: 20, Height: 20); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                    Label #PName1 { Anchor: (Left: 62, Top: 8, Width: 140, Height: 18); Text: "---"; Style: (TextColor: #ff4fa3, FontSize: 13, RenderBold: true); }
-                    Label #PHp1 { Anchor: (Left: 62, Top: 24, Width: 116, Height: 16); Text: "HP ---"; Style: (TextColor: #5dffb0, FontSize: 12); }
-                    Label #POp1 { Anchor: (Left: 14, Top: 66, Width: 182, Height: 18); Text: "OP ---"; Style: (TextColor: #d7ecff, FontSize: 12, RenderBold: true); }
-                    Label #PTurn1 { Anchor: (Left: 14, Top: 88, Width: 182, Height: 18); Text: "TURNO ---"; Style: (TextColor: #38d9ff, FontSize: 12); }
-                }
-                Group #PCard2 {
-                    Anchor: (Left: 850, Bottom: 12, Width: 210, Height: 125);
-                    AssetImage #PCardBg2 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_digimon.png"; }
-                    AssetImage #PCardImg2 { Anchor: (Left: 18, Top: 10, Width: 32, Height: 32); AssetPath: "UI/Custom/png_Digis/Botamon.png"; }
-                    AssetImage #PCardType2 { Anchor: (Left: 182, Top: 6, Width: 20, Height: 20); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                    Label #PName2 { Anchor: (Left: 62, Top: 8, Width: 140, Height: 18); Text: "---"; Style: (TextColor: #ffc857, FontSize: 13, RenderBold: true); }
-                    Label #PHp2 { Anchor: (Left: 62, Top: 24, Width: 116, Height: 16); Text: "HP ---"; Style: (TextColor: #5dffb0, FontSize: 12); }
-                    Label #POp2 { Anchor: (Left: 14, Top: 66, Width: 182, Height: 18); Text: "OP ---"; Style: (TextColor: #d7ecff, FontSize: 12, RenderBold: true); }
-                    Label #PTurn2 { Anchor: (Left: 14, Top: 88, Width: 182, Height: 18); Text: "TURNO ---"; Style: (TextColor: #38d9ff, FontSize: 12); }
-                }
+                {{CARDS}}
 
-                Group #TurnPanel {
-                    LayoutMode: Top;
-                    Anchor: (Top: 12, Right: 12, Width: 260, Height: 380);
-                    Background: (Color: #04070d);
-                    Padding: (Full: 10);
+                {{TURNPANEL}}
 
-                    Label {
-                        Text: "LINEA DE TURNOS";
-                        Style: (TextColor: #ffc857, FontSize: 16, RenderBold: true, LetterSpacing: 1);
-                        Anchor: (Height: 22);
-                    }
-                    Group { Anchor: (Height: 2); Background: (Color: #ffc857); }
-                    Group { Anchor: (Height: 4); }
-
-                    Group #Turn0 {
-                        Anchor: (Height: 64);
-                        AssetImage #TurnBg0 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_turn_ally.png"; }
-                        AssetImage #TurnIcon0 { Anchor: (Left: 10, Top: 18, Width: 28, Height: 28); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                        Label #TurnName0 { Anchor: (Left: 44, Top: 10, Width: 184, Height: 20); Text: "---"; Style: (TextColor: #ffffff, FontSize: 15, RenderBold: true); }
-                        Label #TurnGauge0 { Anchor: (Left: 44, Top: 32, Width: 184, Height: 18); Text: ""; Style: (TextColor: #38d9ff, FontSize: 12); }
-                    }
-                    Group #Turn1 {
-                        Anchor: (Height: 64);
-                        AssetImage #TurnBg1 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_turn_ally.png"; }
-                        AssetImage #TurnIcon1 { Anchor: (Left: 10, Top: 18, Width: 28, Height: 28); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                        Label #TurnName1 { Anchor: (Left: 44, Top: 10, Width: 184, Height: 20); Text: "---"; Style: (TextColor: #ffffff, FontSize: 15, RenderBold: true); }
-                        Label #TurnGauge1 { Anchor: (Left: 44, Top: 32, Width: 184, Height: 18); Text: ""; Style: (TextColor: #38d9ff, FontSize: 12); }
-                    }
-                    Group #Turn2 {
-                        Anchor: (Height: 64);
-                        AssetImage #TurnBg2 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_turn_ally.png"; }
-                        AssetImage #TurnIcon2 { Anchor: (Left: 10, Top: 18, Width: 28, Height: 28); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                        Label #TurnName2 { Anchor: (Left: 44, Top: 10, Width: 184, Height: 20); Text: "---"; Style: (TextColor: #ffffff, FontSize: 15, RenderBold: true); }
-                        Label #TurnGauge2 { Anchor: (Left: 44, Top: 32, Width: 184, Height: 18); Text: ""; Style: (TextColor: #38d9ff, FontSize: 12); }
-                    }
-                    Group #Turn3 {
-                        Anchor: (Height: 64);
-                        AssetImage #TurnBg3 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_turn_ally.png"; }
-                        AssetImage #TurnIcon3 { Anchor: (Left: 10, Top: 18, Width: 28, Height: 28); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                        Label #TurnName3 { Anchor: (Left: 44, Top: 10, Width: 184, Height: 20); Text: "---"; Style: (TextColor: #ffffff, FontSize: 15, RenderBold: true); }
-                        Label #TurnGauge3 { Anchor: (Left: 44, Top: 32, Width: 184, Height: 18); Text: ""; Style: (TextColor: #38d9ff, FontSize: 12); }
-                    }
-                    Group #Turn4 {
-                        Anchor: (Height: 64);
-                        AssetImage #TurnBg4 { Anchor: (Full: 0); AssetPath: "UI/Custom/Common/Cyber/battle/panel_turn_ally.png"; }
-                        AssetImage #TurnIcon4 { Anchor: (Left: 10, Top: 18, Width: 28, Height: 28); AssetPath: "UI/Textures/Icons/Type/Unknown.png"; }
-                        Label #TurnName4 { Anchor: (Left: 44, Top: 10, Width: 184, Height: 20); Text: "---"; Style: (TextColor: #ffffff, FontSize: 15, RenderBold: true); }
-                        Label #TurnGauge4 { Anchor: (Left: 44, Top: 32, Width: 184, Height: 18); Text: ""; Style: (TextColor: #38d9ff, FontSize: 12); }
-                    }
-                }
+                {{LOGPANEL}}
 
                 Group #CmdPanel {
                     LayoutMode: Top;
@@ -167,9 +125,10 @@ public class DigiBatallaComandosUI extends CustomUIPage {
                             Group {
                                 Anchor: (Width: 110, Height: 110);
                                 AssetImage #CmdCentralBg { Anchor: (Left: 0, Top: 0, Width: 110, Height: 110); AssetPath: "UI/Custom/Common/Cyber/battle/boton_central.png"; }
+                                Label #CmdCentralLabel { Anchor: (Full: 0); Text: "ATACAR"; Style: (TextColor: #d7ecff, FontSize: 20, HorizontalAlignment: Center, VerticalAlignment: Center, RenderBold: true); }
                                 TextButton #CmdCentral {
                                     Anchor: (Left: 0, Top: 0, Width: 110, Height: 110);
-                                    Text: "ATACAR";
+                                    Text: "";
                                     Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 20, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true)));
                                 }
                             }
@@ -181,13 +140,15 @@ public class DigiBatallaComandosUI extends CustomUIPage {
                             Group {
                                 Anchor: (Width: 150, Height: 78);
                                 AssetImage { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); AssetPath: "UI/Custom/Common/Cyber/battle/boton_battle.png"; }
-                                TextButton #CmdRoot0 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: "HABILIDAD"; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
+                                Label #CmdRoot0Label { Anchor: (Full: 0); Text: "HABILIDAD"; Style: (TextColor: #d7ecff, FontSize: 16, HorizontalAlignment: Center, VerticalAlignment: Center, RenderBold: true); }
+                                TextButton #CmdRoot0 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: ""; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
                             }
                             Group { Anchor: (Width: 8); }
                             Group {
                                 Anchor: (Width: 150, Height: 78);
                                 AssetImage { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); AssetPath: "UI/Custom/Common/Cyber/battle/boton_battle.png"; }
-                                TextButton #CmdRoot1 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: "APOYO"; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
+                                Label #CmdRoot1Label { Anchor: (Full: 0); Text: "APOYO"; Style: (TextColor: #d7ecff, FontSize: 16, HorizontalAlignment: Center, VerticalAlignment: Center, RenderBold: true); }
+                                TextButton #CmdRoot1 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: ""; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
                             }
                         }
                         Group { Anchor: (Height: 6); }
@@ -197,13 +158,15 @@ public class DigiBatallaComandosUI extends CustomUIPage {
                             Group {
                                 Anchor: (Width: 150, Height: 78);
                                 AssetImage { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); AssetPath: "UI/Custom/Common/Cyber/battle/boton_battle.png"; }
-                                TextButton #CmdRoot2 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: "CAMBIAR"; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
+                                Label #CmdRoot2Label { Anchor: (Full: 0); Text: "CAMBIAR"; Style: (TextColor: #d7ecff, FontSize: 16, HorizontalAlignment: Center, VerticalAlignment: Center, RenderBold: true); }
+                                TextButton #CmdRoot2 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: ""; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
                             }
                             Group { Anchor: (Width: 8); }
                             Group {
                                 Anchor: (Width: 150, Height: 78);
                                 AssetImage { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); AssetPath: "UI/Custom/Common/Cyber/battle/boton_battle.png"; }
-                                TextButton #CmdRoot3 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: "HUIR"; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
+                                Label #CmdRoot3Label { Anchor: (Full: 0); Text: "HUIR"; Style: (TextColor: #d7ecff, FontSize: 16, HorizontalAlignment: Center, VerticalAlignment: Center, RenderBold: true); }
+                                TextButton #CmdRoot3 { Anchor: (Left: 0, Top: 0, Width: 150, Height: 78); Text: ""; Style: (Default: (Background: (Color: #00000001), LabelStyle: (FontSize: 16, TextColor: #d7ecff, HorizontalAlignment: Center, RenderBold: true)), Hovered: (Background: (Color: #38d9ff22), LabelStyle: (FontSize: 16, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true)), Pressed: (Background: (Color: #ffc85733), LabelStyle: (FontSize: 16, TextColor: #ffc857, HorizontalAlignment: Center, RenderBold: true))); }
                             }
                         }
                     }
@@ -236,13 +199,15 @@ public class DigiBatallaComandosUI extends CustomUIPage {
                         Group { Anchor: (Width: 8); }
                         TextButton #CmdCerrar { Text: "CERRAR"; Anchor: (Width: 172, Height: 34); Style: (Default: (Background: (Color: #3d1a1a), LabelStyle: (FontSize: 14, TextColor: #ff9fb0, HorizontalAlignment: Center)), Hovered: (Background: (Color: #5d2a2a), LabelStyle: (FontSize: 14, TextColor: #ffffff, HorizontalAlignment: Center)), Pressed: (Background: (Color: #7a3a3a), LabelStyle: (FontSize: 14, TextColor: #ffc857, HorizontalAlignment: Center))); }
                     }
-                    Group { Anchor: (Height: 4); }
-                    Label #CmdLog { Text: ""; Style: (TextColor: #d7ecff, FontSize: 11, Wrap: true); Anchor: (Height: 40); }
-                    Group { Anchor: (Height: 4); }
-                    Label #CmdHint { Text: "Haz clic en una opcion"; Style: (TextColor: #6f8ca4, FontSize: 11, HorizontalAlignment: Center); Anchor: (Height: 16); }
+                    Group { Anchor: (Height: 8); }
+                    Label #CmdHint { Text: "Haz clic en una opcion"; Style: (TextColor: #6f8ca4, FontSize: 11, HorizontalAlignment: Center, Wrap: true); Anchor: (Height: 30); }
                 }
             }
-            """);
+            """;
+        markup = markup.replace("{{CARDS}}", cardsMarkup())
+            .replace("{{TURNPANEL}}", turnPanelMarkup())
+            .replace("{{LOGPANEL}}", logPanelMarkup());
+        cmd.appendInline(null, markup);
 
         event.addEventBinding(CustomUIEventBindingType.Activating, "#CmdCentral",
             EventData.of("action", "elegir").append("value", "0"), false);
@@ -260,6 +225,98 @@ public class DigiBatallaComandosUI extends CustomUIPage {
             EventData.of("action", "cerrar"), false);
 
         refrescar(cmd);
+        abierta = true;
+        iniciarAnimacion();
+        LOGGER.log(Level.INFO, "UI combate construida (" + playerRef.getUsername() + ")");
+    }
+
+    private static String logPanelMarkup() {
+        StringBuilder b = new StringBuilder();
+        b.append("Group #LogPanel {\n");
+        b.append("    LayoutMode: Top;\n");
+        b.append("    Anchor: (Right: 12, Bottom: 12, Width: 460, Height: 250);\n");
+        b.append("    Background: (Color: #04070d);\n");
+        b.append("    Padding: (Full: 10);\n");
+        b.append("    Group {\n");
+        b.append("        LayoutMode: Left;\n");
+        b.append("        Anchor: (Height: 24);\n");
+        b.append("        Label { Text: \"REGISTRO DE COMBATE\"; Style: (TextColor: #ffc857, FontSize: 15, RenderBold: true, LetterSpacing: 1); Anchor: (Width: 270); }\n");
+        b.append("        Label #LogTurno { Text: \"\"; Style: (TextColor: #38d9ff, FontSize: 11, HorizontalAlignment: End); Anchor: (Width: 160); }\n");
+        b.append("    }\n");
+        b.append("    Group { Anchor: (Height: 2); Background: (Color: #ffc857); }\n");
+        b.append("    Group { Anchor: (Height: 6); }\n");
+        b.append("    Label #PLog { Text: \"\"; Style: (TextColor: #d7ecff, FontSize: 11); Anchor: (Height: 190); }\n");
+        b.append("}\n");
+        return b.toString();
+    }
+
+    private static String cardsMarkup() {
+        StringBuilder b = new StringBuilder();
+        String[] cols = {"#38d9ff", "#ff4fa3", "#ffc857"};
+        int[] left = {410, 630, 850};
+        for (int i = 0; i < 3; i++) {
+            b.append("Group #PCard").append(i).append(" {\n");
+            b.append("    Anchor: (Left: ").append(left[i]).append(", Bottom: 12, Width: 210, Height: 125);\n");
+            b.append("    AssetImage #PCardBg").append(i).append(" { Anchor: (Full: 0); AssetPath: \"UI/Custom/Common/Cyber/battle/panel_digimon.png\"; }\n");
+            b.append("    AssetImage #PCardImg").append(i).append(" { Anchor: (Left: 14, Top: 17, Width: 40, Height: 40); AssetPath: \"UI/Custom/png_Digis/Botamon.png\"; }\n");
+            b.append("    Label #PName").append(i).append(" { Anchor: (Left: 62, Top: 28, Width: 140, Height: 18); Text: \"---\"; Style: (TextColor: ").append(cols[i]).append(", FontSize: 15, RenderBold: true, VerticalAlignment: Center); }\n");
+            b.append("    Label { Text: \"HP\"; Anchor: (Left: 14, Top: 68, Width: 22, Height: 14); Style: (TextColor: #5dffb0, FontSize: 10, VerticalAlignment: Center); }\n");
+            b.append("    Label #PHp").append(i).append(" { Anchor: (Left: 124, Top: 66, Width: 70, Height: 14); Text: \"--\"; Style: (TextColor: #d7ecff, FontSize: 10, HorizontalAlignment: End, VerticalAlignment: Center); }\n");
+            b.append(bar("PHpSeg" + i, 40, 69, 80, 7, "green"));
+            b.append("    Label { Text: \"OP\"; Anchor: (Left: 14, Top: 92, Width: 22, Height: 14); Style: (TextColor: #38d9ff, FontSize: 10, VerticalAlignment: Center); }\n");
+            b.append("    Label #POp").append(i).append(" { Anchor: (Left: 124, Top: 90, Width: 70, Height: 14); Text: \"--\"; Style: (TextColor: #d7ecff, FontSize: 10, HorizontalAlignment: End, VerticalAlignment: Center); }\n");
+            b.append(bar("POpSeg" + i, 40, 93, 80, 7, "cyan"));
+            b.append("}\n");
+        }
+        return b.toString();
+    }
+
+    private static String turnPanelMarkup() {
+        StringBuilder b = new StringBuilder();
+        b.append("Group #TurnPanel {\n");
+        b.append("    LayoutMode: Top;\n");
+        b.append("    Anchor: (Top: 12, Right: 12, Width: 260, Height: 380);\n");
+        b.append("    Background: (Color: #04070d);\n");
+        b.append("    Padding: (Full: 10);\n");
+        b.append("    Label { Text: \"LINEA DE TURNOS\"; Style: (TextColor: #ffc857, FontSize: 16, RenderBold: true, LetterSpacing: 1); Anchor: (Height: 22); }\n");
+        b.append("    Group { Anchor: (Height: 2); Background: (Color: #ffc857); }\n");
+        b.append("    Group { Anchor: (Height: 4); }\n");
+        for (int i = 0; i < 5; i++) {
+            b.append("    Group #Turn").append(i).append(" {\n");
+            b.append("        Anchor: (Height: 64);\n");
+            b.append("        AssetImage #TurnBg").append(i).append(" { Anchor: (Full: 0); AssetPath: \"UI/Custom/Common/Cyber/battle/panel_turn_ally.png\"; }\n");
+            b.append("        AssetImage #TurnIcon").append(i).append(" { Anchor: (Left: 10, Top: 18, Width: 28, Height: 28); AssetPath: \"UI/Custom/png_Digis/Botamon.png\"; }\n");
+            b.append("        Label #TurnName").append(i).append(" { Anchor: (Left: 64, Top: 8, Width: 160, Height: 20); Text: \"---\"; Style: (TextColor: #ffffff, FontSize: 15, RenderBold: true, VerticalAlignment: Center); }\n");
+            b.append("        Label #TurnState").append(i).append(" { Anchor: (Left: 64, Top: 30, Width: 120, Height: 14); Text: \"\"; Style: (TextColor: #38d9ff, FontSize: 10, VerticalAlignment: Center); }\n");
+            b.append(bar("TurnSeg" + i, 64, 46, 120, 6, "cyan"));
+            b.append("    }\n");
+        }
+        b.append("}\n");
+        return b.toString();
+    }
+
+    private static String bar(String prefix, int x, int y, int w, int h, String color) {
+        StringBuilder b = new StringBuilder();
+        b.append("    Group {\n");
+        b.append("        Anchor: (Left: ").append(x).append(", Top: ").append(y)
+            .append(", Width: ").append(w).append(", Height: ").append(h).append(");\n");
+        b.append("        AssetImage { Anchor: (Full: 0); AssetPath: \"UI/Custom/Common/Cyber/bar_bg.png\"; }\n");
+        int sw = w / 10;
+        for (int j = 0; j < 10; j++) {
+            b.append("        AssetImage #").append(prefix).append(j)
+                .append(" { Anchor: (Left: ").append(j * sw).append(", Top: 0, Width: ").append(sw)
+                .append(", Height: ").append(h).append("); AssetPath: \"UI/Custom/Common/Cyber/bar_")
+                .append(color).append(".png\"; }\n");
+        }
+        b.append("    }\n");
+        return b.toString();
+    }
+
+    private static void segments(UICommandBuilder cmd, String prefix, int value, int max) {
+        for (int j = 0; j < 10; j++) {
+            boolean on = max > 0 && (long) value * 10 > (long) j * max;
+            cmd.set("#" + prefix + j + ".Visible", on);
+        }
     }
 
     @Override
@@ -309,37 +366,50 @@ public class DigiBatallaComandosUI extends CustomUIPage {
         EstadoCombate c = d != null ? d.combate : null;
         if (d == null || c == null) return;
 
-        cmd.set("#CmdTitulo.Text", MenuBatalla.titulo(d));
+        String tituloCmd = MenuBatalla.titulo(d);
+        if (c.esperandoJugador && c.actorActual != null && c.actorActual.aliado()) {
+            tituloCmd += " · " + c.nombreDe(c.actorActual);
+        }
+        cmd.set("#CmdTitulo.Text", tituloCmd);
         cmd.set("#CmdFase.Text", c.fase == EstadoCombate.Fase.FIN_COMBATE
             ? (c.victoria ? "VICTORIA" : "DERROTA")
-            : "RONDA " + c.ronda);
-        cmd.set("#CmdEnemigo.Text", "ENEMIGO // " + c.enemigoNombre
-            + "  " + c.enemigoHp + "/" + c.enemigoMaxHp
-            + "  " + EstadoCombate.barraHp(c.enemigoHp, Math.max(1, c.enemigoMaxHp)));
+            : "TURNO " + c.ronda + " · CP " + c.cp);
+
+        Enemigo obj = c.objetivoActual();
+        int vivos = 0;
+        for (Enemigo e : c.enemigos) if (e != null && e.vivo()) vivos++;
+        String enemTxt = obj != null
+            ? "OBJ " + obj.nombre + " [" + obj.elemento + "/" + TablaTipos.textoAtributo(obj.atributo) + "] "
+              + obj.hp + "/" + obj.maxHp
+              + "  ·  vivos " + vivos + "/" + c.enemigos.size()
+              + (obj.cargando ? "  ⚠" : "")
+            : "SIN ENEMIGOS";
+        cmd.set("#CmdEnemigo.Text", enemTxt);
 
         java.util.List<DatoDigimon> party =
             (c.party != null && !c.party.isEmpty()) ? c.party : d.equipoCombate();
-        int[] hps = {c.hpCombateA, c.hpCombateB, c.hpCombateC};
-        int[] ops = {c.opA, c.opB, c.opC};
-        int[] gauges = {c.gaugeA, c.gaugeB, c.gaugeC};
 
         for (int i = 0; i < 3; i++) {
             DatoDigimon digi = i < party.size() ? party.get(i) : null;
-            boolean vivo = digi != null && hps[i] > 0;
+            Actor actor = Actor.aliado(i);
+            int hp = c.hpDe(actor);
+            boolean vivo = digi != null && hp > 0;
+            String estados = EstadoCombate.estadosToString(c.estadosDeAliado(i));
+            String guardia = c.guardiaDe(i) ? " 🛡" : "";
+            boolean actuando = c.esperandoJugador && c.actorActual != null
+                && c.actorActual.aliado() && c.actorActual.idx() == i;
+            String control = actuando ? " ▶TÚ" : " ·TÚ";
             cmd.set("#PName" + i + ".Text", digi != null
-                ? digi.nombre + (vivo ? "" : " [KO]") : "---");
+                ? digi.nombre + control + guardia + (estados.isEmpty() ? "" : " " + estados)
+                  + (vivo ? "" : " [KO]") : "---");
             cmd.set("#PHp" + i + ".Text", digi != null
-                ? "HP " + hps[i] + "/" + Math.max(1, digi.maxHp)
-                    + "  " + EstadoCombate.barraHp(hps[i], Math.max(1, digi.maxHp))
-                : "HP ---");
-            cmd.set("#POp" + i + ".Text", digi != null ? "OP " + ops[i] : "OP ---");
-            cmd.set("#PTurn" + i + ".Text", digi != null
-                ? "TURNO " + EstadoCombate.barraGauge(gauges[i]) : "TURNO ---");
-            String ruta = digi != null ? DigiImagenes.rutaPara(digi.especie) : null;
+                ? hp + "/" + Math.max(1, digi.maxHp) : "--");
+            cmd.set("#POp" + i + ".Text", digi != null ? String.valueOf(c.opDe(i)) : "--");
+            String ruta = digi != null ? DigiImagenes.iconoAtributo(digi.atributo) : null;
             cmd.set("#PCardImg" + i + ".Visible", ruta != null);
             if (ruta != null) cmd.set("#PCardImg" + i + ".AssetPath", ruta);
-            cmd.set("#PCardType" + i + ".AssetPath",
-                DigiImagenes.iconoAtributo(digi != null ? digi.atributo : "UNKNOWN"));
+            segments(cmd, "PHpSeg" + i, hp, Math.max(1, digi != null ? digi.maxHp : 1));
+            segments(cmd, "POpSeg" + i, c.opDe(i), EstadoCombate.OP_MAX);
         }
 
         List<String> items = MenuBatalla.listaItems(d);
@@ -347,11 +417,11 @@ public class DigiBatallaComandosUI extends CustomUIPage {
         cmd.set("#CmdRootGroup.Visible", raiz);
         cmd.set("#CmdListGroup.Visible", !raiz);
         if (raiz) {
-            cmd.set("#CmdCentral.Text", itemOr(items, 0, "ATACAR"));
-            cmd.set("#CmdRoot0.Text", itemOr(items, 1, ""));
-            cmd.set("#CmdRoot1.Text", itemOr(items, 2, ""));
-            cmd.set("#CmdRoot2.Text", itemOr(items, 3, ""));
-            cmd.set("#CmdRoot3.Text", itemOr(items, 4, ""));
+            cmd.set("#CmdCentralLabel.Text", itemOr(items, 0, "ATACAR"));
+            cmd.set("#CmdRoot0Label.Text", itemOr(items, 1, ""));
+            cmd.set("#CmdRoot1Label.Text", itemOr(items, 2, ""));
+            cmd.set("#CmdRoot2Label.Text", itemOr(items, 3, ""));
+            cmd.set("#CmdRoot3Label.Text", itemOr(items, 4, ""));
         } else {
             for (int i = 0; i < MAX_ITEMS; i++) {
                 boolean visible = i < items.size();
@@ -361,19 +431,22 @@ public class DigiBatallaComandosUI extends CustomUIPage {
         }
         cmd.set("#CmdVolver.Visible", d.menuNivel == 1);
 
+        // Línea de turnos real. El primero es quien actúa AHORA si te toca.
         List<Turno> turnos = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            DatoDigimon digi = i < party.size() ? party.get(i) : null;
-            if (digi != null && hps[i] > 0) {
-                turnos.add(new Turno(digi.nombre, gauges[i], true,
-                    DigiImagenes.iconoAtributo(digi.atributo)));
-            }
+        List<Actor> cola = SistemaBatalla.predecirTurnos(c, 5);
+        for (int k = 0; k < cola.size(); k++) {
+            Actor a = cola.get(k);
+            DatoDigimon digi = c.digimonDe(a);
+            String imagen = a.aliado()
+                ? (digi != null ? DigiImagenes.rutaPara(digi.especie) : null)
+                : retratoEnemigo(c, a.idx());
+            String estado;
+            if (a.aliado()) estado = "TÚ";
+            else estado = "ENEMIGO";
+            if (k == 0 && c.esperandoJugador && a.aliado()) estado = "AHORA";
+            turnos.add(new Turno(c.nombreDe(a), c.gaugeDe(a), a.aliado(), imagen, estado, a));
         }
-        if (c.enemigoVivo()) turnos.add(new Turno(c.enemigoNombre, c.gaugeEnemigo, false,
-                DigiImagenes.iconoAtributo(atributoEnemigo(c))));
-        if (c.refuerzoVivo()) turnos.add(new Turno(c.refuerzoNombre, c.gaugeRefuerzo, false,
-                DigiImagenes.iconoAtributo("UNKNOWN")));
-        turnos.sort((a, b) -> Integer.compare(b.gauge(), a.gauge()));
+
         for (int i = 0; i < 5; i++) {
             if (i < turnos.size()) {
                 Turno t = turnos.get(i);
@@ -381,43 +454,163 @@ public class DigiBatallaComandosUI extends CustomUIPage {
                 cmd.set("#TurnBg" + i + ".AssetPath", t.aliado()
                     ? "UI/Custom/Common/Cyber/battle/panel_turn_ally.png"
                     : "UI/Custom/Common/Cyber/battle/panel_turn_enemy.png");
-                cmd.set("#TurnIcon" + i + ".AssetPath", t.icono());
-                cmd.set("#TurnIcon" + i + ".Visible", true);
+                cmd.set("#TurnIcon" + i + ".Visible", t.imagen() != null);
+                if (t.imagen() != null) {
+                    cmd.set("#TurnIcon" + i + ".AssetPath", t.imagen());
+                }
                 cmd.set("#TurnName" + i + ".Text",
                     (i == 0 ? ">> " : "   ") + t.nombre());
-                cmd.set("#TurnGauge" + i + ".Text",
-                    (t.aliado() ? "ALIADO  " : "ENEMIGO  ")
-                        + EstadoCombate.barraGauge(t.gauge()));
+                cmd.set("#TurnState" + i + ".Text", t.estado());
+                String color = t.aliado() ? "cyan" : "magenta";
+                for (int j = 0; j < 10; j++) {
+                    cmd.set("#TurnSeg" + i + j + ".AssetPath",
+                        "UI/Custom/Common/Cyber/bar_" + color + ".png");
+                }
+                segments(cmd, "TurnSeg" + i, t.gauge(), EstadoCombate.GAUGE_MAX);
             } else {
                 cmd.set("#Turn" + i + ".Visible", false);
             }
         }
 
         cmd.set("#CmdCerrar.Visible", c.fase == EstadoCombate.Fase.FIN_COMBATE);
-        cmd.set("#CmdLog.Text", c.getLogFormateado());
-        cmd.set("#CmdHint.Text", c.fase == EstadoCombate.Fase.FIN_COMBATE
-            ? "Cierra para volver al mundo"
-            : "Haz clic en una opcion");
+        cmd.set("#LogTurno.Text", LogCombateUI.recortar(MenuBatalla.estadoTurno(c), 24));
+        cmd.set("#PLog.Text", LogCombateUI.texto(c.getLog(), 10, 84));
+        String pista;
+        if (c.fase == EstadoCombate.Fase.FIN_COMBATE) {
+            pista = "Cierra para volver al mundo";
+        } else if (!c.esperandoJugador) {
+            pista = c.actorActual != null
+                ? "Turno de " + c.nombreDe(c.actorActual) + " (ENEMIGO)..."
+                : "Resolviendo...";
+        } else if (d.menuNivel == 1 && "objetivoAtaque".equals(d.menuSub)) {
+            pista = "Elige objetivo para "
+                + (d.menuMovimiento != null ? d.menuMovimiento.nombre : "el ataque");
+        } else if (obj != null && obj.analizado) {
+            pista = TablaTipos.analisis(obj.elemento, obj.atributo);
+        } else {
+            pista = "TU TURNO · APOYO → ANALIZAR u OBJETIVO";
+        }
+        cmd.set("#CmdHint.Text", pista);
     }
 
     private static String itemOr(List<String> items, int i, String def) {
         return i >= 0 && i < items.size() ? items.get(i) : def;
     }
 
-    private static String atributoEnemigo(EstadoCombate c) {
+    private static String retratoEnemigo(EstadoCombate c, int idx) {
         try {
-            String n = c.enemigoNombre;
-            if (n == null) return "UNKNOWN";
-            String base = n.replace(" Salvaje", "").replace(" Salvaje", "").trim();
-            return DatoDigimon.crearInicial(base).atributo;
-        } catch (Exception e) {
-            return "UNKNOWN";
+            Enemigo e = c.enemigo(idx);
+            if (e == null || e.nombre == null) return null;
+            String base = e.nombre.replace(" Salvaje", "").trim();
+            return DigiImagenes.rutaPara(base);
+        } catch (Exception ex) {
+            return null;
         }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // ANIMACIÓN DE LA LÍNEA DE TURNOS
+    // ══════════════════════════════════════════════════════════════════
+
+    private void iniciarAnimacion() {
+        cancelarAnimacion();
+        animTask = ANIM.scheduleAtFixedRate(() -> {
+            try {
+                if (!abierta) {
+                    cancelarAnimacion();
+                    return;
+                }
+                Ref<EntityStore> ref = playerRef.getReference();
+                if (ref == null || !ref.isValid()) {
+                    cancelarAnimacion();
+                    return;
+                }
+                Store<EntityStore> store = ref.getStore();
+                World world = store.getExternalData().getWorld();
+                if (world == null) {
+                    cancelarAnimacion();
+                    return;
+                }
+                world.execute(this::tickAnimacion);
+            } catch (Exception ignored) {
+            }
+        }, 200L, 200L, TimeUnit.MILLISECONDS);
+    }
+
+    private void cancelarAnimacion() {
+        if (animTask != null) {
+            animTask.cancel(false);
+            animTask = null;
+        }
+    }
+
+    /** Un fotograma de la animación (8 fps, en el hilo del mundo). */
+    private void tickAnimacion() {
+        if (!abierta) {
+            cancelarAnimacion();
+            return;
+        }
+        AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
+        EstadoCombate c = d != null ? d.combate : null;
+        if (d == null || !d.menuAbierto || c == null) {
+            cancelarAnimacion();
+            return;
+        }
+
+        UICommandBuilder cmd = new UICommandBuilder();
+        boolean fin = c.fase == EstadoCombate.Fase.FIN_COMBATE;
+        boolean esperando = c.esperandoJugador && c.actorActual != null && c.actorActual.aliado();
+        boolean cine = c.cinematicaActiva;
+
+        // Durante la cinemática no se refresca el estado: se avisa y al terminar
+        // se pinta todo de golpe (así los números cambian cuando acaba el golpe).
+        if (cine) {
+            String actor = c.actorActual != null ? c.nombreDe(c.actorActual) : "";
+            cmd.set("#CmdTitulo.Text", "ANIMANDO COMBATE");
+            cmd.set("#CmdHint.Text", "Animación de " + actor + "...");
+            cmd.set("#LogTurno.Text", "ANIMANDO · " + actor);
+            // Los botones no se pueden pulsar mientras dura la animación:
+            // se ocultan para que no parezca que la UI está colgada.
+            cmd.set("#CmdRootGroup.Visible", false);
+            cmd.set("#CmdListGroup.Visible", false);
+            cmd.set("#CmdVolver.Visible", false);
+            // La fila 0 refleja al que está actuando AHORA (no al siguiente).
+            if (c.actorActual != null) {
+                cmd.set("#TurnName0.Text", ">> " + actor);
+                cmd.set("#TurnState0.Text", "AHORA");
+            }
+        } else {
+            int actorClave = c.actorActual == null ? -1
+                : (c.actorActual.aliado() ? 1 + c.actorActual.idx() : 10 + c.actorActual.idx());
+            boolean cambioTurno = esperando != esperaAnterior || actorClave != actorAnterior;
+            if (cineAnterior || cambioTurno || (fin && !finMostrado)) {
+                refrescar(cmd);
+                esperaAnterior = esperando;
+                actorAnterior = actorClave;
+                Ref<EntityStore> ref = playerRef.getReference();
+                if (ref != null && ref.isValid() && fin && !finMostrado) {
+                    finMostrado = true;
+                    MenuBatalla.notificarFin(playerRef, ref, ref.getStore());
+                }
+            }
+        }
+        cineAnterior = cine;
+
+        // Los botones solo se pueden pulsar cuando es tu turno y no hay cine.
+        boolean puedePulsar = esperando && !cine;
+        cmd.set("#CmdRootGroup.Visible", d.menuNivel == 0 && puedePulsar);
+        cmd.set("#CmdListGroup.Visible", d.menuNivel == 1 && puedePulsar);
+        cmd.set("#CmdVolver.Visible", d.menuNivel == 1 && puedePulsar);
+
+        sendUpdate(cmd);
+        if (fin && !cine) cancelarAnimacion();
     }
 
     @Override
     public void onDismiss(@Nonnull Ref<EntityStore> ref,
                           @Nonnull Store<EntityStore> store) {
+        abierta = false;
+        cancelarAnimacion();
         AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
         if (d != null && d.menuAbierto) {
             MenuBatalla.cerrar(playerRef, ref, store);

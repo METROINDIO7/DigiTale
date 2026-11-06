@@ -69,9 +69,14 @@ public class AlmacenJugadores {
 
         // ── Refs de combate (NPCs spawneados para la formación, máx 3) ──
         public final Ref<?>[] refsBatalla = new Ref<?>[3];
+        /** Especie que representa cada NPC de la formación (para el Cambio). */
+        public final String[] refsBatallaEspecie = new String[3];
 
         public void limpiarBatalla() {
-            for (int i = 0; i < refsBatalla.length; i++) refsBatalla[i] = null;
+            for (int i = 0; i < refsBatalla.length; i++) {
+                refsBatalla[i] = null;
+                refsBatallaEspecie[i] = null;
+            }
         }
         
         // Información de spawn guardada para rastreo
@@ -167,6 +172,10 @@ public class AlmacenJugadores {
         public int menuIdx = 0;
         /** Submenú abierto: "combate", "equipo", "tactica", "inventario" o "". */
         public String menuSub = "";
+        /** Movimiento elegido a la espera de elegir objetivo (RAM). */
+        public DatoDigimon.Movimiento menuMovimiento = null;
+        /** Submenú desde el que se abrió la lista de objetivos. */
+        public String menuSubAnterior = "";
         /** Para flancos: último salto visto, última dirección y último movimiento. */
         public boolean menuLastJump = false;
         public String menuLastDir = "";
@@ -176,6 +185,8 @@ public class AlmacenJugadores {
         public com.digitale.datos.EstadoCombate combate = null;
         /** Cámara de combate activa (RAM; no persiste). */
         public boolean camaraCombate = false;
+        /** NPC invisible usado como ancla de camara en combate. */
+        public Ref<?> refCamara;
 
         public boolean enCombateUI() {
             return combate != null && combate.activa;

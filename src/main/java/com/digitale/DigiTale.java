@@ -94,7 +94,7 @@ public class DigiTale extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new DigiStatusComando("digi_status", "Ver estado del equipo (comando rapido)"));
         this.getCommandRegistry().registerCommand(new DigiMountModeComando("digi_mountmode", "Control de montura: default/auto/fly/swim"));
         this.getCommandRegistry().registerCommand(new DigiGridTestComando("digi_gridtest", "TEST: ItemGrid con arrastre"));
-        this.getCommandRegistry().registerCommand(new DigiCamComando("digi_cam", "TEST: camara fija [dist] [lock] [cursor]"));
+        this.getCommandRegistry().registerCommand(new DigiCamComando("digi_cam", "Camara de combate [dist] [lock] [cursor] [altura]"));
 
         // ===== Comando de reinicio =====
         this.getCommandRegistry().registerCommand(new DigiResetComando("digi_reset", "Reinicia tu equipo borrando todos los digimons"));

@@ -26,26 +26,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Puesta en escena del combate por turnos:
+ * Puesta en escena del combate por turnos.
  *
  * <ul>
- *   <li>Congela el movimiento del jugador mientras dura la batalla (ajusta
- *       {@link MovementSettings} a cero y lo restaura al salir).</li>
- *   <li>Orienta al jugador hacia el enemigo y coloca la party/enemigo en
- *       formaci&oacute;n (delegando el spawn/teleport a {@link SistemaPaseo}).</li>
- *   <li>Mantiene la formaci&oacute;n fija con un peque&ntilde;o lockperi&oacute;dico
- *       para que la IA de los compa&ntilde;eros no se los lleve de paseo.</li>
+ *   <li>Congela el movimiento del jugador mientras dura la batalla.</li>
+ *   <li>Orienta al jugador hacia el enemigo y coloca party/enemigo en
+ *       formación (spawn/teleport delegado a {@link SistemaPaseo}).</li>
+ *   <li>Materializa las oleadas: cuando el motor pide un enemigo nuevo, aquí se
+ *       bombea el NPC de esa especie y se retira el anterior.</li>
+ *   <li>Mantiene la formación fija con un lock periódico y re-encuadra la
+ *       cámara cuando algo cambia.</li>
  * </ul>
- *
- * Todo se ejecuta en el WorldThread (el lock se encola con {@code world.execute}).
  */
 public final class EscenarioBatalla {
 
     private static final Logger LOGGER = Logger.getLogger(EscenarioBatalla.class.getName());
 
-    /** Cada cu&aacute;nto se re-aplica la formaci&oacute;n (ms). */
+    /** Cada cuánto se re-aplica la formación (ms). */
     private static final long LOCK_MS = 250L;
-    private static final float ENEMIGO_YAW = (float) Math.PI;
+    private static final float MIRANDO_ENEMIGO = (float) Math.PI;
+    private static final float ENEMIGO_YAW = 0f;
 
     private static final ScheduledExecutorService SCHED =
         Executors.newSingleThreadScheduledExecutor(r -> {
@@ -68,7 +68,9 @@ public final class EscenarioBatalla {
         try {
             congelarJugador(playerRef, ref, store);
             colocarFormacion(playerRef, ref, store);
+            // Primer encuadre forzado; después se refresca solo si cambia.
             CamaraCombate.entrar(playerRef);
+            AnimacionesCombate.iniciar(playerRef, ref, store);
             iniciarLock(playerRef, ref, store);
             LOGGER.log(Level.INFO, "EscenarioBatalla iniciado para " + playerRef.getUsername());
         } catch (Exception e) {
@@ -80,10 +82,15 @@ public final class EscenarioBatalla {
                                @Nonnull Ref<EntityStore> ref,
                                @Nonnull Store<EntityStore> store) {
         try {
-            ScheduledFuture<?> f = LOCKS.remove(playerRef.getUuid());
+            UUID uuid = playerRef.getUuid();
+            ScheduledFuture<?> f = LOCKS.remove(uuid);
             if (f != null) f.cancel(false);
-            liberarJugador(playerRef, ref, store);
+            boolean estabaActivo = f != null || ORIGINAL.containsKey(uuid);
+            AnimacionesCombate.detener(playerRef);
+            SistemaPaseo.descongelarBatalla(playerRef, store);
             CamaraCombate.salir(playerRef);
+            if (!estabaActivo) return; // ya estaba detenido: no repetir
+            liberarJugador(playerRef, ref, store);
             LOGGER.log(Level.INFO, "EscenarioBatalla detenido para " + playerRef.getUsername());
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "EscenarioBatalla detener: " + e.getMessage());
@@ -93,8 +100,8 @@ public final class EscenarioBatalla {
     // ── Formación ──────────────────────────────────────────────────────────
 
     /**
-     * Fija al jugador mirando al +Z y recoloca party/enemigo con
-     * {@link SistemaPaseo#prepararBatalla}. Se puede llamar en cada turno.
+     * Fija al jugador mirando al enemigo, coloca party/enemigo y re-encuadra
+     * la cámara. Se puede llamar en cada turno (y desde el lock periódico).
      */
     public static void colocarFormacion(@Nonnull PlayerRef playerRef,
                                         @Nonnull Ref<EntityStore> ref,
@@ -102,34 +109,98 @@ public final class EscenarioBatalla {
         try {
             AlmacenJugadores.DatosJugador d = AlmacenJugadores.getDatos(playerRef.getUuid());
             if (d == null || d.combate == null || !d.combate.activa) return;
+            // Durante la animación no re-colocamos nada: la escena está congelada
+            // y así el hilo del mundo queda libre para la UI.
+            if (d.combate.cinematicaActiva) return;
 
-            TransformComponent jugador = store.getComponent(ref, TransformComponent.getComponentType());
+            TransformComponent jugador = store.getComponent(ref,
+                TransformComponent.getComponentType());
             if (jugador == null) return;
 
             // El jugador queda mirando al +Z (el enemigo se coloca delante).
-            jugador.teleportRotation(new Rotation3f(0f, 0f, 0f));
+            jugador.teleportRotation(new Rotation3f(0f, MIRANDO_ENEMIGO, 0f));
 
-            // Spawn/teleport de la party y del salvaje delante del jugador.
+            // prepararBatalla coloca la party y spawnear/coloca el grupo enemigo.
             SistemaPaseo.prepararBatalla(playerRef, ref, store);
 
-            Rotation3f mirandoEnemigo = new Rotation3f(0f, 0f, 0f);
+            EstadoCombate c = d.combate;
+            Vector3d centroEnemigos = centroDe(store, c.enemigos);
+            Vector3d centroParty = centroDeParty(store, d);
+
+            // Cada uno mira al centro del grupo rival (no todos al mismo yaw fijo).
+            Rotation3f mirandoEnemigo = new Rotation3f(0f, MIRANDO_ENEMIGO, 0f);
             for (Ref<?> r : d.refsBatalla) {
-                if (r != null && r.isValid()) {
-                    TransformComponent t = store.getComponent(
-                        (Ref<EntityStore>) r, TransformComponent.getComponentType());
-                    if (t != null) t.teleportRotation(mirandoEnemigo);
-                }
+                if (r == null || !r.isValid()) continue;
+                if (centroEnemigos != null && mirarA(store, r, centroEnemigos)) continue;
+                @SuppressWarnings("unchecked")
+                TransformComponent t = store.getComponent((Ref<EntityStore>) r,
+                    TransformComponent.getComponentType());
+                if (t != null) t.teleportRotation(mirandoEnemigo);
             }
 
-            EstadoCombate c = d.combate;
-            if (c.objetivo != null && c.objetivo.isValid()) {
-                TransformComponent t = store.getComponent(
-                    (Ref<EntityStore>) c.objetivo, TransformComponent.getComponentType());
+            for (EstadoCombate.Enemigo e : c.enemigos) {
+                if (e == null || e.ref == null || !e.ref.isValid()) continue;
+                if (centroParty != null && mirarA(store, e.ref, centroParty)) continue;
+                @SuppressWarnings("unchecked")
+                TransformComponent t = store.getComponent((Ref<EntityStore>) e.ref,
+                    TransformComponent.getComponentType());
                 if (t != null) t.teleportRotation(new Rotation3f(0f, ENEMIGO_YAW, 0f));
             }
+
+            // Durante un plano de ataque la cámara la manda la cinemática.
+            if (!c.cinematicaActiva) CamaraCombate.actualizar(playerRef);
         } catch (Exception e) {
             LOGGER.log(Level.FINE, "EscenarioBatalla colocarFormacion: " + e.getMessage());
         }
+    }
+
+    private static Vector3d centroDe(Store<EntityStore> store,
+                                     java.util.List<EstadoCombate.Enemigo> enemigos) {
+        double x = 0, y = 0, z = 0;
+        int n = 0;
+        for (EstadoCombate.Enemigo e : enemigos) {
+            if (e == null || e.ref == null || !e.ref.isValid()) continue;
+            @SuppressWarnings("unchecked")
+            TransformComponent t = store.getComponent((Ref<EntityStore>) e.ref,
+                TransformComponent.getComponentType());
+            if (t == null) continue;
+            Vector3d p = t.getPosition();
+            x += p.x; y += p.y; z += p.z; n++;
+        }
+        return n > 0 ? new Vector3d(x / n, y / n, z / n) : null;
+    }
+
+    private static Vector3d centroDeParty(Store<EntityStore> store, AlmacenJugadores.DatosJugador d) {
+        double x = 0, y = 0, z = 0;
+        int n = 0;
+        if (d.refsBatalla != null) {
+            for (Ref<?> r : d.refsBatalla) {
+                if (r == null || !r.isValid()) continue;
+                @SuppressWarnings("unchecked")
+                TransformComponent t = store.getComponent((Ref<EntityStore>) r,
+                    TransformComponent.getComponentType());
+                if (t == null) continue;
+                Vector3d p = t.getPosition();
+                x += p.x; y += p.y; z += p.z; n++;
+            }
+        }
+        return n > 0 ? new Vector3d(x / n, y / n, z / n) : null;
+    }
+
+    /** Gira el NPC para mirar a un punto (solo yaw, sin inclinarlo). */
+    private static boolean mirarA(Store<EntityStore> store, Ref<?> ref, Vector3d objetivo) {
+        if (ref == null || !ref.isValid() || objetivo == null) return false;
+        @SuppressWarnings("unchecked")
+        TransformComponent t = store.getComponent((Ref<EntityStore>) ref,
+            TransformComponent.getComponentType());
+        if (t == null) return false;
+        Vector3d p = t.getPosition();
+        Vector3d dir = new Vector3d(objetivo.x - p.x, 0, objetivo.z - p.z);
+        if (dir.lengthSquared() < 1.0e-4) return false;
+        Rotation3f look = Rotation3f.lookAt(dir);
+        if (look == null) return false;
+        t.setRotation(new Rotation3f(0f, look.yaw(), 0f));
+        return true;
     }
 
     // ── Lock periódico ─────────────────────────────────────────────────────
@@ -158,9 +229,20 @@ public final class EscenarioBatalla {
                             detener(playerRef, ref, store);
                             return;
                         }
-                        // Si el combate ya termino, mantenemos la escena congelada
-                        // hasta que el jugador cierre el menu con Q.
-                        if (!d.combate.activa) return;
+                        // Si el combate ya terminó, mantenemos la escena congelada
+                        // hasta que el jugador cierre el menú, pero retiramos a
+                        // los salvajes derrotados.
+                        if (!d.combate.activa) {
+                            SistemaPaseo.prepararBatalla(playerRef, ref, store);
+                            CamaraCombate.actualizar(playerRef);
+                            return;
+                        }
+                        // Fallback: si la presentación no está viva, el lock
+                        // avanza el combate para que nunca se quede colgado.
+                        if (!AnimacionesCombate.activa(uuid)) {
+                            SistemaBatalla.procesarTurnos(d.combate);
+                            return;
+                        }
                         colocarFormacion(playerRef, ref, store);
                     } catch (Exception ignored) {
                     }
@@ -185,7 +267,6 @@ public final class EscenarioBatalla {
             if (s == null) return;
             ORIGINAL.putIfAbsent(playerRef.getUuid(), snapshot(s));
 
-            // Sin traslacion ni salto; los comandos van por botones (Page).
             s.baseSpeed = 0f;
             s.jumpForce = 0f;
             s.swimJumpForce = 0f;
@@ -213,10 +294,10 @@ public final class EscenarioBatalla {
         }
     }
 
-    /** Restaura la velocidad/salto que ten&iacute;a el jugador antes del combate. */
+    /** Restaura la velocidad/salto que tenía el jugador antes del combate. */
     public static void liberarJugador(@Nonnull PlayerRef playerRef,
-                                       @Nonnull Ref<EntityStore> ref,
-                                       @Nonnull Store<EntityStore> store) {
+                                      @Nonnull Ref<EntityStore> ref,
+                                      @Nonnull Store<EntityStore> store) {
         try {
             MovementSettings original = ORIGINAL.remove(playerRef.getUuid());
             if (original == null) return;
@@ -231,10 +312,11 @@ public final class EscenarioBatalla {
         }
     }
 
-    /** Limpieza r&aacute;pida al desconectar. */
+    /** Limpieza rápida al desconectar. */
     public static void limpiar(@Nonnull UUID uuid) {
         ScheduledFuture<?> f = LOCKS.remove(uuid);
         if (f != null) f.cancel(false);
+        AnimacionesCombate.detener(uuid);
         ORIGINAL.remove(uuid);
     }
 

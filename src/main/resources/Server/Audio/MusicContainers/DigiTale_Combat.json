@@ -1,0 +1,16 @@
+{
+  "Type": "Random",
+  "Mode": "Shuffle",
+  "AvoidRepeatCount": 5,
+  "AudioCategory": "AudioCat_Music",
+  "FadeInDuration": 1.5,
+  "FadeOutDuration": 1.5,
+  "SilenceAfter": { "Min": 0.0, "Max": 0.0 },
+  "Children": [
+    "DigiTale_Combat_AdventurePSP",
+    "DigiTale_Combat_World3",
+    "DigiTale_Combat_DawnDusk",
+    "DigiTale_Combat_NextOrder",
+    "DigiTale_Combat_Greymon"
+  ]
+}

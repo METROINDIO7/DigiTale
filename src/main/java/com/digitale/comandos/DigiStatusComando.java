@@ -48,10 +48,22 @@ public class DigiStatusComando extends AbstractPlayerCommand {
         }
         ctx.sendMessage(DigiMsg.parse("§b============================="));
 
-        if (datos.enCombate) {
-            ctx.sendMessage(DigiMsg.parse("§c> EN COMBATE vs §e" + datos.enemigoNombre +
-                " §7[HP: " + datos.enemigoHp + "/" + datos.enemigoHpMax + "]"));
-            ctx.sendMessage(DigiMsg.parse("§7Turno §f" + datos.turno + "§7 | Ultimo: §f" + datos.logUltimo));
+        if (datos.combate != null && datos.combate.activa) {
+            var c = datos.combate;
+            ctx.sendMessage(DigiMsg.parse("§c> EN COMBATE contra §e" + c.enemigos.size()
+                + " salvajes§7 (turno " + c.ronda + ")"));
+            for (int i = 0; i < c.enemigos.size(); i++) {
+                var e = c.enemigos.get(i);
+                if (e == null) continue;
+                String marca = e.vivo() ? (i == c.objetivoIdx ? "§e>" : "§7-") : "§8x";
+                ctx.sendMessage(DigiMsg.parse(marca + " §f" + e.nombre + " §9"
+                    + e.elemento + "§7/§9" + e.atributo + " §7HP §f"
+                    + e.hp + "/" + e.maxHp
+                    + (e.cargando ? " §c⚠CARGANDO" : "")));
+            }
+            ctx.sendMessage(DigiMsg.parse("§7Turno §f" + c.ronda
+                + "§7 | CP §f" + c.cp + "/" + com.digitale.datos.EstadoCombate.CP_MAX
+                + "§7 | Tu turno: §f" + (c.esperandoJugador ? "si" : "no")));
         }
     }
 
@@ -61,12 +73,14 @@ public class DigiStatusComando extends AbstractPlayerCommand {
             return;
         }
 
-        String barraHp = barra(d.hp, d.maxHp, 10, "§a█", "§8░");
-        String barraEn = barra(d.energia, 100, 10, "§e█", "§8░");
-        String barraLz = barra(d.lazo, 100, 8, "§d█", "§8░");
+        String barraHp = barra(d.hp, d.maxHp, 10, "§a#", "§8-");
+        String barraEn = barra(d.energia, 100, 10, "§e#", "§8-");
+        String barraLz = barra(d.lazo, 100, 8, "§d#", "§8-");
 
         ctx.sendMessage(Message.raw(
-            "§e[" + slot + "] §f" + d.nombre + " §7(" + d.especie + " " + d.nombreNivel() + ") §9" + d.elemento));
+            "§e" + slot + " §f" + d.nombre + " §7(" + d.especie + " " + d.nombreNivel() + ") §9"
+            + d.elemento + "§7/§9" + d.atributo
+            + " §8· Nv." + d.nivelAv + " (" + d.xp + "/100 XP)"));
         ctx.sendMessage(Message.raw(
             "  §cHP  " + barraHp + " §f" + d.hp + "/" + d.maxHp));
         ctx.sendMessage(Message.raw(

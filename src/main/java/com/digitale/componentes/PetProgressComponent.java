@@ -426,6 +426,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             entAtkA=a.entAtk; entDefA=a.entDef; entSpdA=a.entSpd; entWisA=a.entWis; entHpA=a.entHp;
             lazoA=a.lazo; disciplinaA=a.disciplina; victoriasA=a.victorias; derrotasA=a.derrotas;
             vivoA=a.vivo; dormidoA=a.dormido; dormidoEnSegA=a.dormidoEnSeg; vecesLlenoA=a.vecesLleno; hambreA=a.hambre; energiaA=a.energia; abiA=a.abi; crecimientoA=a.crecimiento;
+            levelA=Math.max(1, a.nivelAv); experienceA=Math.max(0, a.xp);
         } else {
             especieA = ""; nombreA = "";
         }
@@ -436,6 +437,7 @@ public class PetProgressComponent implements Component<EntityStore> {
             entAtkB=b.entAtk; entDefB=b.entDef; entSpdB=b.entSpd; entWisB=b.entWis; entHpB=b.entHp;
             lazoB=b.lazo; disciplinaB=b.disciplina; victoriasB=b.victorias; derrotasB=b.derrotas;
             vivoB=b.vivo; dormidoB=b.dormido; dormidoEnSegB=b.dormidoEnSeg; vecesLlenoB=b.vecesLleno; hambreB=b.hambre; energiaB=b.energia; abiB=b.abi; crecimientoB=b.crecimiento;
+            levelB=Math.max(1, b.nivelAv); experienceB=Math.max(0, b.xp);
         } else {
             especieB = ""; nombreB = "";
         }
@@ -461,6 +463,9 @@ public class PetProgressComponent implements Component<EntityStore> {
         setVictoriasSlot(idx, d.victorias); setDerrotasSlot(idx, d.derrotas);
         setVivoSlot(idx, d.vivo); setDormidoSlot(idx, d.dormido); setDormidoEnSegSlot(idx, d.dormidoEnSeg); setVecesLlenoSlot(idx, d.vecesLleno); setHambreSlot(idx, d.hambre);
         setEnergiaSlot(idx, d.energia); setAbiSlot(idx, d.abi); setCrecimientoSlot(idx, d.crecimiento);
+        // Progresión de aventura (antes se perdía al guardar los slots C-F).
+        setLevelSlot(idx, Math.max(1, d.nivelAv));
+        setExperienceSlot(idx, Math.max(0, d.xp));
     }
 
     // ── Acceso por índice a los slots C-F (2-5) ───────────────────
@@ -545,6 +550,12 @@ public class PetProgressComponent implements Component<EntityStore> {
     private void setCrecimientoSlot(int i, double v) {
         switch (i) { case 2 -> crecimientoC = v; case 3 -> crecimientoD = v; case 4 -> crecimientoE = v; default -> crecimientoF = v; }
     }
+    private void setLevelSlot(int i, int v) {
+        switch (i) { case 2 -> levelC = v; case 3 -> levelD = v; case 4 -> levelE = v; default -> levelF = v; }
+    }
+    private void setExperienceSlot(int i, int v) {
+        switch (i) { case 2 -> experienceC = v; case 3 -> experienceD = v; case 4 -> experienceE = v; default -> experienceF = v; }
+    }
 
     // ═════════════════════════════════════════════════════════════
     // Cargar de componente → DatosJugador (llamar al conectar)
@@ -576,6 +587,7 @@ public class PetProgressComponent implements Component<EntityStore> {
                     for (com.digitale.datos.DatoDigimon b : lista) {
                         if (b != null && b.especie != null && !b.especie.isEmpty()
                             && datos.banco.size() < com.digitale.datos.AlmacenJugadores.DatosJugador.BANCO_MAX) {
+                            b.repararIntegridad();
                             datos.banco.add(b);
                         }
                     }
@@ -675,10 +687,13 @@ public class PetProgressComponent implements Component<EntityStore> {
         d.vecesLleno = pickInt(idx, vecesLlenoA, vecesLlenoB, vecesLlenoC, vecesLlenoD, vecesLlenoE, vecesLlenoF);
         d.nivelAv = pickInt(idx, levelA, levelB, levelC, levelD, levelE, levelF);
         if (d.nivelAv < 1) d.nivelAv = 1;
+        d.xp = pickInt(idx, experienceA, experienceB, experienceC, experienceD, experienceE, experienceF);
         d.hambre = pickInt(idx, hambreA, hambreB, hambreC, hambreD, hambreE, hambreF);
         d.energia = pickInt(idx, energiaA, energiaB, energiaC, energiaD, energiaE, energiaF);
         d.abi = pickInt(idx, abiA, abiB, abiC, abiD, abiE, abiF);
         d.crecimiento = pickDouble(idx, crecimientoA, crecimientoB, crecimientoC, crecimientoD, crecimientoE, crecimientoF);
+        // Repara atributo/HP/XP de partidas antiguas antes de usarlo.
+        d.repararIntegridad();
         d.hpCombate = d.hp;
         return d;
     }
